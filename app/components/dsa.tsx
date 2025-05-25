@@ -57,7 +57,6 @@ const HeatmapDay = ({ count, date }: HeatmapDayProps) => {
 };
 
 const LeetCodeDashboard = () => {
-  const [activeTab, setActiveTab] = useState('problems');
   const [streakFilter, setStreakFilter] = useState('current');
   const [hoveredBadge, setHoveredBadge] = useState<number | null>(null);
 
@@ -412,7 +411,7 @@ const LeetCodeDashboard = () => {
                 </div>
                 
                 <div className="mt-5 text-sm text-gray-300 bg-gray-700/30 p-3 rounded-lg border border-gray-600/30">
-                  <span className="text-amber-400">↑ Outstanding</span> - You're performing better than 85% of participants in recent contests.
+                  <span className="text-amber-400">↑ Outstanding</span> - You&apos;re performing better than 85% of participants in recent contests.
                 </div>
               </motion.div>
             </div>

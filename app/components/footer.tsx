@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 
 const TestimonialFooter = () => {
   // Animation variants
@@ -47,7 +46,7 @@ const TestimonialFooter = () => {
               variants={itemVariants}
               className="text-gray-800 text-xl md:text-2xl lg:text-3xl font-medium leading-relaxed max-w-4xl mx-auto"
             >
-              "Working with this team felt like unlocking a creative superpower. Their attention to detail, tech expertise, and collaboration transformed our vision into reality. We didn't just launch a product—we launched an experience."
+              "Working with this team felt like unlocking a creative superpower. Their attention to detail, tech expertise, and collaboration transformed our vision into reality. We didn&apos;t just launch a product—we launched an experience."
             </motion.p>
 
             <motion.div 
@@ -75,7 +74,7 @@ const TestimonialFooter = () => {
             className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6"
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
-              Let's Connect There
+              Let&apos;s Connect There
             </h2>
             <motion.button
               whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}

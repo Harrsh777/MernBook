@@ -4,16 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
-type Certification = {
-  id: number;
-  title: string;
-  issuer: string;
-  issued: string;
-  expires?: string;
-  credentialId?: string;
-  skills?: string[];
-  imageUrl: string;
-};
 
 const certifications = [
   {
@@ -189,7 +179,6 @@ const CertificationsCarousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState<'left' | 'right'>('right');
   const [isHovered, setIsHovered] = useState(false);
-  const carouselRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-rotate effect

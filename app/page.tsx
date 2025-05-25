@@ -142,7 +142,7 @@ export default function Home() {
                 animate={{ y: 0, opacity: 0.8 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
             >
-                Hi, I'm Harsh, Full-Stack Engineer specializing in high-performance web architectures
+                Hi, I&apos;m Harsh, Full-Stack Engineer specializing in high-performance web architectures
             </motion.p>
             
             <motion.div

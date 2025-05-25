@@ -31,7 +31,7 @@ export default function SocialCarousel() {
     if (!container) return
 
     let animationId: number
-    let scrollAmount = 0.75
+    const scrollAmount = 0.75
 
     const scroll = () => {
       if (!container) return
