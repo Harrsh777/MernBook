@@ -111,6 +111,16 @@
   background-image: radial-gradient(#facc15 1px, transparent 1px);
   background-size: 10px 10px;
 }
+/* styles/socialcarousel.css */
+.carousel-scroll {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.carousel-scroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 }
 
 
