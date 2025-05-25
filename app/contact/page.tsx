@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence,} from 'framer-motion';
 import supabase from '@/lib/supabase';
 import { Space_Grotesk } from 'next/font/google';
 import { useRouter } from 'next/navigation';
@@ -197,7 +197,7 @@ export default function LetsTalkPage() {
             transition={{ delay: 0.6 }}
             className="text-gray-600 mb-8 text-center"
           >
-            We've received your message and will get back to you within 24 hours. In the meantime, check out our latest work.
+            We have received your message and will get back to you within 24 hours. In the meantime, check out our latest work.
           </motion.p>
           
           <motion.div
@@ -286,10 +286,10 @@ export default function LetsTalkPage() {
               className="relative z-10"
             >
               <h2 className={`text-2xl font-bold text-white mb-2 ${spaceGrotesk.className}`}>
-                Let's Build Something Amazing
+                Let&apos;s Build Something Amazing
               </h2>
               <p className="text-indigo-100 mb-6">
-                Share your vision with us and we'll help bring it to life.
+                Share your vision with us and we&apos;ll help bring it to life.
               </p>
               
               <div className="mt-12 space-y-4">
@@ -336,9 +336,9 @@ export default function LetsTalkPage() {
                 transition={{ delay: 0.2 }}
                 className="text-gray-600"
               >
-                {currentStep === 1 && "We'll use this information to get in touch with you."}
+                {currentStep === 1 && "We&apos;ll use this information to get in touch with you."}
                 {currentStep === 2 && "Select all that apply to your project."}
-                {currentStep === 3 && "Any final details you'd like to share?"}
+                {currentStep === 3 && "Any final details youd like to share?"}
               </motion.p>
             </div>
 

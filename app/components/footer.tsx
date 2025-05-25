@@ -32,7 +32,7 @@ const TestimonialFooter = () => {
         <div className="relative text-center">
           {/* Background quotation marks */}
           <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
-            <span className="text-gray-100 text-9xl font-serif select-none">"</span>
+            <span className="text-gray-100 text-9xl font-serif select-none">&apos;</span>
           </div>
 
           <motion.div
@@ -42,12 +42,12 @@ const TestimonialFooter = () => {
             variants={containerVariants}
             className="relative z-10"
           >
-            <motion.p 
-              variants={itemVariants}
-              className="text-gray-800 text-xl md:text-2xl lg:text-3xl font-medium leading-relaxed max-w-4xl mx-auto"
-            >
-              "Working with this team felt like unlocking a creative superpower. Their attention to detail, tech expertise, and collaboration transformed our vision into reality. We didn&apos;t just launch a product—we launched an experience."
-            </motion.p>
+            <span className="text-gray-100 text-9xl font-serif select-none">&quot;</span>
+
+<motion.p>
+  Working with this team felt like unlocking a creative superpower. Their attention to detail, tech expertise, and collaboration transformed our vision into reality. We didnot just launch a product—we launched an experience.;
+</motion.p>
+
 
             <motion.div 
               variants={itemVariants}
@@ -86,7 +86,7 @@ const TestimonialFooter = () => {
                 animate={{ x: [0, 4, 0] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
               >
-                &rarr;
+                
               </motion.span>
             </motion.button>
           </motion.div>
