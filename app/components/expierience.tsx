@@ -33,8 +33,17 @@ const ExperienceTimeline = () => {
         'Contributed to the development of travel tech platforms, managed Angular-based components, and enhanced project management workflows.',
       timeRange: 'Dec 2024 – Mar 2025',
     },
+     {
+  id: 3,
+  jobTitle: 'Cyber Security Intern',
+  company: 'MP Police',
+  description:
+    'Developed and implemented cybersecurity tools including a secure VPN, a child-safe browsing assistant, and a threat detection extension. Collaborated with law enforcement to enhance digital safety, streamline incident response, and support public cybersecurity awareness initiatives.',
+  timeRange: 'Dec 2024 – Mar 2025',
+},
+
     {
-      id: 3,
+      id: 4,
       jobTitle: 'MERN Stack Developer (Freelance)',
       company: 'Plotify',
       description:
@@ -42,7 +51,7 @@ const ExperienceTimeline = () => {
       timeRange: 'Nov 2024 – Jan 2025',
     },
     {
-      id: 4,
+      id: 5,
       jobTitle: 'Full Stack Developer Intern',
       company: 'FlatPur',
       description:
