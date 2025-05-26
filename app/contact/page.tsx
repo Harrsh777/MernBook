@@ -115,19 +115,14 @@ const [formData, setFormData] = useState({
         });
         setCurrentStep(1);
       }, 3000);
-    } catch (err: any) {
-      console.error('Submission error:', err);
-      setSubmitError(err.message || 'Failed to submit. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const nextStep = () => {
-  if (formData.name && formData.email) {
-    setCurrentStep(prev => prev + 1);
-  }
-};
+    } catch (err: unknown) {
+  console.error('Submission error:', err);
+  setSubmitError(
+    err instanceof Error 
+      ? err.message 
+      : 'Failed to submit. Please try again.'
+  );
+}}
 
   const prevStep = () => {
     if (currentStep > 1) {
@@ -197,7 +192,7 @@ const [formData, setFormData] = useState({
             transition={{ delay: 0.6 }}
             className="text-gray-400 mb-8 text-center"
           >
-            We've received your message and will get back to you within 24 hours.
+            We&apos;ve received your message and will get back to you within 24 hours.
           </motion.p>
           
           <motion.div
@@ -289,10 +284,10 @@ const [formData, setFormData] = useState({
               className="relative z-10"
             >
               <h2 className={`text-2xl font-bold text-white mb-2 ${spaceGrotesk.className}`}>
-                Let's Build Together
+                Let&apos;s Build Together
               </h2>
               <p className="text-purple-200 mb-6">
-                Share your vision with us and we'll help bring it to life.
+                Share your vision with us and we&apos;ll help bring it to life.
               </p>
               
               <div className="mt-12 space-y-4">
@@ -338,9 +333,9 @@ const [formData, setFormData] = useState({
                 transition={{ delay: 0.2 }}
                 className="text-gray-400"
               >
-                {currentStep === 1 && "We'll use this information to get in touch with you."}
+                {currentStep === 1 && "We&apos;ll use this information to get in touch with you."}
                 {currentStep === 2 && "Select all that apply to your project."}
-                {currentStep === 3 && "Any final details you'd like to share?"}
+                {currentStep === 3 && "Any final details you&apos;d like to share?"}
               </motion.p>
             </div>
 
@@ -545,19 +540,19 @@ const [formData, setFormData] = useState({
     }}
     disabled={!formData.name.trim() || !formData.email.trim()}
     whileHover={
-      formData.name.trim() && formData.email.trim() 
-        ? { scale: 1.02 } 
+      formData.name.trim() && formData.email.trim()
+        ? { scale: 1.02 }
         : {}
     }
     whileTap={
-      formData.name.trim() && formData.email.trim() 
-        ? { scale: 0.98 } 
+      formData.name.trim() && formData.email.trim()
+        ? { scale: 0.98 }
         : {}
     }
-    className={`px-6 py-3 rounded-lg font-medium flex items-center transition-all ${
+    className={`px-6 py-3 rounded-lg font-medium flex items-center ${
       !formData.name.trim() || !formData.email.trim()
         ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-        : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 cursor-pointer'
+        : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700'
     }`}
   >
     Next <FiArrowRight className="ml-2" />

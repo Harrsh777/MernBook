@@ -105,7 +105,7 @@ const TestimonialFooter = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
-              Let's Build <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">Something</span> Amazing
+              Let&apos;s Build <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">Something</span> Amazing
             </motion.h2>
             
             <motion.p 
@@ -115,7 +115,7 @@ const TestimonialFooter = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
             >
-              Ready to bring your vision to life? Let's collaborate and create something extraordinary together.
+              Ready to bring your vision to life? Let&apos;s collaborate and create something extraordinary together.
             </motion.p>
           </div>
 
