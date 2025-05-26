@@ -27,7 +27,7 @@ const PortfolioGrid = () => {
       id: 2,
       title: 'SafeSurf',
       imageUrl: '/safesu.png',
-      link: '#',
+      link: 'https://github.com/Harrsh777/SafeSurfJr',
       category: 'Cybersecurity',
       description: 'Browser extension for real-time phishing protection'
     },
@@ -35,7 +35,7 @@ const PortfolioGrid = () => {
       id: 3,
       title: 'Deplox',
       imageUrl: '/deployx.png',
-      link: '#',
+      link: 'https://github.com/Harrsh777/DeployX',
       category: 'DevOps',
       description: 'CI/CD automation platform for seamless deployments'
     },

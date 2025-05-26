@@ -126,7 +126,7 @@ const LeetCodeDashboard = () => {
           className="mb-10 text-center"
         >
           <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 leading-tight">
-            Developer Performance Metrics
+            LeetCode Performance Metrics
           </h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -311,9 +311,9 @@ const LeetCodeDashboard = () => {
                   </div>
                   <div className="text-right">
                     <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-300">
-                      1,402
+                      1,902
                     </div>
-                    <div className="text-sm text-gray-400">Global: 589,121</div>
+                    <div className="text-sm text-gray-400">Global: 389,121</div>
                   </div>
                 </div>
                 
@@ -346,8 +346,8 @@ const LeetCodeDashboard = () => {
                 
                 <div className="grid grid-cols-3 gap-4 mt-5">
                   {[
-                    { label: 'Attended', value: '2', change: '+2' },
-                    { label: 'Max Rating', value: '1,413', change: '-11' },
+                    { label: 'Attended', value: '7', change: '+2' },
+                    { label: 'Max Rating', value: '1,913', change: '-11' },
                     { label: 'Min Rating', value: '1,398', change: '+4' }
                   ].map((stat, idx) => (
                     <motion.div 

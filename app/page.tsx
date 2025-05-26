@@ -125,101 +125,101 @@ export default function Home() {
 
             {/* Main content */}
 <main className="container mx-auto px-6 py-16 md:py-24 relative z-10">
-    <div className="flex flex-col md:flex-row items-center">
-        <motion.div 
-            className="md:w-1/2 mb-12 md:mb-0"
-            initial={{ x: -50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+  <div className="flex flex-col md:flex-row items-center">
+    
+    {/* Text Section */}
+    <motion.div 
+      className="w-full md:w-1/2 mb-12 md:mb-0"
+      initial={{ x: -50, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.8, delay: 0.2 }}
+    >
+      <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight text-center md:text-left ${spaceGrotesk.className} mb-6`}>
+        Software Developer
+      </h1>
+      <motion.p 
+        className="text-white text-base sm:text-lg md:text-xl opacity-80 text-center md:text-left mb-8"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 0.8 }}
+        transition={{ duration: 0.6, delay: 0.6 }}
+      >
+        Hi, I&apos;m Harsh, Full-Stack Engineer specializing in high-performance web architectures
+      </motion.p>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
+        className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4"
+      >
+        <motion.button
+          onClick={handleDownloadCV}
+          className="flex items-center gap-2 bg-yellow-500 text-black px-4 py-2 rounded-full hover:bg-yellow-400 transition-all"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-            <h1 className={`text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight ml-4 mb-6 ${spaceGrotesk.className}`}>
-                Software Developer
-            </h1>
-            
-            <motion.p 
-                className="text-white text-lg md:text-xl mt-6 ml-5 opacity-80 mb-8"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 0.8 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
-            >
-                Hi, I&apos;m Harsh, Full-Stack Engineer specializing in high-performance web architectures
-            </motion.p>
-            
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
-                className="flex gap-4"
-            >
-                <motion.button
-                    onClick={handleDownloadCV}
-                    className="flex items-center gap-2 bg-yellow-500 text-black px-4 py-2 rounded-full hover:bg-yellow-400 transition-all"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                >
-                    <FaDownload />
-                    Download CV
-                </motion.button>
-                <motion.button
-                    onClick={() => router.push('/contact')}
-                    className="px-6 py-3 border border-yellow-500 text-yellow-500 rounded-lg font-medium"
-                    whileHover={{ y: -3, backgroundColor: "rgba(234, 179, 8, 0.1)" }}
-                    whileTap={{ scale: 0.95 }}
-                >
-                    Contact Me
-                </motion.button>
-            </motion.div>
-        </motion.div>
-
-        <motion.div 
-            className="md:w-1/2 relative"
-            style={{ marginLeft: '10cm' }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+          <FaDownload />
+          Download CV
+        </motion.button>
+        <motion.button
+          onClick={() => router.push('/contact')}
+          className="px-6 py-3 border border-yellow-500 text-yellow-500 rounded-lg font-medium"
+          whileHover={{ y: -3, backgroundColor: "rgba(234, 179, 8, 0.1)" }}
+          whileTap={{ scale: 0.95 }}
         >
-            <div className="relative rounded-xl overflow-hidden" style={{ width: '375px', height: '500px' }}>
-                <div className="w-full h-full bg-gray-800 bg-opacity-40 flex items-center justify-center border-2 border-dashed border-gray-600">
-                    <span className="text-gray-400">Your Image Here</span>
-                </div>
-                <Image
-                    src="/profile.jpg"
-                    alt="Harsh"
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-xl"
-                />
-            </div>
+          Contact Me
+        </motion.button>
+      </motion.div>
+    </motion.div>
 
-            {/* Floating elements */}
-            <motion.div 
-                className="absolute -bottom-6 -left-6 w-16 h-16 bg-yellow-500 rounded-full opacity-20 blur-xl"
-                animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.2, 0.3, 0.2]
-                }}
-                transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-            />
-            <motion.div 
-                className="absolute -top-6 -right-6 w-24 h-24 bg-purple-500 rounded-full opacity-20 blur-xl"
-                animate={{
-                    scale: [1, 1.3, 1],
-                    opacity: [0.2, 0.4, 0.2]
-                }}
-                transition={{
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 1
-                }}
-            />
-        </motion.div>
-    </div>
+    {/* Image Section */}
+    <motion.div 
+      className="w-full md:w-1/2 mt-8 md:mt-0 relative flex justify-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8, delay: 0.4 }}
+    >
+      <div className="relative w-64 sm:w-72 md:w-80 lg:w-96 aspect-[3/4] rounded-xl overflow-hidden">
+        <div className="w-full h-full bg-gray-800 bg-opacity-40 flex items-center justify-center border-2 border-dashed border-gray-600">
+          <span className="text-gray-400">Good Looking Guy</span>
+        </div>
+        <Image
+          src="/profile.jpg"
+          alt="Harsh"
+          fill
+          className="object-cover rounded-xl"
+        />
+      </div>
+
+      {/* Floating elements */}
+      <motion.div 
+        className="absolute -bottom-6 -left-6 w-16 h-16 bg-yellow-500 rounded-full opacity-20 blur-xl"
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.2, 0.3, 0.2]
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+      <motion.div 
+        className="absolute -top-6 -right-6 w-24 h-24 bg-purple-500 rounded-full opacity-20 blur-xl"
+        animate={{
+          scale: [1, 1.3, 1],
+          opacity: [0.2, 0.4, 0.2]
+        }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1
+        }}
+      />
+    </motion.div>
+  </div>
 </main>
+
 
 
             {/* Social Media Carousel */}

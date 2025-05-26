@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence,} from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import supabase from '@/lib/supabase';
 import { Space_Grotesk } from 'next/font/google';
-import { useRouter } from 'next/navigation';
+import { FiArrowRight, FiCheck, FiX } from 'react-icons/fi';
 
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'] });
 
@@ -19,27 +19,40 @@ const serviceTags = [
   'Marketing',
 ];
 
-const floatingShapes = [
-  { icon: '🟡', size: 40, top: '10%', left: '5%', delay: 0.1 },
-  { icon: '🔵', size: 60, top: '20%', right: '10%', delay: 0.3 },
-  { icon: '🟢', size: 30, bottom: '15%', left: '8%', delay: 0.5 },
-  { icon: '🔴', size: 50, bottom: '25%', right: '5%', delay: 0.7 },
-];
-
 export default function LetsTalkPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    services: [] as string[],
-    message: '',
-  });
+const [formData, setFormData] = useState({
+  name: '',
+  email: '',
+  company: '',
+  services: [] as string[],
+  message: '',
+});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
   const [hoveredService, setHoveredService] = useState<string | null>(null);
-  const router = useRouter();
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [isHoveringButton, setIsHoveringButton] = useState(false);
+
+  // Floating particles effect
+  const particles = Array.from({ length: 15 }).map((_, i) => ({
+    id: i,
+    size: Math.random() * 4 + 2,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    delay: Math.random() * 2,
+    duration: Math.random() * 3 + 3
+  }));
+
+  // Handle cursor position for interactive effects
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setCursorPosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -71,22 +84,27 @@ export default function LetsTalkPage() {
     setSubmitError('');
 
     try {
-      const { error } = await supabase.from('idea_submissions').insert([
-        {
+      if (!formData.name || !formData.email) {
+        throw new Error('Name and email are required');
+      }
+      
+      const { data, error } = await supabase
+        .from('idea_submissions')
+        .insert([{
           name: formData.name,
           email: formData.email,
           company_name: formData.company,
           services: formData.services,
           message: formData.message,
           submitted_at: new Date().toISOString(),
-        },
-      ]);
+        }])
+        .select();
 
       if (error) throw error;
+      if (!data) throw new Error('No data returned from server');
 
       setSubmitSuccess(true);
       
-      // Reset form after successful submission
       setTimeout(() => {
         setFormData({
           name: '',
@@ -96,22 +114,20 @@ export default function LetsTalkPage() {
           message: '',
         });
         setCurrentStep(1);
-        setSubmitSuccess(false);
-        router.refresh();
       }, 3000);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Submission error:', err);
-      setSubmitError('Failed to submit. Please check your connection and try again.');
+      setSubmitError(err.message || 'Failed to submit. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const nextStep = () => {
-    if (currentStep < 3) {
-      setCurrentStep(prev => prev + 1);
-    }
-  };
+  if (formData.name && formData.email) {
+    setCurrentStep(prev => prev + 1);
+  }
+};
 
   const prevStep = () => {
     if (currentStep > 1) {
@@ -119,66 +135,50 @@ export default function LetsTalkPage() {
     }
   };
 
-  // Supabase RLS Policy Suggestion
-  // You need to add this to your Supabase table policies:
-  /*
-  create policy "Enable insert for all users"
-  on "public"."idea_submissions"
-  as permissive
-  for insert
-  to public
-  with check (true);
-  */
-
   if (submitSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-white px-4 relative overflow-hidden">
-        {floatingShapes.map((shape, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: shape.delay, duration: 0.8 }}
-            className="absolute text-4xl"
-            style={{
-              top: shape.top,
-              left: shape.left,
-              right: shape.right,
-              bottom: shape.bottom,
-              fontSize: `${shape.size}px`,
-            }}
-          >
-            {shape.icon}
-          </motion.div>
-        ))}
+      <div className="min-h-screen flex items-center justify-center bg-black px-4 relative overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
+          {particles.map((particle) => (
+            <motion.div
+              key={particle.id}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{
+                opacity: [0, 0.6, 0],
+                y: [0, particle.size * 10],
+                x: [particle.x, particle.x + (Math.random() * 20 - 10)]
+              }}
+              transition={{
+                delay: particle.delay,
+                duration: particle.duration,
+                repeat: Infinity,
+                repeatType: 'loop'
+              }}
+              className="absolute rounded-full bg-purple-500"
+              style={{
+                width: `${particle.size}px`,
+                height: `${particle.size}px`,
+                left: `${particle.x}%`,
+                top: `-${particle.size}px`
+              }}
+            />
+          ))}
+        </div>
         
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 relative z-10"
-        >
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-2xl bg-gray-900 rounded-2xl shadow-xl overflow-hidden border border-gray-800"
+      >
           <div className="flex justify-center mb-6">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: 'spring' }}
-              className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center"
+              className="w-20 h-20 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full flex items-center justify-center text-white"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-10 w-10 text-green-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
+              <FiCheck className="h-8 w-8" />
             </motion.div>
           </div>
           
@@ -186,7 +186,7 @@ export default function LetsTalkPage() {
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className={`text-3xl font-bold mb-4 text-center ${spaceGrotesk.className}`}
+            className={`text-3xl font-bold mb-4 text-center text-white ${spaceGrotesk.className}`}
           >
             Message Sent!
           </motion.h2>
@@ -195,9 +195,9 @@ export default function LetsTalkPage() {
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="text-gray-600 mb-8 text-center"
+            className="text-gray-400 mb-8 text-center"
           >
-            We have received your message and will get back to you within 24 hours. In the meantime, check out our latest work.
+            We've received your message and will get back to you within 24 hours.
           </motion.p>
           
           <motion.div
@@ -207,18 +207,10 @@ export default function LetsTalkPage() {
             className="flex flex-col space-y-3"
           >
             <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => router.push('/work')}
-              className="w-full bg-black text-white py-3 px-6 rounded-lg font-medium"
-            >
-              View Our Work
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(124, 58, 237, 0.5)" }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setSubmitSuccess(false)}
-              className="w-full bg-transparent text-black py-3 px-6 rounded-lg font-medium border border-gray-200"
+              className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-medium"
             >
               Send Another Message
             </motion.button>
@@ -229,54 +221,65 @@ export default function LetsTalkPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white flex items-center justify-center px-4 py-12 relative overflow-hidden">
-      {/* Floating background elements */}
-      {floatingShapes.map((shape, index) => (
-        <motion.div
-          key={index}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 0.4, y: 0 }}
-          transition={{ delay: shape.delay, duration: 0.8 }}
-          className="absolute text-4xl opacity-40"
-          style={{
-            top: shape.top,
-            left: shape.left,
-            right: shape.right,
-            bottom: shape.bottom,
-            fontSize: `${shape.size}px`,
-          }}
-        >
-          {shape.icon}
-        </motion.div>
-      ))}
+    <div className="min-h-screen bg-black flex items-center justify-center px-4 py-12 relative overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden">
+        {particles.map((particle) => (
+          <motion.div
+            key={particle.id}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{
+              opacity: [0, 0.3, 0],
+              y: [0, particle.size * 10],
+              x: [particle.x, particle.x + (Math.random() * 20 - 10)]
+            }}
+            transition={{
+              delay: particle.delay,
+              duration: particle.duration,
+              repeat: Infinity,
+              repeatType: 'loop'
+            }}
+            className="absolute rounded-full bg-purple-500"
+            style={{
+              width: `${particle.size}px`,
+              height: `${particle.size}px`,
+              left: `${particle.x}%`,
+              top: `-${particle.size}px`
+            }}
+          />
+        ))}
+      </div>
+
+      <AnimatePresence>
+        {isHoveringButton && (
+          <motion.div
+            className="fixed pointer-events-none h-64 w-64 rounded-full bg-purple-900/20 backdrop-blur-sm z-0"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              x: cursorPosition.x - 128,
+              y: cursorPosition.y - 128
+            }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 200 }}
+          />
+        )}
+      </AnimatePresence>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden"
+        className="w-full max-w-2xl bg-gray-900 rounded-2xl shadow-xl overflow-hidden border border-gray-800"
       >
         <div className="md:flex">
-          {/* Visual side */}
-          <div className="hidden md:block md:w-1/3 bg-gradient-to-b from-indigo-500 to-purple-600 p-8 relative overflow-hidden">
+          <div className="hidden md:block md:w-1/3 bg-gradient-to-b from-purple-900 to-gray-900 p-8 relative overflow-hidden">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
               className="absolute inset-0 flex items-center justify-center opacity-10"
             >
-              <svg
-                width="200"
-                height="200"
-                viewBox="0 0 200 200"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M100 0C44.8 0 0 44.8 0 100C0 155.2 44.8 200 100 200C155.2 200 200 155.2 200 100C200 44.8 155.2 0 100 0ZM100 180C56.4 180 20 143.6 20 100C20 56.4 56.4 20 100 20C143.6 20 180 56.4 180 100C180 143.6 143.6 180 100 180Z"
-                  fill="white"
-                />
-              </svg>
             </motion.div>
             
             <motion.div
@@ -286,64 +289,64 @@ export default function LetsTalkPage() {
               className="relative z-10"
             >
               <h2 className={`text-2xl font-bold text-white mb-2 ${spaceGrotesk.className}`}>
-                Let&apos;s Build Something Amazing
+                Let's Build Together
               </h2>
-              <p className="text-indigo-100 mb-6">
-                Share your vision with us and we&apos;ll help bring it to life.
+              <p className="text-purple-200 mb-6">
+                Share your vision with us and we'll help bring it to life.
               </p>
               
               <div className="mt-12 space-y-4">
                 <div className="flex items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${currentStep >= 1 ? 'bg-white text-indigo-600' : 'bg-indigo-400 text-white'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${currentStep >= 1 ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-400'}`}>
                     1
                   </div>
-                  <span className={`${currentStep >= 1 ? 'text-white font-medium' : 'text-indigo-200'}`}>Basic Info</span>
+                  <span className={`${currentStep >= 1 ? 'text-white font-medium' : 'text-gray-400'}`}>Basic Info</span>
                 </div>
                 
                 <div className="flex items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${currentStep >= 2 ? 'bg-white text-indigo-600' : 'bg-indigo-400 text-white'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${currentStep >= 2 ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-400'}`}>
                     2
                   </div>
-                  <span className={`${currentStep >= 2 ? 'text-white font-medium' : 'text-indigo-200'}`}>Services</span>
+                  <span className={`${currentStep >= 2 ? 'text-white font-medium' : 'text-gray-400'}`}>Services</span>
                 </div>
                 
                 <div className="flex items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${currentStep >= 3 ? 'bg-white text-indigo-600' : 'bg-indigo-400 text-white'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${currentStep >= 3 ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-400'}`}>
                     3
                   </div>
-                  <span className={`${currentStep >= 3 ? 'text-white font-medium' : 'text-indigo-200'}`}>Final Details</span>
+                  <span className={`${currentStep >= 3 ? 'text-white font-medium' : 'text-gray-400'}`}>Final Details</span>
                 </div>
               </div>
             </motion.div>
           </div>
 
-          {/* Form side */}
           <div className="md:w-2/3 p-8">
             <div className="mb-8">
               <motion.h1 
                 initial={{ y: -10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className={`text-3xl font-bold mb-2 ${spaceGrotesk.className}`}
+                className={`text-3xl font-bold mb-2 text-white ${spaceGrotesk.className}`}
               >
                 {currentStep === 1 && "Tell us about yourself"}
                 {currentStep === 2 && "What services do you need?"}
-                {currentStep === 3 && "Almost there!"}
+                {currentStep === 3 && "Final details"}
               </motion.h1>
               <motion.p
                 initial={{ y: -10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
-                className="text-gray-600"
+                className="text-gray-400"
               >
-                {currentStep === 1 && "We&apos;ll use this information to get in touch with you."}
+                {currentStep === 1 && "We'll use this information to get in touch with you."}
                 {currentStep === 2 && "Select all that apply to your project."}
-                {currentStep === 3 && "Any final details youd like to share?"}
+                {currentStep === 3 && "Any final details you'd like to share?"}
               </motion.p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <AnimatePresence mode="wait">
+                
                 {currentStep === 1 && (
                   <motion.div
                     key="step1"
@@ -354,19 +357,19 @@ export default function LetsTalkPage() {
                     className="space-y-5"
                   >
                     <div className="relative">
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                        className="peer h-12 w-full border-b border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-indigo-600"
-                        placeholder=" "
-                      />
+                     <input
+  type="text"
+  id="name"
+  name="name"  // Must match the state key
+  value={formData.name}
+  onChange={handleInputChange}  // Verify this is working
+  required
+  className="peer h-12 w-full bg-gray-800 border-b border-gray-700 text-white placeholder-transparent focus:outline-none focus:border-purple-500"
+  placeholder=" "
+/>
                       <label
                         htmlFor="name"
-                        className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-indigo-600 peer-focus:text-sm"
+                        className="absolute left-0 -top-3.5 text-gray-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-purple-400 peer-focus:text-sm"
                       >
                         Your Name
                       </label>
@@ -380,12 +383,12 @@ export default function LetsTalkPage() {
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        className="peer h-12 w-full border-b border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-indigo-600"
+                        className="peer h-12 w-full bg-gray-800 border-b border-gray-700 text-white placeholder-transparent focus:outline-none focus:border-purple-500"
                         placeholder=" "
                       />
                       <label
                         htmlFor="email"
-                        className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-indigo-600 peer-focus:text-sm"
+                        className="absolute left-0 -top-3.5 text-gray-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-purple-400 peer-focus:text-sm"
                       >
                         Email Address
                       </label>
@@ -398,12 +401,12 @@ export default function LetsTalkPage() {
                         name="company"
                         value={formData.company}
                         onChange={handleInputChange}
-                        className="peer h-12 w-full border-b border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-indigo-600"
+                        className="peer h-12 w-full bg-gray-800 border-b border-gray-700 text-white placeholder-transparent focus:outline-none focus:border-purple-500"
                         placeholder=" "
                       />
                       <label
                         htmlFor="company"
-                        className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-indigo-600 peer-focus:text-sm"
+                        className="absolute left-0 -top-3.5 text-gray-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-purple-400 peer-focus:text-sm"
                       >
                         Company (Optional)
                       </label>
@@ -434,11 +437,11 @@ export default function LetsTalkPage() {
                             onClick={() => handleServiceToggle(service)}
                             className={`w-full px-4 py-3 rounded-lg text-sm border transition-all ${
                               formData.services.includes(service)
-                                ? 'bg-indigo-600 text-white border-indigo-600 shadow-md'
-                                : 'bg-white text-gray-700 border-gray-300 hover:border-indigo-400'
+                                ? 'bg-purple-600 text-white border-purple-600 shadow-md'
+                                : 'bg-gray-800 text-gray-300 border-gray-700 hover:border-purple-400'
                             } ${
                               hoveredService === service && !formData.services.includes(service)
-                                ? 'shadow-md border-indigo-400'
+                                ? 'shadow-md border-purple-400'
                                 : ''
                             }`}
                           >
@@ -449,7 +452,7 @@ export default function LetsTalkPage() {
                               layoutId="serviceHover"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
-                              className="absolute -bottom-2 left-0 right-0 h-1 bg-indigo-200 rounded-full mx-auto"
+                              className="absolute -bottom-2 left-0 right-0 h-1 bg-purple-400/30 rounded-full mx-auto"
                               style={{ width: '80%' }}
                             />
                           )}
@@ -474,12 +477,12 @@ export default function LetsTalkPage() {
                         value={formData.message}
                         onChange={handleInputChange}
                         rows={4}
-                        className="peer h-32 w-full border border-gray-300 rounded-lg p-3 text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        className="peer h-32 w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                         placeholder=" "
                       />
                       <label
                         htmlFor="message"
-                        className="absolute left-3 -top-3 bg-white px-1 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3 peer-focus:-top-3 peer-focus:text-indigo-600 peer-focus:text-sm"
+                        className="absolute left-3 -top-3 bg-gray-900 px-1 text-gray-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 peer-focus:-top-3 peer-focus:text-purple-400 peer-focus:text-sm"
                       >
                         Project Details (Optional)
                       </label>
@@ -487,14 +490,14 @@ export default function LetsTalkPage() {
 
                     {formData.services.length > 0 && (
                       <div className="mt-4">
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">Selected Services:</h4>
+                        <h4 className="text-sm font-medium text-gray-300 mb-2">Selected Services:</h4>
                         <div className="flex flex-wrap gap-2">
                           {formData.services.map(service => (
                             <motion.div
                               key={service}
                               initial={{ scale: 0.8, opacity: 0 }}
                               animate={{ scale: 1, opacity: 1 }}
-                              className="px-3 py-1 bg-indigo-100 text-indigo-800 text-xs rounded-full"
+                              className="px-3 py-1 bg-purple-900/50 text-purple-300 text-xs rounded-full border border-purple-800"
                             >
                               {service}
                             </motion.div>
@@ -510,20 +513,9 @@ export default function LetsTalkPage() {
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="p-3 bg-red-50 text-red-600 text-sm rounded-lg flex items-start"
+                  className="p-3 bg-red-900/20 text-red-400 text-sm rounded-lg flex items-start border border-red-900/50"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  <FiX className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
                   <div>{submitError}</div>
                 </motion.div>
               )}
@@ -535,40 +527,54 @@ export default function LetsTalkPage() {
                     onClick={prevStep}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="px-6 py-2 rounded-lg font-medium text-indigo-600 hover:bg-indigo-50"
+                    className="px-6 py-2 rounded-lg font-medium text-purple-400 hover:bg-gray-800 transition-colors"
                   >
                     Back
                   </motion.button>
                 ) : (
-                  <div></div> // Empty div to maintain space
+                  <div></div>
                 )}
 
-                {currentStep < 3 ? (
-                  <motion.button
-                    type="button"
-                    onClick={nextStep}
-                    disabled={!formData.name || !formData.email}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`px-6 py-3 rounded-lg font-medium ${
-                      !formData.name || !formData.email
-                        ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                        : 'bg-indigo-600 text-white hover:bg-indigo-700'
-                    }`}
-                  >
-                    Next
-                  </motion.button>
-                ) : (
+             {currentStep < 3 ? (
+  <motion.button
+    type="button"
+    onClick={() => {
+      if (formData.name.trim() && formData.email.trim()) {
+        setCurrentStep(prev => prev + 1);
+      }
+    }}
+    disabled={!formData.name.trim() || !formData.email.trim()}
+    whileHover={
+      formData.name.trim() && formData.email.trim() 
+        ? { scale: 1.02 } 
+        : {}
+    }
+    whileTap={
+      formData.name.trim() && formData.email.trim() 
+        ? { scale: 0.98 } 
+        : {}
+    }
+    className={`px-6 py-3 rounded-lg font-medium flex items-center transition-all ${
+      !formData.name.trim() || !formData.email.trim()
+        ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+        : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 cursor-pointer'
+    }`}
+  >
+    Next <FiArrowRight className="ml-2" />
+  </motion.button>
+) : (
                   <motion.button
                     type="submit"
                     disabled={isSubmitting}
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(124, 58, 237, 0.5)" }}
                     whileTap={{ scale: 0.98 }}
                     className={`px-6 py-3 rounded-lg font-medium ${
                       isSubmitting
-                        ? 'bg-indigo-400 text-white cursor-not-allowed'
-                        : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                        ? 'bg-purple-800 text-white cursor-not-allowed'
+                        : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700'
                     }`}
+                    onMouseEnter={() => setIsHoveringButton(true)}
+                    onMouseLeave={() => setIsHoveringButton(false)}
                   >
                     {isSubmitting ? (
                       <div className="flex items-center justify-center">
@@ -595,7 +601,10 @@ export default function LetsTalkPage() {
                         Sending...
                       </div>
                     ) : (
-                      'Send Message'
+                      <div className="flex items-center">
+                        <span>Send Message</span>
+                        <FiArrowRight className="ml-2" />
+                      </div>
                     )}
                   </motion.button>
                 )}
