@@ -41,7 +41,7 @@ const PortfolioGrid = () => {
     },
     {
       id: 4,
-      title: 'Plotify.com',
+      title: 'The Plotify.com',
       imageUrl: '/plotify.png',
       link: 'https://www.theplotify.com',
       category: 'Freelance',
