@@ -20,7 +20,7 @@ interface Skill {
 }
 
 const Skills = () => {
-  const [init, setInit] = useState(false);
+  const [, setInit] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [isAnimating, setIsAnimating] = useState(false);
 
