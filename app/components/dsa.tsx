@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Line, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { Pie, Cell, ResponsiveContainer } from 'recharts';
 import dynamic from 'next/dynamic';
 
 // --- HELPER COMPONENTS ---
@@ -18,7 +18,6 @@ interface HeatmapDayProps {
 }
 
 // Dynamically import charts for better performance (client-side rendering only)
-const LineChart = dynamic(() => import('recharts').then(mod => mod.LineChart), { ssr: false });
 const PieChart = dynamic(() => import('recharts').then(mod => mod.PieChart), { ssr: false });
 
 const BadgeCard = ({ icon, title, subtitle, isHighlighted = false }: BadgeCardProps) => (
@@ -58,22 +57,12 @@ const HeatmapDay = ({ count, date }: HeatmapDayProps) => {
   );
 };
 
-
 // --- MAIN DASHBOARD COMPONENT ---
 
 const LeetCodeDashboard = () => {
-  const [streakFilter, setStreakFilter] = useState('current');
   const [hoveredBadge, setHoveredBadge] = useState<number | null>(null);
 
   // --- MOCK DATA (Replace with real API data) ---
-
-  const contestRatingData = [
-    { name: 'Sep', rating: 1750 }, { name: 'Oct', rating: 1780 },
-    { name: 'Nov', rating: 1810 }, { name: 'Dec', rating: 1850 },
-    { name: 'Jan', rating: 1830 }, { name: 'Feb', rating: 1880 },
-    { name: 'Mar', rating: 1902 },
-  ];
-
   const problemsData = {
     totalSolved: 950,
     totalQuestions: 3553,
@@ -137,7 +126,6 @@ const LeetCodeDashboard = () => {
         </motion.h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-
           {/* --- Left Profile Panel --- */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -206,7 +194,6 @@ const LeetCodeDashboard = () => {
 
           {/* --- Right Content Area --- */}
           <motion.div className="lg:col-span-9 space-y-6" variants={containerVariants} initial="hidden" animate="visible">
-
             {/* Contest Rating & Problems Solved */}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
               {/* Contest Rating Card */}

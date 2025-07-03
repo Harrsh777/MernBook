@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import { IconType } from 'react-icons';
 
@@ -10,7 +10,6 @@ import {
   SiNodedotjs, SiExpress, SiMongodb, SiPostgresql, SiGraphql, 
   SiAmazons3, SiDocker, SiGit, SiGithubactions, SiJest, SiTailwindcss, SiKubernetes
 } from 'react-icons/si';
-
 
 interface Skill {
   name: string;
@@ -25,7 +24,7 @@ const Skills = () => {
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [isAnimating, setIsAnimating] = useState(false);
 
- const skillsData: Skill[] = useMemo(() => [
+  const skillsData: Skill[] = useMemo(() => [
     // Frontend
     { name: 'HTML5', icon: SiHtml5, color: '#E34F26', category: 'frontend', proficiency: 5 },
     { name: 'CSS3', icon: SiCss3, color: '#1572B6', category: 'frontend', proficiency: 5 },
@@ -55,15 +54,6 @@ const Skills = () => {
     if (activeFilter === 'all') return skillsData;
     return skillsData.filter(skill => skill.category === activeFilter);
   }, [activeFilter, skillsData]);
-
-  // Group skills into rows of 6
-  const skillRows = useMemo(() => {
-    const rows = [];
-    for (let i = 0; i < filteredSkills.length; i += 6) {
-      rows.push(filteredSkills.slice(i, i + 6));
-    }
-    return rows;
-  }, [filteredSkills]);
 
   useEffect(() => {
     initParticlesEngine(async (engine) => {
