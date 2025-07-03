@@ -1,25 +1,48 @@
 // app/page.tsx
 "use client"
 
+// NEW: Import hooks and particle engine dependencies
+import { useEffect, useState } from 'react';
+import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { loadSlim } from "@tsparticles/slim";
+ // Make sure you have particles.ts in the same directory or adjust path
+
 import { Inter, Space_Grotesk } from 'next/font/google';
 import { motion } from 'framer-motion';
 import Image from "next/image";
 import { FaEnvelope, FaDownload } from 'react-icons/fa';
-
 import { useRouter } from 'next/navigation';
+
 import SocialCarousel from './components/SocialCarousel';
-import ExperienceTimeline from './components/expierience';
+import ExperienceTimeline from './components/experience';
 import PortfolioGrid from './components/PortfolioGrid';
 import LeetCodeDashboard from './components/dsa';
 import CertificationsCarousel from './components/certification';
 import TestimonialFooter from './components/footer';
+import Skills from './components/Skills';
+import { particlesOptions } from './particles-config';
 
 const inter = Inter({ subsets: ['latin'] });
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'] });
 
 export default function Home() {
     const router = useRouter();
-    
+
+    // NEW: State to manage particle engine initialization
+    const [init, setInit] = useState(false);
+
+    // NEW: useEffect to initialize the particles engine on component mount
+    useEffect(() => {
+        initParticlesEngine(async (engine) => {
+            await loadSlim(engine);
+        }).then(() => {
+            setInit(true);
+        });
+    }, []);
+
+    // NEW: Define the height for the particle banner. You can change this value.
+    const particleBannerHeight = '1000px';
+
     const handleScroll = (distance: number) => {
         window.scrollBy({
             top: distance,
@@ -28,7 +51,6 @@ export default function Home() {
     };
 
     const handleDownloadCV = () => {
-        // Replace with your actual CV file path
         const cvUrl = '/Resume.pdf';
         const link = document.createElement('a');
         link.href = cvUrl;
@@ -52,6 +74,26 @@ export default function Home() {
 
     return (
         <div className={`min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 overflow-hidden relative ${inter.className}`}>
+            
+            {/* NEW: Particle Banner Container */}
+            {/* This div creates a container for the particles at the top of the page. */}
+            {init && (
+                 <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: particleBannerHeight, // Restricts the height
+                    pointerEvents: 'none',       // CRITICAL: Allows clicks to pass through to content below
+                    zIndex: 0                    // Places it behind your z-10 content
+                 }}>
+                    <Particles
+                        id="tsparticles"
+                        options={particlesOptions}
+                    />
+                </div>
+            )}
+            
             {/* Animated background text */}
             <motion.div
                 className="absolute inset-0 overflow-hidden pointer-events-none"
@@ -84,11 +126,10 @@ export default function Home() {
                 <div className={`text-2xl font-bold text-white ${spaceGrotesk.className}`}>
                     Harsh
                 </div>
-
                 <div className="hidden md:flex space-x-8 items-center">
                     {[
-                        { name: 'Projects', action: () => handleScroll(1800) }, // 50cm ≈ 500px
-                        { name: 'Certifications', action: () => handleScroll(4700) }, // 100cm ≈ 1000px
+                        { name: 'Projects', action: () => handleScroll(1800) },
+                        { name: 'Certifications', action: () => handleScroll(4700) },
                         { name: 'Book', action: () => router.push('/book') },
                         { name: 'Contact', action: () => router.push('/contact') }
                     ].map((item) => (
@@ -103,17 +144,7 @@ export default function Home() {
                             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full"></span>
                         </motion.button>
                     ))}
-                    
-                    {/* Download CV Button */}
-                   
                 </div>
-
-                {/* Mobile menu button would go here */}
-                <div className="md:hidden">
-                    {/* Mobile menu implementation would go here */}
-                </div>
-
-                {/* Email Badge - Moved inside nav for better mobile layout */}
                 <a
                     href="mailto:Harrshh077@gmail.com"
                     className="hidden md:flex items-center gap-2 bg-white text-black px-4 py-2 rounded-full hover:scale-105 transition-transform"
@@ -123,102 +154,86 @@ export default function Home() {
                 </a>
             </motion.nav>
 
-            {/* Main content */}
-<main className="container mx-auto px-6 py-16 md:py-24 relative z-10">
-  <div className="flex flex-col md:flex-row items-center">
-    
-    {/* Text Section */}
-    <motion.div 
-      className="w-full md:w-1/2 mb-12 md:mb-0"
-      initial={{ x: -50, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      transition={{ duration: 0.8, delay: 0.2 }}
-    >
-      <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight text-center md:text-left ${spaceGrotesk.className} mb-6`}>
-        Software Developer
-      </h1>
-      <motion.p 
-        className="text-white text-base sm:text-lg md:text-xl opacity-80 text-center md:text-left mb-8"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 0.8 }}
-        transition={{ duration: 0.6, delay: 0.6 }}
-      >
-        Hi, I&apos;m Harsh, Full-Stack Engineer specializing in high-performance web architectures
-      </motion.p>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-        className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4"
-      >
-        <motion.button
-          onClick={handleDownloadCV}
-          className="flex items-center gap-2 bg-yellow-500 text-black px-4 py-2 rounded-full hover:bg-yellow-400 transition-all"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <FaDownload />
-          Download CV
-        </motion.button>
-        <motion.button
-          onClick={() => router.push('/contact')}
-          className="px-6 py-3 border border-yellow-500 text-yellow-500 rounded-lg font-medium"
-          whileHover={{ y: -3, backgroundColor: "rgba(234, 179, 8, 0.1)" }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Contact Me
-        </motion.button>
-      </motion.div>
-    </motion.div>
+            {/* Main content - this hero section will appear inside the particle banner */}
+            <main className="container mx-auto px-6 py-16 md:py-24 relative z-10">
+              <div className="flex flex-col md:flex-row items-center">
+                {/* Text Section */}
+                <motion.div 
+                  className="w-full md:w-1/2 mb-12 md:mb-0"
+                  initial={{ x: -50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                >
+                  <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight text-center md:text-left ${spaceGrotesk.className} mb-6`}>
+                    Software Developer
+                  </h1>
+                  <motion.p 
+                    className="text-white text-base sm:text-lg md:text-xl opacity-80 text-center md:text-left mb-8"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 0.8 }}
+                    transition={{ duration: 0.6, delay: 0.6 }}
+                  >
+                    Hi, I'm Harsh, Full-Stack Engineer specializing in high-performance web architectures
+                  </motion.p>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.8 }}
+                    className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4"
+                  >
+                    <motion.button
+                      onClick={handleDownloadCV}
+                      className="flex items-center gap-2 bg-yellow-500 text-black px-4 py-2 rounded-full hover:bg-yellow-400 transition-all"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <FaDownload />
+                      Download CV
+                    </motion.button>
+                    <motion.button
+                      onClick={() => router.push('/contact')}
+                      className="px-6 py-3 border border-yellow-500 text-yellow-500 rounded-lg font-medium"
+                      whileHover={{ y: -3, backgroundColor: "rgba(234, 179, 8, 0.1)" }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      Contact Me
+                    </motion.button>
+                  </motion.div>
+                </motion.div>
 
-    {/* Image Section */}
-    <motion.div 
-      className="w-full md:w-1/2 mt-8 md:mt-0 relative flex justify-center"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.8, delay: 0.4 }}
-    >
-      <div className="relative w-64 sm:w-72 md:w-80 lg:w-96 aspect-[3/4] rounded-xl overflow-hidden">
-        <div className="w-full h-full bg-gray-800 bg-opacity-40 flex items-center justify-center border-2 border-dashed border-gray-600">
-          <span className="text-gray-400">Good Looking Guy</span>
-        </div>
-        <Image
-          src="/profile.jpg"
-          alt="Harsh"
-          fill
-          className="object-cover rounded-xl"
-        />
-      </div>
+                {/* Image Section */}
+                <motion.div 
+                  className="w-full md:w-1/2 mt-8 md:mt-0 relative flex justify-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                  <div className="relative w-64 sm:w-72 md:w-80 lg:w-96 aspect-[3/4] rounded-xl overflow-hidden">
+                    <div className="w-full h-full bg-gray-800 bg-opacity-40 flex items-center justify-center border-2 border-dashed border-gray-600">
+                      <span className="text-gray-400">Good Looking Guy</span>
+                    </div>
+                    <Image
+                      src="/profile.jpg"
+                      alt="Harsh"
+                      fill
+                      className="object-cover rounded-xl"
+                    />
+                  </div>
 
-      {/* Floating elements */}
-      <motion.div 
-        className="absolute -bottom-6 -left-6 w-16 h-16 bg-yellow-500 rounded-full opacity-20 blur-xl"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.2, 0.3, 0.2]
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
-      <motion.div 
-        className="absolute -top-6 -right-6 w-24 h-24 bg-purple-500 rounded-full opacity-20 blur-xl"
-        animate={{
-          scale: [1, 1.3, 1],
-          opacity: [0.2, 0.4, 0.2]
-        }}
-        transition={{
-          duration: 5,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1
-        }}
-      />
-    </motion.div>
-  </div>
-</main>
+                  {/* Floating elements */}
+                  <motion.div 
+                    className="absolute -bottom-6 -left-6 w-16 h-16 bg-yellow-500 rounded-full opacity-20 blur-xl"
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.3, 0.2] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  <motion.div 
+                    className="absolute -top-6 -right-6 w-24 h-24 bg-purple-500 rounded-full opacity-20 blur-xl"
+                    animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                  />
+                </motion.div>
+              </div>
+            </main>
 
 
 
@@ -238,6 +253,7 @@ export default function Home() {
             <section id="projects">
                 <PortfolioGrid/>
             </section>
+            <Skills />
             <LeetCodeDashboard/>
             
             <section id="certifications">

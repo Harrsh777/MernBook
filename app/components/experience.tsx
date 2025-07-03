@@ -44,14 +44,6 @@ const ExperienceTimeline = () => {
 
     {
       id: 4,
-      jobTitle: 'MERN Stack Developer (Freelance)',
-      company: 'Plotify',
-      description:
-        'Worked closely with the team to deliver polished user interfaces using React.js and integrated responsive features tailored to client needs.',
-      timeRange: 'Nov 2024 – Jan 2025',
-    },
-    {
-      id: 5,
       jobTitle: 'Full Stack Developer Intern',
       company: 'FlatPur',
       description:
@@ -101,7 +93,7 @@ const ExperienceTimeline = () => {
                 }`}
                 onMouseEnter={() => setActiveItem(exp.id)}
                 onMouseLeave={() => setActiveItem(null)}
-                onClick={() => setActiveItem(exp.id === activeItem ? null : exp.id)}
+                
               >
                 <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                   <div className={`flex-1 ${index % 2 === 0 ? 'md:order-2 md:text-right' : ''}`}>

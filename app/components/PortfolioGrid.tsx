@@ -21,7 +21,7 @@ const PortfolioGrid = () => {
       imageUrl: '/flatpur.png',
       link: 'https://www.flatpur.com',
       category: 'E-commerce',
-      description: 'A modern e-commerce platform with AI-powered recommendations'
+      description: 'A modern Real-Estate startup with AI-powered recommendations'
     },
     {
       id: 2,
@@ -45,7 +45,7 @@ const PortfolioGrid = () => {
       imageUrl: '/plotify.png',
       link: 'https://www.theplotify.com',
       category: 'Freelance',
-      description: 'Interactive data storytelling platform'
+      description: 'A modern Real-Estate listing platform'
     },
     {
       id: 5,
@@ -57,11 +57,11 @@ const PortfolioGrid = () => {
     },
     {
       id: 6,
-      title: 'Distributed Chat System',
-      imageUrl: '/placeholder-project-6.jpg',
-      link: 'https://github.com/Harrsh777/DistributedChatSystem',
+      title: 'Supply Chain Management',
+      imageUrl: '/sdpl.png',
+      link: 'https://sdpl.vercel.app/',
       category: 'Web Application',
-      description: 'Tailored solution for enterprise client'
+      description: 'Biggest Distributon and Supply Chain Management Firm in Uttar Pradesh'
     },
   ];
 
