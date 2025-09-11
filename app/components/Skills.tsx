@@ -10,7 +10,7 @@ import {
   SiNodedotjs, SiExpress, SiMongodb, SiPostgresql, SiGraphql, 
   SiAmazons3, SiDocker, SiGit, SiGithubactions, SiJest, SiTailwindcss, SiKubernetes,
   SiPython, SiTensorflow, SiPytorch, SiOpenai, SiHuggingface, SiPandas, 
-  SiNumpy, SiScikitlearn, SiJupyter, SiOpencv, SiFastapi, SiStreamlit,
+  SiNumpy, SiScikitlearn, SiJupyter, SiOpencv, SiFastapi,
   SiLangchain,
 } from 'react-icons/si';
 

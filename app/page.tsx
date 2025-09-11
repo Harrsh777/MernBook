@@ -291,7 +291,7 @@ export default function Home() {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.6 }}
                   >
-                    Hi, I'm <span className="text-yellow-400 font-semibold">Harsh</span>, a passionate developer specializing in 
+                    Hi, I&apos;m <span className="text-yellow-400 font-semibold">Harsh</span>, a passionate developer specializing in 
                     <span className="text-blue-400 font-semibold"> AI/ML integration</span>, 
                     <span className="text-purple-400 font-semibold"> full-stack development</span>, and 
                     <span className="text-green-400 font-semibold"> scalable cloud solutions</span>. 
@@ -326,7 +326,7 @@ export default function Home() {
                     >
                       <span className="relative z-10 flex items-center gap-2">
                         <span>📧</span>
-                        Let's Connect
+                        Let&apos;s Connect
                       </span>
                       <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </motion.button>
