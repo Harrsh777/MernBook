@@ -161,7 +161,9 @@ const LeetCodeDashboard = () => {
 
               <div className="w-full text-left space-y-3">
                 {[
-                  { icon: '💼', text: 'MyTripGoals | DevOps Intern' },
+                  { icon: '💼', text: 'BuildAiEngine | DevOps Intern' },
+                  { icon: '💼', text: 'MyTripGoal | Software Developer Intern' },
+                  { icon: '💼', text: 'MP Police | Cyber Security Intern' },
                   { icon: '📍', text: 'India' },
                   { icon: '🎓', text: 'Vellore Institute of Technology' }
                 ].map((item, i) => (

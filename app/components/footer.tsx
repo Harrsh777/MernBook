@@ -31,10 +31,10 @@ const TestimonialFooter = () => {
 
   // Social media links data
   const socialLinks = [
-    { icon: <FiTwitter />, name: 'twitter', url: '#' },
-    { icon: <FiGithub />, name: 'github', url: '#' },
-    { icon: <FiLinkedin />, name: 'linkedin', url: '#' },
-    { icon: <FiDribbble />, name: 'dribbble', url: '#' }
+    { icon: <FiTwitter />, name: 'twitter', url: 'https://twitter.com/Harrshh077' },
+    { icon: <FiGithub />, name: 'github', url: 'https://github.com/Harrsh777' },
+    { icon: <FiLinkedin />, name: 'linkedin', url: 'https://linkedin.com/in/harsh-srivastava-ai' },
+    { icon: <FiDribbble />, name: 'dribbble', url: 'https://dribbble.com/harshsrivastava' }
   ];
 
   // Footer navigation links
