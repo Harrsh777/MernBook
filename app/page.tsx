@@ -32,6 +32,79 @@ export default function Home() {
     const [init, setInit] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    // SEO Structured Data (JSON-LD)
+    const structuredData = {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Harsh Srivastava",
+        "jobTitle": "AWS Certified Solutions Architect",
+        "description": "Full-Stack Developer specializing in MERN Stack, TypeScript, Spring Boot, REST APIs, Microservices, Docker, Kubernetes, CI/CD, Jenkins, Git, System Design. Cyber Security Intern at MP Police, Full Stack Developer at BUILD AI ENGINE.",
+        "url": "https://www.harshsrivastava.in/",
+        "image": "https://www.harshsrivastava.in/profile.jpg",
+        "sameAs": [
+            "https://github.com/Harrsh777",
+            "https://www.linkedin.com/in/harrshh/",
+            "https://twitter.com/harrshh"
+        ],
+        "worksFor": [
+            {
+                "@type": "Organization",
+                "name": "MP Police",
+                "jobTitle": "Cyber Security Intern"
+            },
+            {
+                "@type": "Organization", 
+                "name": "BUILD AI ENGINE",
+                "jobTitle": "Full Stack Developer Intern"
+            },
+            {
+                "@type": "Organization",
+                "name": "MyTripGoal",
+                "jobTitle": "Software Engineer Intern"
+            }
+        ],
+        "alumniOf": {
+            "@type": "EducationalOrganization",
+            "name": "VIT (Vellore Institute of Technology)"
+        },
+        "award": [
+            "5× Hackathon Winner",
+            "AWS Certified Solutions Architect",
+            "Certified Kubernetes Administrator",
+            "GSoC 2024 Participant"
+        ],
+        "knowsAbout": [
+            "MERN Stack",
+            "TypeScript", 
+            "Spring Boot",
+            "REST APIs",
+            "Microservices",
+            "Docker",
+            "Kubernetes",
+            "CI/CD",
+            "Jenkins",
+            "Git",
+            "System Design",
+            "Cyber Security",
+            "AI/ML",
+            "DevOps",
+            "JavaScript",
+            "React",
+            "Node.js",
+            "MongoDB",
+            "MySQL",
+            "PostgreSQL"
+        ],
+        "hasOccupation": {
+            "@type": "Occupation",
+            "name": "Full-Stack Developer",
+            "occupationLocation": {
+                "@type": "Country",
+                "name": "India"
+            }
+        }
+    };
+
     // NEW: useEffect to initialize the particles engine on component mount
     useEffect(() => {
         initParticlesEngine(async (engine) => {
@@ -74,7 +147,15 @@ export default function Home() {
     };
 
     return (
-        <div className={`min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 overflow-hidden relative ${inter.className}`}>
+        <>
+            {/* SEO Structured Data */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(structuredData),
+                }}
+            />
+            <div className={`min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 overflow-hidden relative ${inter.className}`}>
             
             {/* Enhanced Particle Banner Container with Glassmorphism */}
             {init && (
@@ -272,10 +353,6 @@ export default function Home() {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.3 }}
                   >
-                    <span className="bg-gradient-to-r from-white via-blue-200 to-purple-300 bg-clip-text text-transparent">
-                      AI-Powered
-                    </span>
-                    <br />
                     <span className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
                       Full-Stack
                     </span>
@@ -283,6 +360,8 @@ export default function Home() {
                     <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
                       Developer
                     </span>
+                    <br />
+                    
                   </motion.h1>
 
                   <motion.p 
@@ -293,8 +372,11 @@ export default function Home() {
                   >
                     Hi, I&apos;m <span className="text-yellow-400 font-semibold">Harsh</span>, a passionate developer specializing in 
                     <span className="text-blue-400 font-semibold"> AI/ML integration</span>, 
-                    <span className="text-purple-400 font-semibold"> full-stack development</span>, and 
-                    <span className="text-green-400 font-semibold"> scalable cloud solutions</span>. 
+                    <span className="text-purple-400 font-semibold"> full-stack development</span>, 
+                    <span className="text-green-400 font-semibold"> MLOps</span>, and 
+                    <span className="text-cyan-400 font-semibold"> scalable cloud solutions</span>. 
+                    <span className="text-orange-400 font-semibold"> AWS Certified Solutions Architect</span> and 
+                    <span className="text-indigo-400 font-semibold"> Certified Kubernetes Administrator</span>. 
                     National hackathon winner, published author, and AI enthusiast building the future of web applications.
                   </motion.p>
 
@@ -520,9 +602,164 @@ export default function Home() {
                     </motion.div>
                 </div>
             </div>
+
+            {/* SEO-Optimized Experience Section */}
+            <section className="py-16 px-4 bg-gradient-to-r from-gray-900 via-purple-900 to-violet-900">
+                <div className="container mx-auto max-w-6xl">
+                    <motion.h2 
+                        className="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent"
+                        initial={{ y: 30, opacity: 0 }}
+                        whileInView={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.8 }}
+                        viewport={{ once: true }}
+                    >
+                        Professional Experience
+                    </motion.h2>
+                    
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {/* MP Police Experience */}
+                        <motion.div 
+                            className="bg-gray-800/50 backdrop-blur-sm border border-purple-500/30 rounded-xl p-6 hover:border-purple-400/50 transition-all duration-300"
+                            initial={{ y: 30, opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            transition={{ duration: 0.6, delay: 0.1 }}
+                            viewport={{ once: true }}
+                        >
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                                    <span className="text-white font-bold text-lg">MP</span>
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold text-white">Cyber Security Intern</h3>
+                                    <p className="text-gray-400">MP Police</p>
+                                    <p className="text-sm text-gray-500">Feb 2025 - Aug 2025</p>
+                                </div>
+                            </div>
+                            <ul className="space-y-2 text-gray-300">
+                                <li className="flex items-start gap-2">
+                                    <span className="text-blue-400 mt-1">•</span>
+                                    <span>Engineered Chrome extension using JavaScript and Transformer models for 95%+ accurate AI filtering</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-blue-400 mt-1">•</span>
+                                    <span>Developed real-time, cross-platform cyberbullying filters for Instagram, Twitter, achieving sub-100ms latency</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-blue-400 mt-1">•</span>
+                                    <span>Secured pre-seed funding and patent-pending status for SafeSurf Jr., validated by MP Police for child safety</span>
+                                </li>
+                            </ul>
+                        </motion.div>
+
+                        {/* BUILD AI ENGINE Experience */}
+                        <motion.div 
+                            className="bg-gray-800/50 backdrop-blur-sm border border-green-500/30 rounded-xl p-6 hover:border-green-400/50 transition-all duration-300"
+                            initial={{ y: 30, opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            viewport={{ once: true }}
+                        >
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
+                                    <span className="text-white font-bold text-lg">AI</span>
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold text-white">Full Stack Developer Intern</h3>
+                                    <p className="text-gray-400">BUILD AI ENGINE</p>
+                                    <p className="text-sm text-gray-500">Mar 2025 - Jun 2025</p>
+                                </div>
+                            </div>
+                            <ul className="space-y-2 text-gray-300">
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-400 mt-1">•</span>
+                                    <span>Designed workflow to test, compare, and rank AI models, improving speed and performance by 30%</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-400 mt-1">•</span>
+                                    <span>Built AI discovery tool to help users search, filter, and choose from 2,300 models on real-time benchmarks</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-400 mt-1">•</span>
+                                    <span>Led DevOps team to set up automated testing and deployment using Docker and Kubernetes</span>
+                                </li>
+                            </ul>
+                        </motion.div>
+
+                        {/* MyTripGoal Experience */}
+                        <motion.div 
+                            className="bg-gray-800/50 backdrop-blur-sm border border-orange-500/30 rounded-xl p-6 hover:border-orange-400/50 transition-all duration-300"
+                            initial={{ y: 30, opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            transition={{ duration: 0.6, delay: 0.3 }}
+                            viewport={{ once: true }}
+                        >
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center">
+                                    <span className="text-white font-bold text-lg">MT</span>
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold text-white">Software Engineer Intern</h3>
+                                    <p className="text-gray-400">MyTripGoal</p>
+                                    <p className="text-sm text-gray-500">Dec 2024 - Mar 2025</p>
+                                </div>
+                            </div>
+                            <ul className="space-y-2 text-gray-300">
+                                <li className="flex items-start gap-2">
+                                    <span className="text-orange-400 mt-1">•</span>
+                                    <span>Developed scalable backend services using Node.js and Express.js</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-orange-400 mt-1">•</span>
+                                    <span>Implemented RESTful APIs and microservices architecture</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-orange-400 mt-1">•</span>
+                                    <span>Collaborated with cross-functional teams to deliver high-quality software solutions</span>
+                                </li>
+                            </ul>
+                        </motion.div>
+                    </div>
+
+                    {/* Achievements Section */}
+                    <motion.div 
+                        className="mt-16 text-center"
+                        initial={{ y: 30, opacity: 0 }}
+                        whileInView={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.8, delay: 0.4 }}
+                        viewport={{ once: true }}
+                    >
+                        <h3 className="text-3xl font-bold mb-8 bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+                            Key Achievements & Certifications
+                        </h3>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div className="bg-gray-800/50 backdrop-blur-sm border border-yellow-500/30 rounded-lg p-4 hover:border-yellow-400/50 transition-all duration-300">
+                                <div className="text-3xl mb-2">🏆</div>
+                                <h4 className="font-bold text-white">5× Hackathon Winner</h4>
+                                <p className="text-gray-400 text-sm">National level competitions</p>
+                            </div>
+                            <div className="bg-gray-800/50 backdrop-blur-sm border border-blue-500/30 rounded-lg p-4 hover:border-blue-400/50 transition-all duration-300">
+                                <div className="text-3xl mb-2">☁️</div>
+                                <h4 className="font-bold text-white">AWS Certified Solutions Architect</h4>
+                                <p className="text-gray-400 text-sm">Professional certification</p>
+                            </div>
+                            <div className="bg-gray-800/50 backdrop-blur-sm border border-purple-500/30 rounded-lg p-4 hover:border-purple-400/50 transition-all duration-300">
+                                <div className="text-3xl mb-2">🐳</div>
+                                <h4 className="font-bold text-white">Certified Kubernetes Administrator</h4>
+                                <p className="text-gray-400 text-sm">Container orchestration expert</p>
+                            </div>
+                            <div className="bg-gray-800/50 backdrop-blur-sm border border-green-500/30 rounded-lg p-4 hover:border-green-400/50 transition-all duration-300">
+                                <div className="text-3xl mb-2">🎓</div>
+                                <h4 className="font-bold text-white">GSoC 2024 Participant</h4>
+                                <p className="text-gray-400 text-sm">Google Summer of Code</p>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
             
             <TestimonialFooter/>
         </div>
+        </>
     );
 }
 

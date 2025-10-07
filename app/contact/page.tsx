@@ -2,41 +2,49 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import supabase from '@/lib/supabase';
 import { Space_Grotesk } from 'next/font/google';
-import { FiArrowRight, FiCheck, FiX } from 'react-icons/fi';
+import { 
+  FiArrowRight, 
+  FiCheck, 
+  FiX, 
+  FiUser, 
+  FiMail, 
+  FiMessageSquare,
+  FiSend,
+  FiLoader
+} from 'react-icons/fi';
 
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'] });
 
 const serviceTags = [
-  'Mobile App',
-  'Web Design',
-  'Branding',
-  'UI/UX',
-  'Product Strategy',
-  'Development',
+  'Web Development',
+  'Mobile App Development',
+  'UI/UX Design',
+  'DevOps & Cloud',
+  'AI/ML Integration',
+  'System Design',
   'Consulting',
-  'Marketing',
+  'Full-Stack Development',
 ];
 
-export default function LetsTalkPage() {
-const [formData, setFormData] = useState({
-  name: '',
-  email: '',
-  company: '',
-  services: [] as string[],
-  message: '',
-});
+export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    company: '',
+    services: [] as string[],
+    message: '',
+  });
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
   const [hoveredService, setHoveredService] = useState<string | null>(null);
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-  const [isHoveringButton, setIsHoveringButton] = useState(false);
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
 
   // Floating particles effect
-  const particles = Array.from({ length: 15 }).map((_, i) => ({
+  const particles = Array.from({ length: 20 }).map((_, i) => ({
     id: i,
     size: Math.random() * 4 + 2,
     x: Math.random() * 100,
@@ -45,14 +53,27 @@ const [formData, setFormData] = useState({
     duration: Math.random() * 3 + 3
   }));
 
-  // Handle cursor position for interactive effects
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setCursorPosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  // Validation function
+  const validateStep = (step: number) => {
+    const newErrors: {[key: string]: string} = {};
+    
+    if (step === 1) {
+      if (!formData.name.trim()) {
+        newErrors.name = 'Name is required';
+      } else if (formData.name.trim().length < 2) {
+        newErrors.name = 'Name must be at least 2 characters';
+      }
+      
+      if (!formData.email.trim()) {
+        newErrors.email = 'Email is required';
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        newErrors.email = 'Please enter a valid email address';
+      }
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -60,34 +81,54 @@ const [formData, setFormData] = useState({
       ...prev,
       [name]: value,
     }));
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: '',
+      }));
+    }
   };
 
   const handleServiceToggle = (service: string) => {
-    setFormData(prev => {
-      if (prev.services.includes(service)) {
-        return {
-          ...prev,
-          services: prev.services.filter(s => s !== service),
-        };
-      } else {
-        return {
-          ...prev,
-          services: [...prev.services, service],
-        };
-      }
-    });
+    setFormData(prev => ({
+      ...prev,
+      services: prev.services.includes(service)
+        ? prev.services.filter(s => s !== service)
+        : [...prev.services, service],
+    }));
+  };
+
+  const nextStep = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep(prev => prev + 1);
+    }
+  };
+
+  const prevStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(prev => prev - 1);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateStep(currentStep)) {
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitError('');
 
     try {
-      if (!formData.name || !formData.email) {
-        throw new Error('Name and email are required');
-      }
+      // Simulate API call - replace with actual Supabase call
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
+      // For now, we'll just show success
+      // In production, replace this with your actual Supabase call:
+      /*
       const { data, error } = await supabase
         .from('idea_submissions')
         .insert([{
@@ -97,14 +138,14 @@ const [formData, setFormData] = useState({
           services: formData.services,
           message: formData.message,
           submitted_at: new Date().toISOString(),
-        }])
-        .select();
+        }]);
 
       if (error) throw error;
-      if (!data) throw new Error('No data returned from server');
+      */
 
       setSubmitSuccess(true);
       
+      // Reset form after 3 seconds
       setTimeout(() => {
         setFormData({
           name: '',
@@ -114,25 +155,25 @@ const [formData, setFormData] = useState({
           message: '',
         });
         setCurrentStep(1);
-      }, 3000);
+        setSubmitSuccess(false);
+      }, 5000);
+      
     } catch (err: unknown) {
-  console.error('Submission error:', err);
-  setSubmitError(
-    err instanceof Error 
-      ? err.message 
-      : 'Failed to submit. Please try again.'
-  );
-}}
-
-  const prevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(prev => prev - 1);
+      console.error('Submission error:', err);
+      setSubmitError(
+        err instanceof Error 
+          ? err.message 
+          : 'Failed to submit. Please try again.'
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  // Success screen
   if (submitSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black px-4 relative overflow-hidden">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 px-4 relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           {particles.map((particle) => (
             <motion.div
@@ -161,62 +202,67 @@ const [formData, setFormData] = useState({
         </div>
         
         <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-2xl bg-gray-900 rounded-2xl shadow-xl overflow-hidden border border-gray-800"
-      >
-          <div className="flex justify-center mb-6">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: 'spring' }}
-              className="w-20 h-20 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full flex items-center justify-center text-white"
-            >
-              <FiCheck className="h-8 w-8" />
-            </motion.div>
-          </div>
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-md bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-purple-500/30 p-8 text-center"
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+            className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white mx-auto mb-6"
+          >
+            <FiCheck className="h-10 w-10" />
+          </motion.div>
           
           <motion.h2 
-            initial={{ y: 10, opacity: 0 }}
+            initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className={`text-3xl font-bold mb-4 text-center text-white ${spaceGrotesk.className}`}
+            className={`text-3xl font-bold mb-4 text-white ${spaceGrotesk.className}`}
           >
             Message Sent!
           </motion.h2>
           
           <motion.p
-            initial={{ y: 10, opacity: 0 }}
+            initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="text-gray-400 mb-8 text-center"
+            className="text-gray-300 mb-8 leading-relaxed"
           >
-            We&apos;ve received your message and will get back to you within 24 hours.
+            Thank you for reaching out! I've received your message and will get back to you within 24 hours.
           </motion.p>
           
-          <motion.div
-            initial={{ y: 10, opacity: 0 }}
+          <motion.button
+            initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.8 }}
-            className="flex flex-col space-y-3"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => {
+              setSubmitSuccess(false);
+              setFormData({
+                name: '',
+                email: '',
+                company: '',
+                services: [],
+                message: '',
+              });
+              setCurrentStep(1);
+            }}
+            className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-300"
           >
-            <motion.button
-              whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(124, 58, 237, 0.5)" }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setSubmitSuccess(false)}
-              className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-medium"
-            >
-              Send Another Message
-            </motion.button>
-          </motion.div>
+            Send Another Message
+          </motion.button>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4 py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 flex items-center justify-center px-4 py-12 relative overflow-hidden">
+      {/* Background particles */}
       <div className="absolute inset-0 overflow-hidden">
         {particles.map((particle) => (
           <motion.div
@@ -233,7 +279,7 @@ const [formData, setFormData] = useState({
               repeat: Infinity,
               repeatType: 'loop'
             }}
-            className="absolute rounded-full bg-purple-500"
+            className="absolute rounded-full bg-purple-500/30"
             style={{
               width: `${particle.size}px`,
               height: `${particle.size}px`,
@@ -244,78 +290,84 @@ const [formData, setFormData] = useState({
         ))}
       </div>
 
-      <AnimatePresence>
-        {isHoveringButton && (
-          <motion.div
-            className="fixed pointer-events-none h-64 w-64 rounded-full bg-purple-900/20 backdrop-blur-sm z-0"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{
-              opacity: 1,
-              scale: 1,
-              x: cursorPosition.x - 128,
-              y: cursorPosition.y - 128
-            }}
-            exit={{ opacity: 0, scale: 0.5 }}
-            transition={{ type: 'spring', damping: 20, stiffness: 200 }}
-          />
-        )}
-      </AnimatePresence>
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-2xl bg-gray-900 rounded-2xl shadow-xl overflow-hidden border border-gray-800"
+        className="w-full max-w-4xl bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-purple-500/30"
       >
-        <div className="md:flex">
-          <div className="hidden md:block md:w-1/3 bg-gradient-to-b from-purple-900 to-gray-900 p-8 relative overflow-hidden">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="absolute inset-0 flex items-center justify-center opacity-10"
-            >
-            </motion.div>
+        <div className="flex flex-col lg:flex-row min-h-[600px]">
+          {/* Left sidebar */}
+          <div className="lg:w-1/3 bg-gradient-to-b from-purple-900/50 to-gray-900/50 p-8 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-transparent"></div>
             
-            <motion.div
-              initial={{ y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="relative z-10"
-            >
-              <h2 className={`text-2xl font-bold text-white mb-2 ${spaceGrotesk.className}`}>
-                Let&apos;s Build Together
-              </h2>
-              <p className="text-purple-200 mb-6">
-                Share your vision with us and we&apos;ll help bring it to life.
-              </p>
+            <div className="relative z-10">
+              <motion.div
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                <h2 className={`text-3xl font-bold text-white mb-4 ${spaceGrotesk.className}`}>
+                  Let's Build Together
+                </h2>
+                <p className="text-purple-200 mb-8 leading-relaxed">
+                  Share your vision with me and I'll help bring it to life with cutting-edge technology and innovative solutions.
+                </p>
+              </motion.div>
               
-              <div className="mt-12 space-y-4">
-                <div className="flex items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${currentStep >= 1 ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-400'}`}>
-                    1
-                  </div>
-                  <span className={`${currentStep >= 1 ? 'text-white font-medium' : 'text-gray-400'}`}>Basic Info</span>
-                </div>
-                
-                <div className="flex items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${currentStep >= 2 ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-400'}`}>
-                    2
-                  </div>
-                  <span className={`${currentStep >= 2 ? 'text-white font-medium' : 'text-gray-400'}`}>Services</span>
-                </div>
-                
-                <div className="flex items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${currentStep >= 3 ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-400'}`}>
-                    3
-                  </div>
-                  <span className={`${currentStep >= 3 ? 'text-white font-medium' : 'text-gray-400'}`}>Final Details</span>
-                </div>
+              {/* Progress indicator */}
+              <div className="space-y-4">
+                {[1, 2, 3].map((step) => (
+                  <motion.div
+                    key={step}
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 + step * 0.1 }}
+                    className="flex items-center"
+                  >
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-4 transition-all duration-300 ${
+                      currentStep >= step 
+                        ? 'bg-purple-600 text-white shadow-lg' 
+                        : 'bg-gray-700 text-gray-400'
+                    }`}>
+                      {currentStep > step ? (
+                        <FiCheck className="h-5 w-5" />
+                      ) : (
+                        <span className="font-semibold">{step}</span>
+                      )}
+                    </div>
+                    <span className={`font-medium transition-colors duration-300 ${
+                      currentStep >= step ? 'text-white' : 'text-gray-400'
+                    }`}>
+                      {step === 1 && 'Basic Information'}
+                      {step === 2 && 'Services & Requirements'}
+                      {step === 3 && 'Project Details'}
+                    </span>
+                  </motion.div>
+                ))}
               </div>
-            </motion.div>
+
+              {/* Contact info */}
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.8 }}
+                className="mt-12 space-y-4"
+              >
+                <div className="flex items-center text-gray-300">
+                  <FiMail className="h-5 w-5 mr-3 text-purple-400" />
+                  <span>harrshh077@gmail.com</span>
+                </div>
+                <div className="flex items-center text-gray-300">
+                  <FiUser className="h-5 w-5 mr-3 text-purple-400" />
+                  <span>Available for new opportunities</span>
+                </div>
+              </motion.div>
+            </div>
           </div>
 
-          <div className="md:w-2/3 p-8">
+          {/* Right form section */}
+          <div className="lg:w-2/3 p-8">
             <div className="mb-8">
               <motion.h1 
                 initial={{ y: -10, opacity: 0 }}
@@ -325,7 +377,7 @@ const [formData, setFormData] = useState({
               >
                 {currentStep === 1 && "Tell us about yourself"}
                 {currentStep === 2 && "What services do you need?"}
-                {currentStep === 3 && "Final details"}
+                {currentStep === 3 && "Project details & message"}
               </motion.h1>
               <motion.p
                 initial={{ y: -10, opacity: 0 }}
@@ -333,15 +385,14 @@ const [formData, setFormData] = useState({
                 transition={{ delay: 0.2 }}
                 className="text-gray-400"
               >
-                {currentStep === 1 && "We&apos;ll use this information to get in touch with you."}
-                {currentStep === 2 && "Select all that apply to your project."}
-                {currentStep === 3 && "Any final details you&apos;d like to share?"}
+                {currentStep === 1 && "Let's start with some basic information to get in touch."}
+                {currentStep === 2 && "Select the services that best match your project needs."}
+                {currentStep === 3 && "Share any additional details about your project."}
               </motion.p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <AnimatePresence mode="wait">
-                
                 {currentStep === 1 && (
                   <motion.div
                     key="step1"
@@ -349,62 +400,69 @@ const [formData, setFormData] = useState({
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: 20, opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="space-y-5"
+                    className="space-y-6"
                   >
-                    <div className="relative">
-                     <input
-  type="text"
-  id="name"
-  name="name"  // Must match the state key
-  value={formData.name}
-  onChange={handleInputChange}  // Verify this is working
-  required
-  className="peer h-12 w-full bg-gray-800 border-b border-gray-700 text-white placeholder-transparent focus:outline-none focus:border-purple-500"
-  placeholder=" "
-/>
-                      <label
-                        htmlFor="name"
-                        className="absolute left-0 -top-3.5 text-gray-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-purple-400 peer-focus:text-sm"
-                      >
-                        Your Name
-                      </label>
-                    </div>
+                    <div className="space-y-5">
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <FiUser className="h-5 w-5 text-gray-400" />
+                        </div>
+                        <input
+                          type="text"
+                          id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          className={`block w-full pl-10 pr-3 py-3 bg-gray-800/50 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
+                            errors.name ? 'border-red-500' : 'border-gray-600'
+                          }`}
+                          placeholder="Your full name"
+                        />
+                        {errors.name && (
+                          <p className="mt-1 text-sm text-red-400">{errors.name}</p>
+                        )}
+                      </div>
 
-                    <div className="relative">
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                        className="peer h-12 w-full bg-gray-800 border-b border-gray-700 text-white placeholder-transparent focus:outline-none focus:border-purple-500"
-                        placeholder=" "
-                      />
-                      <label
-                        htmlFor="email"
-                        className="absolute left-0 -top-3.5 text-gray-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-purple-400 peer-focus:text-sm"
-                      >
-                        Email Address
-                      </label>
-                    </div>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <FiMail className="h-5 w-5 text-gray-400" />
+                        </div>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          className={`block w-full pl-10 pr-3 py-3 bg-gray-800/50 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
+                            errors.email ? 'border-red-500' : 'border-gray-600'
+                          }`}
+                          placeholder="your.email@example.com"
+                        />
+                        {errors.email && (
+                          <p className="mt-1 text-sm text-red-400">{errors.email}</p>
+                        )}
+                      </div>
 
-                    <div className="relative">
-                      <input
-                        type="text"
-                        id="company"
-                        name="company"
-                        value={formData.company}
-                        onChange={handleInputChange}
-                        className="peer h-12 w-full bg-gray-800 border-b border-gray-700 text-white placeholder-transparent focus:outline-none focus:border-purple-500"
-                        placeholder=" "
-                      />
-                      <label
-                        htmlFor="company"
-                        className="absolute left-0 -top-3.5 text-gray-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-purple-400 peer-focus:text-sm"
-                      >
-                        Company (Optional)
-                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          {/* Replace FiBuilding with a valid icon or remove if not imported */}
+                          {/* <FiBuilding className="h-5 w-5 text-gray-400" /> */}
+                          <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <rect x="3" y="7" width="7" height="13" rx="2" />
+                            <rect x="14" y="3" width="7" height="17" rx="2" />
+                            <path d="M17 17v2M6.5 17v2" />
+                          </svg>
+                        </div>
+                        <input
+                          type="text"
+                          id="company"
+                          name="company"
+                          value={formData.company}
+                          onChange={handleInputChange}
+                          className="block w-full pl-10 pr-3 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                          placeholder="Company name (optional)"
+                        />
+                      </div>
                     </div>
                   </motion.div>
                 )}
@@ -417,41 +475,33 @@ const [formData, setFormData] = useState({
                     exit={{ x: 20, opacity: 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-4">
                       {serviceTags.map(service => (
-                        <motion.div
+                        <motion.button
                           key={service}
-                          whileHover={{ scale: 1.03 }}
-                          whileTap={{ scale: 0.97 }}
+                          type="button"
+                          onClick={() => handleServiceToggle(service)}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
                           onMouseEnter={() => setHoveredService(service)}
                           onMouseLeave={() => setHoveredService(null)}
-                          className="relative"
+                          className={`relative p-4 rounded-lg text-sm font-medium transition-all duration-300 ${
+                            formData.services.includes(service)
+                              ? 'bg-purple-600 text-white border-2 border-purple-400 shadow-lg'
+                              : 'bg-gray-800/50 text-gray-300 border-2 border-gray-600 hover:border-purple-400 hover:bg-gray-700/50'
+                          }`}
                         >
-                          <button
-                            type="button"
-                            onClick={() => handleServiceToggle(service)}
-                            className={`w-full px-4 py-3 rounded-lg text-sm border transition-all ${
-                              formData.services.includes(service)
-                                ? 'bg-purple-600 text-white border-purple-600 shadow-md'
-                                : 'bg-gray-800 text-gray-300 border-gray-700 hover:border-purple-400'
-                            } ${
-                              hoveredService === service && !formData.services.includes(service)
-                                ? 'shadow-md border-purple-400'
-                                : ''
-                            }`}
-                          >
-                            {service}
-                          </button>
-                          {hoveredService === service && (
+                          {service}
+                          {formData.services.includes(service) && (
                             <motion.div
-                              layoutId="serviceHover"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              className="absolute -bottom-2 left-0 right-0 h-1 bg-purple-400/30 rounded-full mx-auto"
-                              style={{ width: '80%' }}
-                            />
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
+                            >
+                              <FiCheck className="h-3 w-3 text-white" />
+                            </motion.div>
                           )}
-                        </motion.div>
+                        </motion.button>
                       ))}
                     </div>
                   </motion.div>
@@ -464,38 +514,36 @@ const [formData, setFormData] = useState({
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: 20, opacity: 0 }}
                     transition={{ duration: 0.3 }}
+                    className="space-y-6"
                   >
                     <div className="relative">
+                      <div className="absolute top-3 left-3">
+                        <FiMessageSquare className="h-5 w-5 text-gray-400" />
+                      </div>
                       <textarea
                         id="message"
                         name="message"
                         value={formData.message}
                         onChange={handleInputChange}
-                        rows={4}
-                        className="peer h-32 w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                        placeholder=" "
+                        rows={6}
+                        className="block w-full pl-10 pr-3 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 resize-none"
+                        placeholder="Tell me about your project, goals, timeline, or any specific requirements..."
                       />
-                      <label
-                        htmlFor="message"
-                        className="absolute left-3 -top-3 bg-gray-900 px-1 text-gray-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 peer-focus:-top-3 peer-focus:text-purple-400 peer-focus:text-sm"
-                      >
-                        Project Details (Optional)
-                      </label>
                     </div>
 
                     {formData.services.length > 0 && (
-                      <div className="mt-4">
-                        <h4 className="text-sm font-medium text-gray-300 mb-2">Selected Services:</h4>
+                      <div className="bg-gray-800/30 rounded-lg p-4">
+                        <h4 className="text-sm font-medium text-gray-300 mb-3">Selected Services:</h4>
                         <div className="flex flex-wrap gap-2">
                           {formData.services.map(service => (
-                            <motion.div
+                            <motion.span
                               key={service}
                               initial={{ scale: 0.8, opacity: 0 }}
                               animate={{ scale: 1, opacity: 1 }}
-                              className="px-3 py-1 bg-purple-900/50 text-purple-300 text-xs rounded-full border border-purple-800"
+                              className="px-3 py-1 bg-purple-900/50 text-purple-300 text-sm rounded-full border border-purple-800"
                             >
                               {service}
-                            </motion.div>
+                            </motion.span>
                           ))}
                         </div>
                       </div>
@@ -508,98 +556,66 @@ const [formData, setFormData] = useState({
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="p-3 bg-red-900/20 text-red-400 text-sm rounded-lg flex items-start border border-red-900/50"
+                  className="p-4 bg-red-900/20 text-red-400 text-sm rounded-lg flex items-start border border-red-900/50"
                 >
-                  <FiX className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
+                  <FiX className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
                   <div>{submitError}</div>
                 </motion.div>
               )}
 
-              <div className="flex justify-between pt-4">
-                {currentStep > 1 ? (
+              {/* Navigation buttons */}
+              <div className="flex justify-between pt-6">
+                <motion.button
+                  type="button"
+                  onClick={prevStep}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+                    currentStep > 1
+                      ? 'text-purple-400 hover:bg-gray-800/50'
+                      : 'invisible'
+                  }`}
+                >
+                  Back
+                </motion.button>
+
+                {currentStep < 3 ? (
                   <motion.button
                     type="button"
-                    onClick={prevStep}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="px-6 py-2 rounded-lg font-medium text-purple-400 hover:bg-gray-800 transition-colors"
+                    onClick={nextStep}
+                    disabled={!formData.name.trim() || !formData.email.trim()}
+                    whileHover={formData.name.trim() && formData.email.trim() ? { scale: 1.02 } : {}}
+                    whileTap={formData.name.trim() && formData.email.trim() ? { scale: 0.98 } : {}}
+                    className={`px-6 py-3 rounded-lg font-medium flex items-center transition-all duration-300 ${
+                      !formData.name.trim() || !formData.email.trim()
+                        ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 shadow-lg'
+                    }`}
                   >
-                    Back
+                    Next <FiArrowRight className="ml-2" />
                   </motion.button>
                 ) : (
-                  <div></div>
-                )}
-
-             {currentStep < 3 ? (
-  <motion.button
-    type="button"
-    onClick={() => {
-      if (formData.name.trim() && formData.email.trim()) {
-        setCurrentStep(prev => prev + 1);
-      }
-    }}
-    disabled={!formData.name.trim() || !formData.email.trim()}
-    whileHover={
-      formData.name.trim() && formData.email.trim()
-        ? { scale: 1.02 }
-        : {}
-    }
-    whileTap={
-      formData.name.trim() && formData.email.trim()
-        ? { scale: 0.98 }
-        : {}
-    }
-    className={`px-6 py-3 rounded-lg font-medium flex items-center ${
-      !formData.name.trim() || !formData.email.trim()
-        ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-        : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700'
-    }`}
-  >
-    Next <FiArrowRight className="ml-2" />
-  </motion.button>
-) : (
                   <motion.button
                     type="submit"
                     disabled={isSubmitting}
-                    whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(124, 58, 237, 0.5)" }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`px-6 py-3 rounded-lg font-medium ${
+                    whileHover={!isSubmitting ? { scale: 1.02 } : {}}
+                    whileTap={!isSubmitting ? { scale: 0.98 } : {}}
+                    className={`px-6 py-3 rounded-lg font-medium flex items-center transition-all duration-300 ${
                       isSubmitting
                         ? 'bg-purple-800 text-white cursor-not-allowed'
-                        : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700'
+                        : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 shadow-lg'
                     }`}
-                    onMouseEnter={() => setIsHoveringButton(true)}
-                    onMouseLeave={() => setIsHoveringButton(false)}
                   >
                     {isSubmitting ? (
-                      <div className="flex items-center justify-center">
-                        <svg
-                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
+                      <>
+                        <FiLoader className="animate-spin mr-2" />
                         Sending...
-                      </div>
+                      </>
                     ) : (
-                      <div className="flex items-center">
-                        <span>Send Message</span>
-                        <FiArrowRight className="ml-2" />
-                      </div>
+                      <>
+                        <FiSend className="mr-2" />
+                        Send Message
+                      </>
                     )}
                   </motion.button>
                 )}
