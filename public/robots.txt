@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://www.harshsrivastava.in/sitemap/sitemap.xml
+Sitemap: https://www.harshsrivastava.in/sitemap.xml
 
 # Crawl-delay
 Crawl-delay: 1
