@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Space_Grotesk } from 'next/font/google';
 import { 
@@ -40,7 +40,6 @@ export default function ContactPage() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
-  const [hoveredService, setHoveredService] = useState<string | null>(null);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
 
   // Floating particles effect
@@ -231,7 +230,7 @@ export default function ContactPage() {
             transition={{ delay: 0.6 }}
             className="text-gray-300 mb-8 leading-relaxed"
           >
-            Thank you for reaching out! I've received your message and will get back to you within 24 hours.
+            Thank you for reaching out! I&apos;ve received your message and will get back to you within 24 hours.
           </motion.p>
           
           <motion.button
@@ -308,10 +307,10 @@ export default function ContactPage() {
                 transition={{ delay: 0.2 }}
               >
                 <h2 className={`text-3xl font-bold text-white mb-4 ${spaceGrotesk.className}`}>
-                  Let's Build Together
+                  Let&apos;s Build Together
                 </h2>
                 <p className="text-purple-200 mb-8 leading-relaxed">
-                  Share your vision with me and I'll help bring it to life with cutting-edge technology and innovative solutions.
+                  Share your vision with me and I&apos;ll help bring it to life with cutting-edge technology and innovative solutions.
                 </p>
               </motion.div>
               
@@ -483,8 +482,6 @@ export default function ContactPage() {
                           onClick={() => handleServiceToggle(service)}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          onMouseEnter={() => setHoveredService(service)}
-                          onMouseLeave={() => setHoveredService(null)}
                           className={`relative p-4 rounded-lg text-sm font-medium transition-all duration-300 ${
                             formData.services.includes(service)
                               ? 'bg-purple-600 text-white border-2 border-purple-400 shadow-lg'
