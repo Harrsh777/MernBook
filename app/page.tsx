@@ -102,7 +102,28 @@ export default function Home() {
                 "@type": "Country",
                 "name": "India"
             }
-        }
+        },
+        "birthPlace": {
+            "@type": "Place",
+            "name": "India"
+        },
+        "nationality": "Indian",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "India"
+        },
+        "hasCredential": [
+            {
+                "@type": "EducationalOccupationalCredential",
+                "name": "AWS Certified Solutions Architect",
+                "credentialCategory": "Professional Certification"
+            },
+            {
+                "@type": "EducationalOccupationalCredential", 
+                "name": "Certified Kubernetes Administrator",
+                "credentialCategory": "Professional Certification"
+            }
+        ]
     };
 
     // NEW: useEffect to initialize the particles engine on component mount
@@ -118,20 +139,24 @@ export default function Home() {
     const particleBannerHeight = '23cm'
 
     const handleScroll = (distance: number) => {
-        window.scrollBy({
-            top: distance,
-            behavior: 'smooth'
-        });
+        if (typeof window !== 'undefined') {
+            window.scrollBy({
+                top: distance,
+                behavior: 'smooth'
+            });
+        }
     };
 
     const handleDownloadCV = () => {
-        const cvUrl = '/Harsh_Resume.pdf';
-        const link = document.createElement('a');
-        link.href = cvUrl;
-        link.download = 'Harsh_Resume.pdf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+            const cvUrl = '/Harsh_Resume.pdf';
+            const link = document.createElement('a');
+            link.href = cvUrl;
+            link.download = 'Harsh_Resume.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     };
 
     const backgroundTextVariants = {
@@ -235,6 +260,8 @@ export default function Home() {
                 </motion.div>
                 <div className="hidden md:flex space-x-6 items-center">
                     {[
+                        { name: 'Resume', action: () => router.push('/resume'), icon: '📄' },
+                        { name: 'Job Scraper', action: () => router.push('/dashboard'), icon: '🚀' },
                         { name: 'Projects', action: () => handleScroll(1800), icon: '💼' },
                         { name: 'Skills', action: () => handleScroll(2500), icon: '⚡' },
                         { name: 'Certifications', action: () => handleScroll(4700), icon: '🏆' },
@@ -293,6 +320,8 @@ export default function Home() {
                     >
                         <div className="container mx-auto px-6 py-4 space-y-4">
                             {[
+                                { name: 'Resume', action: () => { router.push('/resume'); setIsMobileMenuOpen(false); }, icon: '📄' },
+                                { name: 'Job Scraper', action: () => { router.push('/dashboard'); setIsMobileMenuOpen(false); }, icon: '🚀' },
                                 { name: 'Projects', action: () => { handleScroll(1800); setIsMobileMenuOpen(false); }, icon: '💼' },
                                 { name: 'Skills', action: () => { handleScroll(2500); setIsMobileMenuOpen(false); }, icon: '⚡' },
                                 { name: 'Certifications', action: () => { handleScroll(4700); setIsMobileMenuOpen(false); }, icon: '🏆' },
@@ -330,12 +359,12 @@ export default function Home() {
             <main className="container mx-auto px-4 py-12 md:py-16 relative z-10">
               <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
                 {/* Enhanced Text Section */}
-                <motion.div 
-                  className="w-full lg:w-1/2 mb-6 lg:mb-0"
-                  initial={{ x: -50, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                >
+                  <motion.div 
+                    className="w-full lg:w-1/2 mb-6 lg:mb-0 px-4 sm:px-0"
+                    initial={{ x: -50, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                  >
                   {/* Status Badge */}
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -348,7 +377,7 @@ export default function Home() {
                   </motion.div>
 
                   <motion.h1 
-                    className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-center lg:text-left mb-4 ${spaceGrotesk.className}`}
+                    className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight text-center lg:text-left mb-4 ${spaceGrotesk.className}`}
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.3 }}
@@ -365,7 +394,7 @@ export default function Home() {
                   </motion.h1>
 
                   <motion.p 
-                    className="text-gray-300 text-base sm:text-lg md:text-xl text-center lg:text-left mb-8 leading-relaxed"
+                    className="text-gray-300 text-sm sm:text-base md:text-lg lg:text-xl text-center lg:text-left mb-8 leading-relaxed"
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.6 }}
@@ -385,7 +414,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.8 }}
-                    className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-8"
+                    className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-8"
                   >
                     <motion.button
                       onClick={handleDownloadCV}
@@ -438,14 +467,14 @@ export default function Home() {
 
                 {/* Enhanced Image Section with 3D Effects */}
                 <motion.div 
-                  className="w-full lg:w-1/2 mt-4 lg:mt-0 relative flex justify-center"
+                  className="w-full lg:w-1/2 mt-4 lg:mt-0 relative flex justify-center px-4 sm:px-0"
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
                 >
                   <div className="relative group">
                     {/* Main Image Container with Glassmorphism */}
-                    <div className="relative w-[12cm] h-[14cm] rounded-3xl overflow-hidden bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 shadow-2xl">
+                    <div className="relative w-[280px] h-[350px] sm:w-[320px] sm:h-[400px] md:w-[360px] md:h-[450px] lg:w-[400px] lg:h-[500px] xl:w-[12cm] xl:h-[14cm] rounded-3xl overflow-hidden bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 shadow-2xl">
                       <Image
                         src="/profile.jpg"
                         alt="Harsh - AI/ML Developer"
@@ -603,160 +632,6 @@ export default function Home() {
                 </div>
             </div>
 
-            {/* SEO-Optimized Experience Section */}
-            <section className="py-16 px-4 bg-gradient-to-r from-gray-900 via-purple-900 to-violet-900">
-                <div className="container mx-auto max-w-6xl">
-                    <motion.h2 
-                        className="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent"
-                        initial={{ y: 30, opacity: 0 }}
-                        whileInView={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.8 }}
-                        viewport={{ once: true }}
-                    >
-                        Professional Experience
-                    </motion.h2>
-                    
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {/* MP Police Experience */}
-                        <motion.div 
-                            className="bg-gray-800/50 backdrop-blur-sm border border-purple-500/30 rounded-xl p-6 hover:border-purple-400/50 transition-all duration-300"
-                            initial={{ y: 30, opacity: 0 }}
-                            whileInView={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.6, delay: 0.1 }}
-                            viewport={{ once: true }}
-                        >
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                                    <span className="text-white font-bold text-lg">MP</span>
-                                </div>
-                                <div>
-                                    <h3 className="text-xl font-bold text-white">Cyber Security Intern</h3>
-                                    <p className="text-gray-400">MP Police</p>
-                                    <p className="text-sm text-gray-500">Feb 2025 - Aug 2025</p>
-                                </div>
-                            </div>
-                            <ul className="space-y-2 text-gray-300">
-                                <li className="flex items-start gap-2">
-                                    <span className="text-blue-400 mt-1">•</span>
-                                    <span>Engineered Chrome extension using JavaScript and Transformer models for 95%+ accurate AI filtering</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <span className="text-blue-400 mt-1">•</span>
-                                    <span>Developed real-time, cross-platform cyberbullying filters for Instagram, Twitter, achieving sub-100ms latency</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <span className="text-blue-400 mt-1">•</span>
-                                    <span>Secured pre-seed funding and patent-pending status for SafeSurf Jr., validated by MP Police for child safety</span>
-                                </li>
-                            </ul>
-                        </motion.div>
-
-                        {/* BUILD AI ENGINE Experience */}
-                        <motion.div 
-                            className="bg-gray-800/50 backdrop-blur-sm border border-green-500/30 rounded-xl p-6 hover:border-green-400/50 transition-all duration-300"
-                            initial={{ y: 30, opacity: 0 }}
-                            whileInView={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                            viewport={{ once: true }}
-                        >
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
-                                    <span className="text-white font-bold text-lg">AI</span>
-                                </div>
-                                <div>
-                                    <h3 className="text-xl font-bold text-white">Full Stack Developer Intern</h3>
-                                    <p className="text-gray-400">BUILD AI ENGINE</p>
-                                    <p className="text-sm text-gray-500">Mar 2025 - Jun 2025</p>
-                                </div>
-                            </div>
-                            <ul className="space-y-2 text-gray-300">
-                                <li className="flex items-start gap-2">
-                                    <span className="text-green-400 mt-1">•</span>
-                                    <span>Designed workflow to test, compare, and rank AI models, improving speed and performance by 30%</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <span className="text-green-400 mt-1">•</span>
-                                    <span>Built AI discovery tool to help users search, filter, and choose from 2,300 models on real-time benchmarks</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <span className="text-green-400 mt-1">•</span>
-                                    <span>Led DevOps team to set up automated testing and deployment using Docker and Kubernetes</span>
-                                </li>
-                            </ul>
-                        </motion.div>
-
-                        {/* MyTripGoal Experience */}
-                        <motion.div 
-                            className="bg-gray-800/50 backdrop-blur-sm border border-orange-500/30 rounded-xl p-6 hover:border-orange-400/50 transition-all duration-300"
-                            initial={{ y: 30, opacity: 0 }}
-                            whileInView={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.6, delay: 0.3 }}
-                            viewport={{ once: true }}
-                        >
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center">
-                                    <span className="text-white font-bold text-lg">MT</span>
-                                </div>
-                                <div>
-                                    <h3 className="text-xl font-bold text-white">Software Engineer Intern</h3>
-                                    <p className="text-gray-400">MyTripGoal</p>
-                                    <p className="text-sm text-gray-500">Dec 2024 - Mar 2025</p>
-                                </div>
-                            </div>
-                            <ul className="space-y-2 text-gray-300">
-                                <li className="flex items-start gap-2">
-                                    <span className="text-orange-400 mt-1">•</span>
-                                    <span>Developed scalable backend services using Node.js and Express.js</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <span className="text-orange-400 mt-1">•</span>
-                                    <span>Implemented RESTful APIs and microservices architecture</span>
-                                </li>
-                                <li className="flex items-start gap-2">
-                                    <span className="text-orange-400 mt-1">•</span>
-                                    <span>Collaborated with cross-functional teams to deliver high-quality software solutions</span>
-                                </li>
-                            </ul>
-                        </motion.div>
-                    </div>
-
-                    {/* Achievements Section */}
-                    <motion.div 
-                        className="mt-16 text-center"
-                        initial={{ y: 30, opacity: 0 }}
-                        whileInView={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
-                        viewport={{ once: true }}
-                    >
-                        <h3 className="text-3xl font-bold mb-8 bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                            Key Achievements & Certifications
-                        </h3>
-                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <div className="bg-gray-800/50 backdrop-blur-sm border border-yellow-500/30 rounded-lg p-4 hover:border-yellow-400/50 transition-all duration-300">
-                                <div className="text-3xl mb-2">🏆</div>
-                                <h4 className="font-bold text-white">5× Hackathon Winner</h4>
-                                <p className="text-gray-400 text-sm">National level competitions</p>
-                            </div>
-                            <div className="bg-gray-800/50 backdrop-blur-sm border border-blue-500/30 rounded-lg p-4 hover:border-blue-400/50 transition-all duration-300">
-                                <div className="text-3xl mb-2">☁️</div>
-                                <h4 className="font-bold text-white">AWS Certified Solutions Architect</h4>
-                                <p className="text-gray-400 text-sm">Professional certification</p>
-                            </div>
-                            <div className="bg-gray-800/50 backdrop-blur-sm border border-purple-500/30 rounded-lg p-4 hover:border-purple-400/50 transition-all duration-300">
-                                <div className="text-3xl mb-2">🐳</div>
-                                <h4 className="font-bold text-white">Certified Kubernetes Administrator</h4>
-                                <p className="text-gray-400 text-sm">Container orchestration expert</p>
-                            </div>
-                            <div className="bg-gray-800/50 backdrop-blur-sm border border-green-500/30 rounded-lg p-4 hover:border-green-400/50 transition-all duration-300">
-                                <div className="text-3xl mb-2">🎓</div>
-                                <h4 className="font-bold text-white">GSoC 2024 Participant</h4>
-                                <p className="text-gray-400 text-sm">Google Summer of Code</p>
-                            </div>
-                        </div>
-                    </motion.div>
-                </div>
-            </section>
-            
             <TestimonialFooter/>
         </div>
         </>
