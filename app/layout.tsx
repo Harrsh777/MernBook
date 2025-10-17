@@ -74,9 +74,9 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code', // Add your actual verification code
-    yandex: 'your-yandex-verification-code', // Add if you have one
-    yahoo: 'your-yahoo-verification-code', // Add if you have one
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || '',
+    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION || '',
+    yahoo: process.env.NEXT_PUBLIC_YAHOO_VERIFICATION || '',
   },
   category: 'technology',
 };
