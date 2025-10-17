@@ -1,7 +1,7 @@
 // app/page.tsx
 "use client"
 
-import type { Metadata } from 'next';
+// Removed unused Metadata import to satisfy ESLint
 
 // NEW: Import hooks and particle engine dependencies
 import { useEffect, useState } from 'react';

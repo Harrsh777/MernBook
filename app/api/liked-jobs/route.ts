@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // Fallback in-memory storage for demo purposes
-let likedJobsStorage: any[] = [];
+interface LikedJobMemory {
+  id: string;
+  job_id: string;
+  liked_at: string;
+}
+
+let likedJobsStorage: LikedJobMemory[] = [];
 
 // Check if Supabase is configured
 const isSupabaseConfigured = () => {

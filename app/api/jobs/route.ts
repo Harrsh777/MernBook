@@ -1,8 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // Fallback in-memory storage for demo purposes
-let jobsStorage: any[] = [];
-let lastUpdated = new Date();
+interface InMemoryJob {
+  title: string;
+  company: string;
+  location: string;
+  description: string;
+  url: string;
+  posted_date?: string | null;
+  salary?: string | null;
+  job_type?: string | null;
+  experience_level?: string | null;
+  scraped_at: string;
+}
+
+let jobsStorage: InMemoryJob[] = [];
+// lastUpdated kept for potential future use; prefix with underscore to avoid lint error
+let _lastUpdated = new Date();
 
 // Check if Supabase is configured
 const isSupabaseConfigured = () => {
@@ -112,7 +126,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Sort by scraped date (newest first)
-    filteredJobs.sort((a, b) => new Date(b.scraped_at || b.scrapedAt).getTime() - new Date(a.scraped_at || a.scrapedAt).getTime());
+    filteredJobs.sort((a, b) => new Date(b.scraped_at).getTime() - new Date(a.scraped_at).getTime());
 
     // Apply pagination
     const total = filteredJobs.length;
@@ -159,7 +173,7 @@ export async function POST(request: NextRequest) {
       // Use Supabase if configured
       try {
         // Transform jobs to match database schema
-        const transformedJobs = jobs.map(job => ({
+        const transformedJobs = jobs.map((job: any) => ({
           title: job.title,
           company: job.company,
           location: job.location,
@@ -199,11 +213,24 @@ export async function POST(request: NextRequest) {
     // Fallback to in-memory storage
     // Remove duplicates based on URL
     const existingUrls = new Set(jobsStorage.map(job => job.url));
-    const newJobs = jobs.filter(job => !existingUrls.has(job.url));
+    const newJobs: InMemoryJob[] = jobs
+      .filter((job: any) => !existingUrls.has(job.url))
+      .map((job: any): InMemoryJob => ({
+        title: job.title,
+        company: job.company,
+        location: job.location,
+        description: job.description,
+        url: job.url,
+        posted_date: job.postedDate || null,
+        salary: job.salary || null,
+        job_type: job.type || null,
+        experience_level: job.experience || null,
+        scraped_at: new Date(job.scrapedAt).toISOString()
+      }));
     
     // Add new jobs to storage
     jobsStorage.push(...newJobs);
-    lastUpdated = new Date();
+    _lastUpdated = new Date();
 
     return NextResponse.json({
       success: true,

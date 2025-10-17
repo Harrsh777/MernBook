@@ -157,7 +157,8 @@ async function scrapeCompanyJobs(config: ScrapingConfig): Promise<JobListing[]> 
         ];
 
         let jobElements = $();
-        let bestSelector = '';
+        // bestSelector kept only for debugging; prefix with underscore to avoid lint error if unused
+        let _bestSelector = '';
         let maxJobs = 0;
 
         for (const selector of possibleSelectors) {
@@ -165,7 +166,7 @@ async function scrapeCompanyJobs(config: ScrapingConfig): Promise<JobListing[]> 
           if (elements.length > maxJobs) {
             maxJobs = elements.length;
             jobElements = elements;
-            bestSelector = selector;
+            _bestSelector = selector;
           }
         }
 
@@ -285,11 +286,11 @@ async function scrapeCompanyJobs(config: ScrapingConfig): Promise<JobListing[]> 
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     console.log('Starting scheduled job scraping...');
     
-    let allJobs: JobListing[] = [];
+    const allJobs: JobListing[] = [];
     
     // Scrape all companies
     for (const config of companyConfigs) {

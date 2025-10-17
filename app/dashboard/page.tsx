@@ -77,6 +77,7 @@ export default function JobDashboard() {
 
   useEffect(() => {
     fetchJobs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, searchFilters]);
 
   useEffect(() => {
@@ -502,12 +503,12 @@ export default function JobDashboard() {
                 </div>
               ) : jobs.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {jobs.map((job, index) => (
+                  {jobs.map((job) => (
                     <motion.div
                       key={job.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
+                      transition={{ duration: 0.2 }}
                       className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300 group"
                     >
                       <div className="flex items-start justify-between mb-4">

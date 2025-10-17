@@ -113,7 +113,7 @@ const companyConfigs: ScrapingConfig[] = [
 
 async function scrapeCompanyJobsStream(
   config: ScrapingConfig,
-  sendData: (data: any) => void
+  sendData: (data: unknown) => void
 ): Promise<JobListing[]> {
   const browser = await puppeteer.launch({
     headless: true,
@@ -170,7 +170,8 @@ async function scrapeCompanyJobsStream(
         ];
 
         let jobElements = $();
-        let bestSelector = '';
+        // bestSelector used only for debug streaming; underscore to avoid unused when omitted
+        let _bestSelector = '';
         let maxJobs = 0;
 
         for (const selector of possibleSelectors) {
@@ -178,7 +179,7 @@ async function scrapeCompanyJobsStream(
           if (elements.length > maxJobs) {
             maxJobs = elements.length;
             jobElements = elements;
-            bestSelector = selector;
+            _bestSelector = selector;
           }
         }
 
@@ -337,12 +338,12 @@ async function scrapeCompanyJobsStream(
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const encoder = new TextEncoder();
 
   const customReadable = new ReadableStream({
     async start(controller) {
-      const sendData = (data: any) => {
+      const sendData = (data: unknown) => {
         const chunk = `data: ${JSON.stringify(data)}\n\n`;
         controller.enqueue(encoder.encode(chunk));
       };

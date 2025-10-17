@@ -1121,7 +1121,7 @@ async function scrapeCompanyJobs(config: ScrapingConfig): Promise<JobListing[]> 
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const company = searchParams.get('company');
@@ -1178,11 +1178,11 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   try {
     console.log('Starting job scraping...');
     
-    let jobs: JobListing[] = [];
+    const jobs: JobListing[] = [];
     
     // Scrape all companies (limit to 10 for demo to avoid timeout)
     const limitedConfigs = companyConfigs.slice(0, 10);

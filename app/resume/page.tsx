@@ -196,7 +196,7 @@ export default function ResumePage() {
                 transition={{ delay: 0.4 }}
               >
                 <p className="text-green-300 text-center font-medium text-sm md:text-base">
-                  💡 <span className="italic">"If I were you, I would hire this guy immediately!"</span> 😉
+                  💡 <span className="italic">&quot;If I were you, I would hire this guy immediately!&quot;</span> 😉
                 </p>
               </motion.div>
             </motion.div>
