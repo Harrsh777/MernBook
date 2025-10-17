@@ -266,7 +266,7 @@ export default function Home() {
                         { name: 'Projects', action: () => handleScroll(1800), icon: '💼', href: '#projects' },
                         { name: 'Skills', action: () => handleScroll(2500), icon: '⚡', href: '#skills' },
                         { name: 'Certifications', action: () => handleScroll(4700), icon: '🏆', href: '#certifications' },
-                        
+                
                         { name: 'Book', action: () => router.push('/book'), icon: '📚', href: '/book' },
                         
                     ].map((item) => (
@@ -360,27 +360,18 @@ export default function Home() {
 
             {/* Enhanced Main content with modern design */}
             <main className="container mx-auto px-4 py-12 md:py-16 relative z-10">
-              <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+              <div className="flex flex-row items-start gap-4 sm:items-center sm:gap-8 lg:gap-12">
                 {/* Enhanced Text Section */}
                   <motion.div 
-                    className="w-full lg:w-1/2 mb-6 lg:mb-0 px-4 sm:px-0"
+                    className="flex-1 mb-4 lg:mb-0 pr-2 sm:pr-0"
                     initial={{ x: -50, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
                   >
-                  {/* Status Badge */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                    className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-green-500/20 to-blue-500/20 border border-green-500/30 text-green-300 text-xs font-medium mb-4"
-                  >
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    Available for new opportunities
-                  </motion.div>
+                  {/* Status Badge removed per request */}
 
                   <motion.h1 
-                    className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight text-center lg:text-left mb-4 ${spaceGrotesk.className}`}
+                    className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight text-left mb-3 ${spaceGrotesk.className}`}
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.3 }}
@@ -397,7 +388,7 @@ export default function Home() {
                   </motion.h1>
 
                   <motion.h1 
-                    className="text-gray-300 text-sm sm:text-base md:text-lg lg:text-xl text-center lg:text-left mb-8 leading-relaxed"
+                    className="text-gray-300 text-xs sm:text-sm md:text-base lg:text-lg text-left mb-5 leading-relaxed"
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.6 }}
@@ -416,11 +407,11 @@ export default function Home() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.8 }}
-                    className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-8"
+                    className="flex flex-col sm:flex-row items-start justify-start gap-1.5 sm:gap-3 mb-5"
                   >
                     <motion.button
                       onClick={handleDownloadCV}
-                      className="group relative overflow-hidden bg-gradient-to-r from-yellow-500 to-orange-500 text-black px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                      className="group relative overflow-hidden bg-gradient-to-r from-yellow-500 to-orange-500 text-black px-3 py-1.5 rounded-full font-semibold text-xs sm:text-base sm:px-6 sm:py-3 shadow-lg hover:shadow-xl transition-all duration-300"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -433,7 +424,7 @@ export default function Home() {
                     
                     <motion.button
                       onClick={() => router.push('/contact')}
-                      className="group px-6 py-3 border-2 border-gradient-to-r from-blue-400 to-purple-400 text-white rounded-full font-semibold text-base hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-purple-500/20 transition-all duration-300 relative overflow-hidden"
+                      className="group px-3 py-1.5 border-2 border-gradient-to-r from-blue-400 to-purple-400 text-white rounded-full font-semibold text-xs sm:text-sm sm:px-5 sm:py-2.5 hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-purple-500/20 transition-all duration-300 relative overflow-hidden"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -469,14 +460,14 @@ export default function Home() {
 
                 {/* Enhanced Image Section with 3D Effects */}
                 <motion.div 
-                  className="w-full lg:w-1/2 mt-4 lg:mt-0 relative flex justify-center px-4 sm:px-0"
+                  className="w-[220px] sm:w-auto lg:w-1/2 mt-0 lg:mt-0 relative flex justify-center pl-2 sm:pl-0"
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
                 >
                   <div className="relative group">
                     {/* Main Image Container with Glassmorphism */}
-                    <div className="relative w-[280px] h-[350px] sm:w-[320px] sm:h-[400px] md:w-[360px] md:h-[450px] lg:w-[400px] lg:h-[500px] xl:w-[12cm] xl:h-[14cm] rounded-3xl overflow-hidden bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 shadow-2xl">
+                    <div className="relative w-[210px] h-[300px] sm:w-[250px] sm:h-[330px] md:w-[330px] md:h-[430px] lg:w-[430px] lg:h-[560px] xl:w-[12cm] xl:h-[15cm] rounded-3xl overflow-hidden bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 shadow-2xl">
                       <Image
                         src="/profile.jpg"
                         alt="Harsh - AI/ML Developer"
