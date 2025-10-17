@@ -15,8 +15,8 @@ interface InMemoryJob {
 }
 
 let jobsStorage: InMemoryJob[] = [];
-// lastUpdated kept for potential future use; prefix with underscore to avoid lint error
-let _lastUpdated = new Date();
+// Track lastUpdated on writes (used in responses if needed)
+let lastUpdated = new Date();
 
 // Check if Supabase is configured
 const isSupabaseConfigured = () => {
@@ -31,7 +31,7 @@ const getSupabaseClient = async () => {
   try {
     const { supabaseAdmin } = await import('@/lib/supabase-client');
     return supabaseAdmin;
-  } catch (error) {
+  } catch (err) {
     console.error('Supabase not configured, using fallback storage');
     return null;
   }
@@ -62,11 +62,11 @@ export async function GET(request: NextRequest) {
           offset_count: offset
         };
 
-        const { data: jobs, error } = await supabaseAdmin.rpc('search_jobs', searchParamsForRpc);
+        const { data: jobs, error: supaErr } = await supabaseAdmin.rpc('search_jobs', searchParamsForRpc);
 
-        if (error) {
-          console.error('Supabase search error:', error);
-          throw error;
+        if (supaErr) {
+          console.error('Supabase search error:', supaErr);
+          throw supaErr;
         }
 
         // Get total count for pagination
@@ -173,7 +173,20 @@ export async function POST(request: NextRequest) {
       // Use Supabase if configured
       try {
         // Transform jobs to match database schema
-        const transformedJobs = jobs.map((job: any) => ({
+        type IncomingJob = {
+          title: string;
+          company: string;
+          location: string;
+          description: string;
+          url: string;
+          postedDate?: string | null;
+          salary?: string | null;
+          type?: string | null;
+          experience?: string | null;
+          scrapedAt: string | Date;
+        };
+
+        const transformedJobs = (jobs as IncomingJob[]).map((job) => ({
           title: job.title,
           company: job.company,
           location: job.location,
@@ -213,24 +226,25 @@ export async function POST(request: NextRequest) {
     // Fallback to in-memory storage
     // Remove duplicates based on URL
     const existingUrls = new Set(jobsStorage.map(job => job.url));
-    const newJobs: InMemoryJob[] = jobs
-      .filter((job: any) => !existingUrls.has(job.url))
-      .map((job: any): InMemoryJob => ({
+    const incoming = jobs as Array<Record<string, unknown>>;
+    const newJobs: InMemoryJob[] = incoming
+      .filter((job) => typeof job.url === 'string' && !existingUrls.has(job.url as string))
+      .map((job): InMemoryJob => ({
         title: job.title,
         company: job.company,
         location: job.location,
         description: job.description,
-        url: job.url,
-        posted_date: job.postedDate || null,
-        salary: job.salary || null,
-        job_type: job.type || null,
-        experience_level: job.experience || null,
-        scraped_at: new Date(job.scrapedAt).toISOString()
+        url: job.url as string,
+        posted_date: (job as any).postedDate || null,
+        salary: (job as any).salary || null,
+        job_type: (job as any).type || null,
+        experience_level: (job as any).experience || null,
+        scraped_at: new Date((job as any).scrapedAt).toISOString()
       }));
     
     // Add new jobs to storage
     jobsStorage.push(...newJobs);
-    _lastUpdated = new Date();
+    lastUpdated = new Date();
 
     return NextResponse.json({
       success: true,

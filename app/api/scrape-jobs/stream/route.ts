@@ -170,8 +170,7 @@ async function scrapeCompanyJobsStream(
         ];
 
         let jobElements = $();
-        // bestSelector used only for debug streaming; underscore to avoid unused when omitted
-        let _bestSelector = '';
+        let bestSelector = '';
         let maxJobs = 0;
 
         for (const selector of possibleSelectors) {
@@ -179,7 +178,7 @@ async function scrapeCompanyJobsStream(
           if (elements.length > maxJobs) {
             maxJobs = elements.length;
             jobElements = elements;
-            _bestSelector = selector;
+            bestSelector = selector;
           }
         }
 
@@ -338,7 +337,7 @@ async function scrapeCompanyJobsStream(
   }
 }
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
   const encoder = new TextEncoder();
 
   const customReadable = new ReadableStream({
@@ -354,7 +353,7 @@ export async function GET(_request: NextRequest) {
           data: { message: 'Starting job scraping...' }
         });
 
-        let allJobs: JobListing[] = [];
+        const allJobs: JobListing[] = [];
 
         for (const config of companyConfigs) {
           const companyJobs = await scrapeCompanyJobsStream(config, sendData);

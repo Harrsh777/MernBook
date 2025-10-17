@@ -111,12 +111,10 @@ export default function BookLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script
           type="application/ld+json"
-          // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: JSON.stringify(bookJsonLd) }}
         />
         <script
           type="application/ld+json"
-          // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
         />
         <link rel="canonical" href="https://www.harshsrivastava.in/book" />

@@ -1121,7 +1121,7 @@ async function scrapeCompanyJobs(config: ScrapingConfig): Promise<JobListing[]> 
   }
 }
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
   try {
     const { searchParams } = new URL(request.url);
     const company = searchParams.get('company');
@@ -1178,7 +1178,7 @@ export async function GET(_request: NextRequest) {
   }
 }
 
-export async function POST(_request: NextRequest) {
+export async function POST() {
   try {
     console.log('Starting job scraping...');
     
