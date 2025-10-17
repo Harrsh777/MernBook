@@ -4,10 +4,7 @@ Allow: /
 # Sitemap
 Sitemap: https://www.harshsrivastava.in/sitemap.xml
 
-# Crawl-delay
-Crawl-delay: 1
-
-# Allow all search engines
+# Allow all search engines to crawl
 User-agent: Googlebot
 Allow: /
 
@@ -17,6 +14,16 @@ Allow: /
 User-agent: Slurp
 Allow: /
 
-# Block specific paths if needed
-# Disallow: /admin/
-# Disallow: /private/
+# Disallow admin or private areas (if any)
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+
+# Allow important pages
+Allow: /resume
+Allow: /contact
+Allow: /dashboard
+Allow: /book
+
+# Crawl delay (optional)
+Crawl-delay: 1

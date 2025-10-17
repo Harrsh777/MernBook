@@ -1,6 +1,8 @@
 // app/page.tsx
 "use client"
 
+import type { Metadata } from 'next';
+
 // NEW: Import hooks and particle engine dependencies
 import { useEffect, useState } from 'react';
 import Particles, { initParticlesEngine } from "@tsparticles/react";
@@ -260,16 +262,17 @@ export default function Home() {
                 </motion.div>
                 <div className="hidden md:flex space-x-6 items-center">
                     {[
-                        { name: 'Resume', action: () => router.push('/resume'), icon: '📄' },
-                        { name: 'Job Scraper', action: () => router.push('/dashboard'), icon: '🚀' },
-                        { name: 'Projects', action: () => handleScroll(1800), icon: '💼' },
-                        { name: 'Skills', action: () => handleScroll(2500), icon: '⚡' },
-                        { name: 'Certifications', action: () => handleScroll(4700), icon: '🏆' },
-                        { name: 'Book', action: () => router.push('/book'), icon: '📚' },
-                        { name: 'Contact', action: () => router.push('/contact'), icon: '📧' }
+                        { name: 'About', action: () => handleScroll(400), icon: '👨‍💻', href: '#about' },
+                        { name: 'Projects', action: () => handleScroll(1800), icon: '💼', href: '#projects' },
+                        { name: 'Skills', action: () => handleScroll(2500), icon: '⚡', href: '#skills' },
+                        { name: 'Certifications', action: () => handleScroll(4700), icon: '🏆', href: '#certifications' },
+                        
+                        { name: 'Book', action: () => router.push('/book'), icon: '📚', href: '/book' },
+                        
                     ].map((item) => (
-                        <motion.button
+                        <motion.a
                             key={item.name}
+                            href={item.href}
                             onClick={item.action}
                             className="text-gray-300 hover:text-white transition-all duration-300 relative group flex items-center gap-1 px-3 py-1 rounded-lg hover:bg-white/10 text-sm"
                             whileHover={{ y: -2, scale: 1.05 }}
@@ -278,7 +281,7 @@ export default function Home() {
                             <span className="text-sm">{item.icon}</span>
                             {item.name}
                             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-orange-400 transition-all duration-300 group-hover:w-full"></span>
-                        </motion.button>
+                        </motion.a>
                     ))}
                 </div>
                 <div className="flex items-center gap-4">
@@ -393,21 +396,20 @@ export default function Home() {
                     
                   </motion.h1>
 
-                  <motion.p 
+                  <motion.h1 
                     className="text-gray-300 text-sm sm:text-base md:text-lg lg:text-xl text-center lg:text-left mb-8 leading-relaxed"
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.6 }}
                   >
-                    Hi, I&apos;m <span className="text-yellow-400 font-semibold">Harsh</span>, a passionate developer specializing in 
+                    Hi, I&apos;m <span className="text-yellow-400 font-semibold">Harsh Srivastava</span>, an <span className="text-orange-400 font-semibold">AWS Certified Solutions Architect</span> and passionate developer specializing in 
                     <span className="text-blue-400 font-semibold"> AI/ML integration</span>, 
                     <span className="text-purple-400 font-semibold"> full-stack development</span>, 
                     <span className="text-green-400 font-semibold"> MLOps</span>, and 
                     <span className="text-cyan-400 font-semibold"> scalable cloud solutions</span>. 
-                    <span className="text-orange-400 font-semibold"> AWS Certified Solutions Architect</span> and 
-                    <span className="text-indigo-400 font-semibold"> Certified Kubernetes Administrator</span>. 
-                    National hackathon winner, published author, and AI enthusiast building the future of web applications.
-                  </motion.p>
+                    <span className="text-indigo-400 font-semibold"> Certified Kubernetes Administrator</span>, 
+ 5× Hackathon Winner, published author, and AI enthusiast building the future of web applications.
+                  </motion.h1> 
 
                   {/* Enhanced CTA Buttons */}
                   <motion.div
@@ -546,13 +548,18 @@ export default function Home() {
                 <SocialCarousel />
             </motion.div>
             
-            <ExperienceTimeline/>
+            <section id="about">
+                <ExperienceTimeline/>
+            </section>
             
             <section id="projects">
                 <PortfolioGrid/>
             </section>
-            <Skills />
-            <LeetCodeDashboard/>
+            
+            <section id="skills">
+                <Skills />
+                <LeetCodeDashboard/>
+            </section>
             
             <section id="certifications">
                 <CertificationsCarousel/>
