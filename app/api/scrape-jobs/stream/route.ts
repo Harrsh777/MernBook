@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+// No request param imports needed
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 
