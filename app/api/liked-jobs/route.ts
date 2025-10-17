@@ -22,7 +22,7 @@ const getSupabaseClient = async () => {
   try {
     const { supabase } = await import('@/lib/supabase-client');
     return supabase;
-  } catch (error) {
+  } catch {
     console.error('Supabase not configured, using fallback storage');
     return null;
   }
