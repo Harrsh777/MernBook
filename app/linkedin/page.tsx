@@ -5,7 +5,9 @@ import { useEffect } from 'react';
 export default function LinkedInRedirect() {
   useEffect(() => {
     // Redirect to your LinkedIn profile
-    window.location.href = 'https://www.linkedin.com/in/harrshh/'; // Replace with your actual LinkedIn username
+    if (typeof window !== 'undefined') {
+      window.location.replace('https://www.linkedin.com/in/harrshh/');
+    }
   }, []);
 
   return (
