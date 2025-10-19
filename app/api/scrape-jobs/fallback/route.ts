@@ -35,6 +35,7 @@ export async function GET(request: NextRequest) {
         description: 'We are looking for a Senior Software Engineer to join our team. You will work on building scalable applications using modern technologies.',
         url: 'https://example.com/job/1',
         posted_date: '2 days ago',
+        salary: '$120,000 - $180,000',
         job_type: 'Full-time',
         experience_level: 'Senior',
         scraped_at: new Date().toISOString()
@@ -47,6 +48,7 @@ export async function GET(request: NextRequest) {
         description: 'Join our fast-growing startup as a Full Stack Developer. Work with React, Node.js, and cloud technologies.',
         url: 'https://example.com/job/2',
         posted_date: '1 week ago',
+        salary: '$80,000 - $120,000',
         job_type: 'Full-time',
         experience_level: 'Mid-level',
         scraped_at: new Date().toISOString()
@@ -59,6 +61,7 @@ export async function GET(request: NextRequest) {
         description: 'Looking for a DevOps Engineer to manage our cloud infrastructure and deployment pipelines.',
         url: 'https://example.com/job/3',
         posted_date: '3 days ago',
+        salary: '$100,000 - $150,000',
         job_type: 'Full-time',
         experience_level: 'Senior',
         scraped_at: new Date().toISOString()

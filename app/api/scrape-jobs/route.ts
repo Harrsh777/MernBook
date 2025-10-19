@@ -940,7 +940,7 @@ const companyConfigs: ScrapingConfig[] = [
 
 // Mock jobs fallback function
 function getMockJobsForCompany(companyName: string): JobListing[] {
-  const baseJobs = [
+  const baseJobs: JobListing[] = [
     {
       id: `mock-${Date.now()}-1`,
       title: 'Senior Software Engineer',
@@ -948,10 +948,11 @@ function getMockJobsForCompany(companyName: string): JobListing[] {
       location: 'San Francisco, CA',
       description: 'We are looking for a Senior Software Engineer to join our team. You will work on building scalable applications using modern technologies.',
       url: `https://${companyName.toLowerCase().replace(/\s+/g, '')}.com/careers/1`,
-      posted_date: '2 days ago',
-      job_type: 'Full-time',
-      experience_level: 'Senior',
-      scraped_at: new Date().toISOString()
+      postedDate: '2 days ago',
+      salary: '$120,000 - $180,000',
+      type: 'Full-time',
+      experience: 'Senior',
+      scrapedAt: new Date()
     },
     {
       id: `mock-${Date.now()}-2`,
@@ -960,10 +961,11 @@ function getMockJobsForCompany(companyName: string): JobListing[] {
       location: 'Remote',
       description: 'Join our team as a Full Stack Developer. Work with React, Node.js, and cloud technologies.',
       url: `https://${companyName.toLowerCase().replace(/\s+/g, '')}.com/careers/2`,
-      posted_date: '1 week ago',
-      job_type: 'Full-time',
-      experience_level: 'Mid-level',
-      scraped_at: new Date().toISOString()
+      postedDate: '1 week ago',
+      salary: '$80,000 - $120,000',
+      type: 'Full-time',
+      experience: 'Mid-level',
+      scrapedAt: new Date()
     }
   ];
   
