@@ -98,6 +98,7 @@ export default function JobDashboard() {
     }, 180 * 60 * 1000); // 180 minutes in milliseconds
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Initial auto-scrape on page load (after 5 seconds to let page load)
@@ -112,6 +113,7 @@ export default function JobDashboard() {
     }, 5000);
 
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchJobs = async () => {
@@ -121,7 +123,7 @@ export default function JobDashboard() {
         page: currentPage.toString(),
         limit: '12',
         ...Object.fromEntries(
-          Object.entries(searchFilters).filter(([_, value]) => value.trim())
+          Object.entries(searchFilters).filter(([, value]) => value.trim())
         )
       });
 
@@ -248,11 +250,7 @@ export default function JobDashboard() {
     setCurrentPage(1);
   };
 
-  const getCompanyIcon = (company: string) => {
-    const companyLower = company.toLowerCase();
-    if (companyLower.includes('google')) return <FaCode className="text-blue-500" />;
-    if (companyLower.includes('microsoft')) return <FaDatabase className="text-blue-600" />;
-    if (companyLower.includes('amazon')) return <FaCloud className="text-orange-500" />;
+  const getCompanyIcon = () => {
     return <FaBuilding className="text-gray-500" />;
   };
 
@@ -513,7 +511,7 @@ export default function JobDashboard() {
                     >
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
-                          {getCompanyIcon(job.company)}
+                          {getCompanyIcon()}
                           <div>
                             <h3 className="text-white font-semibold group-hover:text-blue-400 transition-colors">
                               {job.title}
@@ -656,7 +654,7 @@ export default function JobDashboard() {
 
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  {getCompanyIcon(selectedJob.company)}
+                  {getCompanyIcon()}
                   <div>
                     <p className="text-white font-semibold">{selectedJob.company}</p>
                     <p className="text-gray-400">{selectedJob.location}</p>
