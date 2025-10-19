@@ -329,7 +329,7 @@ async function scrapeCompanyJobsStream(
     console.error(`Error scraping ${config.name}:`, error);
     sendData({
       type: 'company_error',
-      data: { company: config.name, error: error.message }
+      data: { company: config.name, error: error instanceof Error ? error.message : 'Unknown error' }
     });
     return [];
   } finally {
@@ -389,7 +389,7 @@ export async function GET() {
       } catch (error) {
         sendData({
           type: 'error',
-          data: { error: error.message }
+          data: { error: error instanceof Error ? error.message : 'Unknown error' }
         });
       } finally {
         controller.close();

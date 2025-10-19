@@ -119,7 +119,7 @@ export async function GET(request: NextRequest) {
 
     if (type) {
       filteredJobs = filteredJobs.filter(job => 
-        (job.job_type || job.type || '').toLowerCase().includes(type.toLowerCase())
+        (job.job_type || '').toLowerCase().includes(type.toLowerCase())
       );
     }
 
@@ -253,7 +253,6 @@ export async function POST(request: NextRequest) {
     
     // Add new jobs to storage
     jobsStorage.push(...newJobs);
-    lastUpdated = new Date();
 
     return NextResponse.json({
       success: true,

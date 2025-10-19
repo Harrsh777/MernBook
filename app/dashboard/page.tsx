@@ -12,9 +12,6 @@ import {
   FaSync,
   FaDownload,
   FaStar,
-  FaCode,
-  FaDatabase,
-  FaCloud,
   FaHeart,
   FaRegHeart
 } from 'react-icons/fa';
@@ -141,7 +138,7 @@ export default function JobDashboard() {
     }
   };
 
-  const scrapeJobs = async (company?: string) => {
+  const scrapeJobs = async () => {
     setScraping(true);
     try {
       // Use the streaming endpoint for real-time updates

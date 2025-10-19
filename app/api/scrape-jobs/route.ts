@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 
@@ -1121,7 +1121,7 @@ async function scrapeCompanyJobs(config: ScrapingConfig): Promise<JobListing[]> 
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const company = searchParams.get('company');
