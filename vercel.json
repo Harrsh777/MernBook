@@ -1,0 +1,19 @@
+{
+  "functions": {
+    "app/api/scrape-jobs/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/scrape-jobs/stream/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/scrape-daily/route.ts": {
+      "maxDuration": 300
+    }
+  },
+  "build": {
+    "env": {
+      "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "false",
+      "PUPPETEER_EXECUTABLE_PATH": "/usr/bin/google-chrome-stable"
+    }
+  }
+}

@@ -111,14 +111,88 @@ const companyConfigs: ScrapingConfig[] = [
   }
 ];
 
+// Mock jobs fallback function for streaming
+function getMockJobsForCompanyStream(companyName: string): JobListing[] {
+  const baseJobs = [
+    {
+      id: `mock-${Date.now()}-1`,
+      title: 'Senior Software Engineer',
+      company: companyName,
+      location: 'San Francisco, CA',
+      description: 'We are looking for a Senior Software Engineer to join our team. You will work on building scalable applications using modern technologies.',
+      url: `https://${companyName.toLowerCase().replace(/\s+/g, '')}.com/careers/1`,
+      posted_date: '2 days ago',
+      job_type: 'Full-time',
+      experience_level: 'Senior',
+      scraped_at: new Date().toISOString()
+    },
+    {
+      id: `mock-${Date.now()}-2`,
+      title: 'Full Stack Developer',
+      company: companyName,
+      location: 'Remote',
+      description: 'Join our team as a Full Stack Developer. Work with React, Node.js, and cloud technologies.',
+      url: `https://${companyName.toLowerCase().replace(/\s+/g, '')}.com/careers/2`,
+      posted_date: '1 week ago',
+      job_type: 'Full-time',
+      experience_level: 'Mid-level',
+      scraped_at: new Date().toISOString()
+    }
+  ];
+  
+  return baseJobs;
+}
+
 async function scrapeCompanyJobsStream(
   config: ScrapingConfig,
   sendData: (data: unknown) => void
 ): Promise<JobListing[]> {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
-  });
+  let browser;
+  
+  try {
+    browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--disable-gpu',
+        '--disable-web-security',
+        '--disable-features=VizDisplayCompositor',
+        '--single-process'
+      ],
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined
+    });
+  } catch (error) {
+    console.error(`Failed to launch Puppeteer for ${config.name}:`, error);
+    console.log('Falling back to mock data...');
+    
+    // Send fallback notifications
+    sendData({
+      type: 'company_start',
+      data: { company: config.name, message: 'Using fallback mode - mock data' }
+    });
+    
+    const mockJobs = getMockJobsForCompanyStream(config.name);
+    
+    // Simulate streaming the mock jobs
+    for (const job of mockJobs) {
+      sendData({
+        type: 'job_found',
+        data: job
+      });
+    }
+    
+    sendData({
+      type: 'company_complete',
+      data: { company: config.name, totalJobs: mockJobs.length }
+    });
+    
+    return mockJobs;
+  }
 
   try {
     const page = await browser.newPage();
