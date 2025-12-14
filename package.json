@@ -12,6 +12,7 @@
     "postinstall": "npx puppeteer browsers install chrome"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.49.8",
     "@tabler/icons-react": "^3.33.0",
@@ -23,6 +24,7 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "framer-motion": "^12.12.2",
+    "gsap": "^3.14.1",
     "lucide-react": "^0.511.0",
     "next": "15.1.8",
     "node-cron": "^4.2.1",

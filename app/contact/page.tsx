@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Space_Grotesk } from 'next/font/google';
+import emailjs from '@emailjs/browser';
 import { 
   FiArrowRight, 
   FiCheck, 
@@ -27,6 +28,92 @@ const serviceTags = [
   'Full-Stack Development',
 ];
 
+// Particle Button Component
+const ParticleButton = ({ 
+  children, 
+  onClick, 
+  disabled = false,
+  className = '',
+  type = 'button'
+}: { 
+  children: React.ReactNode; 
+  onClick?: () => void;
+  disabled?: boolean;
+  className?: string;
+  type?: 'button' | 'submit';
+}) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; size: number; opacity: number }>>([]);
+
+  useEffect(() => {
+    if (isHovered && !disabled) {
+      const newParticles = Array.from({ length: 120 }).map((_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 2 + 1,
+        opacity: Math.random() * 0.6 + 0.4
+      }));
+      setParticles(newParticles);
+    } else {
+      setParticles([]);
+    }
+  }, [isHovered, disabled]);
+
+  return (
+    <motion.button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={`relative overflow-hidden rounded-full border-2 border-black ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      whileHover={!disabled ? { scale: 1.05 } : {}}
+      whileTap={!disabled ? { scale: 0.95 } : {}}
+    >
+      {/* Particles Background */}
+      {isHovered && !disabled && (
+        <motion.div 
+          className="absolute inset-0 overflow-hidden pointer-events-none z-0 bg-black"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {particles.map((particle) => (
+            <motion.div
+              key={particle.id}
+              className="absolute rounded-full"
+              style={{
+                backgroundColor: '#9CA3AF',
+                width: `${particle.size}px`,
+                height: `${particle.size}px`,
+                left: `${particle.x}%`,
+                top: `${particle.y}%`,
+              }}
+              animate={{
+                opacity: [0, particle.opacity, particle.opacity * 0.7, 0],
+                x: [particle.x + '%', (particle.x + (Math.random() - 0.5) * 30) + '%'],
+                y: [particle.y + '%', (particle.y + (Math.random() - 0.5) * 30) + '%'],
+              }}
+              transition={{
+                duration: 2 + Math.random() * 1.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          ))}
+        </motion.div>
+      )}
+
+      {/* Button Content */}
+      <div className="relative z-10">
+        {children}
+      </div>
+    </motion.button>
+  );
+};
+
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
@@ -41,16 +128,6 @@ export default function ContactPage() {
   const [submitError, setSubmitError] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
-
-  // Floating particles effect
-  const particles = Array.from({ length: 20 }).map((_, i) => ({
-    id: i,
-    size: Math.random() * 4 + 2,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    delay: Math.random() * 2,
-    duration: Math.random() * 3 + 3
-  }));
 
   // Validation function
   const validateStep = (step: number) => {
@@ -122,40 +199,87 @@ export default function ContactPage() {
     setSubmitError('');
 
     try {
-      // Simulate API call - replace with actual Supabase call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // For now, we'll just show success
-      // In production, replace this with your actual Supabase call:
-      /*
-      const { data, error } = await supabase
-        .from('idea_submissions')
-        .insert([{
-          name: formData.name,
-          email: formData.email,
-          company_name: formData.company,
-          services: formData.services,
-          message: formData.message,
-          submitted_at: new Date().toISOString(),
-        }]);
+      // Prepare email template parameters
+      // Note: EmailJS will send the email TO your email, but you can reply directly to the submitter
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email, // User's email - use this for reply_to in template
+        reply_to: formData.email, // This allows you to reply directly to the submitter
+        to_name: 'Harsh Srivastava',
+        to_email: 'harrshh077@gmail.com', // Your email address
+        company: formData.company || 'Not provided',
+        services: formData.services.length > 0 ? formData.services.join(', ') : 'None selected',
+        message: formData.message || 'No message provided',
+        // Formatted email body with all information
+        email_body: `
+New Contact Form Submission
 
-      if (error) throw error;
-      */
+Name: ${formData.name}
+Email: ${formData.email}
+Company: ${formData.company || 'Not provided'}
 
-      setSubmitSuccess(true);
+Selected Services:
+${formData.services.length > 0 ? formData.services.map(s => `- ${s}`).join('\n') : 'None selected'}
+
+Message:
+${formData.message || 'No message provided'}
+
+---
+This email was sent from your portfolio contact form.
+You can reply directly to this email to respond to ${formData.name} at ${formData.email}.
+        `.trim()
+      };
+
+      // Send email using EmailJS
+      // To set up EmailJS:
+      // 1. Go to your EmailJS dashboard (https://dashboard.emailjs.com)
+      // 2. Create a new email template or edit existing one
+      // 3. In the template, use these variables:
+      //    - {{from_name}} - Submitter's name
+      //    - {{from_email}} or {{reply_to}} - Submitter's email (for reply-to)
+      //    - {{to_email}} - Your email (harrshh077@gmail.com)
+      //    - {{email_body}} - Formatted email with all form data
+      //    - {{company}}, {{services}}, {{message}} - Individual fields
+      // 4. Set "Reply To" field in template to: {{reply_to}}
+      // 5. Get your Template ID from the Email Templates section
+      // 6. Get your Public Key from Account > General > API Keys
+      // 7. Create a .env.local file in the root directory and add:
+      //    NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id_here
+      //    NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key_here
       
-      // Reset form after 3 seconds
-      setTimeout(() => {
-        setFormData({
-          name: '',
-          email: '',
-          company: '',
-          services: [],
-          message: '',
-        });
-        setCurrentStep(1);
-        setSubmitSuccess(false);
-      }, 5000);
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID';
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
+      
+      // Validate that required values are set
+      if (templateId === 'YOUR_TEMPLATE_ID' || publicKey === 'YOUR_PUBLIC_KEY') {
+        throw new Error('Please configure EmailJS Template ID and Public Key. See comments in code for instructions.');
+      }
+      
+      const response = await emailjs.send(
+        'service_t05mdq2', // Service ID (already provided)
+        templateId, // Template ID
+        templateParams,
+        publicKey // Public Key
+      );
+
+      if (response.status === 200) {
+        setSubmitSuccess(true);
+        
+        // Reset form after 5 seconds
+        setTimeout(() => {
+          setFormData({
+            name: '',
+            email: '',
+            company: '',
+            services: [],
+            message: '',
+          });
+          setCurrentStep(1);
+          setSubmitSuccess(false);
+        }, 5000);
+      } else {
+        throw new Error('Failed to send email');
+      }
       
     } catch (err: unknown) {
       console.error('Submission error:', err);
@@ -172,45 +296,18 @@ export default function ContactPage() {
   // Success screen
   if (submitSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-          {particles.map((particle) => (
-            <motion.div
-              key={particle.id}
-              initial={{ opacity: 0, y: -20 }}
-              animate={{
-                opacity: [0, 0.6, 0],
-                y: [0, particle.size * 10],
-                x: [particle.x, particle.x + (Math.random() * 20 - 10)]
-              }}
-              transition={{
-                delay: particle.delay,
-                duration: particle.duration,
-                repeat: Infinity,
-                repeatType: 'loop'
-              }}
-              className="absolute rounded-full bg-purple-500"
-              style={{
-                width: `${particle.size}px`,
-                height: `${particle.size}px`,
-                left: `${particle.x}%`,
-                top: `-${particle.size}px`
-              }}
-            />
-          ))}
-        </div>
-        
+      <div className="min-h-screen flex items-center justify-center bg-white px-4 relative overflow-hidden">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-md bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-purple-500/30 p-8 text-center"
+          className="w-full max-w-md bg-white border-2 border-black rounded-lg shadow-2xl overflow-hidden p-8 text-center"
         >
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-            className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white mx-auto mb-6"
+            className="w-20 h-20 bg-black rounded-full flex items-center justify-center text-white mx-auto mb-6"
           >
             <FiCheck className="h-10 w-10" />
           </motion.div>
@@ -219,7 +316,7 @@ export default function ContactPage() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className={`text-3xl font-bold mb-4 text-white ${spaceGrotesk.className}`}
+            className={`text-3xl font-bold mb-4 text-black ${spaceGrotesk.className}`}
           >
             Message Sent!
           </motion.h2>
@@ -228,17 +325,12 @@ export default function ContactPage() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="text-gray-300 mb-8 leading-relaxed"
+            className={`text-gray-700 mb-8 leading-relaxed ${spaceGrotesk.className}`}
           >
             Thank you for reaching out! I&apos;ve received your message and will get back to you within 24 hours.
           </motion.p>
           
-          <motion.button
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+          <ParticleButton
             onClick={() => {
               setSubmitSuccess(false);
               setFormData({
@@ -250,72 +342,45 @@ export default function ContactPage() {
               });
               setCurrentStep(1);
             }}
-            className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-300"
+            className="bg-black text-white px-8 py-4 uppercase text-sm font-semibold w-full"
           >
-            Send Another Message
-          </motion.button>
+            <span className={`${spaceGrotesk.className} flex items-center justify-center gap-2`}>
+              Send Another Message
+              <FiArrowRight className="text-sm" />
+            </span>
+          </ParticleButton>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 flex items-center justify-center px-4 py-12 relative overflow-hidden">
-      {/* Background particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        {particles.map((particle) => (
-          <motion.div
-            key={particle.id}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{
-              opacity: [0, 0.3, 0],
-              y: [0, particle.size * 10],
-              x: [particle.x, particle.x + (Math.random() * 20 - 10)]
-            }}
-            transition={{
-              delay: particle.delay,
-              duration: particle.duration,
-              repeat: Infinity,
-              repeatType: 'loop'
-            }}
-            className="absolute rounded-full bg-purple-500/30"
-            style={{
-              width: `${particle.size}px`,
-              height: `${particle.size}px`,
-              left: `${particle.x}%`,
-              top: `-${particle.size}px`
-            }}
-          />
-        ))}
-      </div>
-
+    <div className="min-h-screen bg-white flex items-center justify-center px-4 py-12 relative overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-4xl bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-purple-500/30"
+        className="w-full max-w-6xl bg-white border-2 border-black rounded-lg shadow-2xl overflow-hidden"
       >
         <div className="flex flex-col lg:flex-row min-h-[600px]">
           {/* Left sidebar */}
-          <div className="lg:w-1/3 bg-gradient-to-b from-purple-900/50 to-gray-900/50 p-8 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-transparent"></div>
-            
-            <div className="relative z-10">
+          <div className="lg:w-1/3 bg-black text-white p-8 relative overflow-hidden">
+            <div className="relative z-10 h-full flex flex-col">
               <motion.div
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <h2 className={`text-3xl font-bold text-white mb-4 ${spaceGrotesk.className}`}>
+                <h2 className={`text-3xl font-bold mb-4 ${spaceGrotesk.className}`}>
                   Let&apos;s Build Together
                 </h2>
-                <p className="text-purple-200 mb-8 leading-relaxed">
+                <p className={`text-gray-300 mb-8 leading-relaxed ${spaceGrotesk.className}`}>
                   Share your vision with me and I&apos;ll help bring it to life with cutting-edge technology and innovative solutions.
                 </p>
               </motion.div>
               
               {/* Progress indicator */}
-              <div className="space-y-4">
+              <div className="space-y-4 flex-1">
                 {[1, 2, 3].map((step) => (
                   <motion.div
                     key={step}
@@ -324,18 +389,18 @@ export default function ContactPage() {
                     transition={{ delay: 0.3 + step * 0.1 }}
                     className="flex items-center"
                   >
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-4 transition-all duration-300 ${
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-4 transition-all duration-300 border-2 ${
                       currentStep >= step 
-                        ? 'bg-purple-600 text-white shadow-lg' 
-                        : 'bg-gray-700 text-gray-400'
+                        ? 'bg-white text-black border-white' 
+                        : 'bg-transparent text-gray-400 border-gray-600'
                     }`}>
                       {currentStep > step ? (
                         <FiCheck className="h-5 w-5" />
                       ) : (
-                        <span className="font-semibold">{step}</span>
+                        <span className={`font-semibold ${spaceGrotesk.className}`}>{step}</span>
                       )}
                     </div>
-                    <span className={`font-medium transition-colors duration-300 ${
+                    <span className={`font-medium transition-colors duration-300 ${spaceGrotesk.className} ${
                       currentStep >= step ? 'text-white' : 'text-gray-400'
                     }`}>
                       {step === 1 && 'Basic Information'}
@@ -353,12 +418,12 @@ export default function ContactPage() {
                 transition={{ delay: 0.8 }}
                 className="mt-12 space-y-4"
               >
-                <div className="flex items-center text-gray-300">
-                  <FiMail className="h-5 w-5 mr-3 text-purple-400" />
+                <div className={`flex items-center text-gray-300 ${spaceGrotesk.className}`}>
+                  <FiMail className="h-5 w-5 mr-3 text-white" />
                   <span>harrshh077@gmail.com</span>
                 </div>
-                <div className="flex items-center text-gray-300">
-                  <FiUser className="h-5 w-5 mr-3 text-purple-400" />
+                <div className={`flex items-center text-gray-300 ${spaceGrotesk.className}`}>
+                  <FiUser className="h-5 w-5 mr-3 text-white" />
                   <span>Available for new opportunities</span>
                 </div>
               </motion.div>
@@ -366,13 +431,13 @@ export default function ContactPage() {
           </div>
 
           {/* Right form section */}
-          <div className="lg:w-2/3 p-8">
+          <div className="lg:w-2/3 p-8 bg-white">
             <div className="mb-8">
               <motion.h1 
                 initial={{ y: -10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className={`text-3xl font-bold mb-2 text-white ${spaceGrotesk.className}`}
+                className={`text-3xl font-bold mb-2 text-black ${spaceGrotesk.className}`}
               >
                 {currentStep === 1 && "Tell us about yourself"}
                 {currentStep === 2 && "What services do you need?"}
@@ -382,7 +447,7 @@ export default function ContactPage() {
                 initial={{ y: -10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
-                className="text-gray-400"
+                className={`text-gray-600 ${spaceGrotesk.className}`}
               >
                 {currentStep === 1 && "Let's start with some basic information to get in touch."}
                 {currentStep === 2 && "Select the services that best match your project needs."}
@@ -412,13 +477,13 @@ export default function ContactPage() {
                           name="name"
                           value={formData.name}
                           onChange={handleInputChange}
-                          className={`block w-full pl-10 pr-3 py-3 bg-gray-800/50 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
-                            errors.name ? 'border-red-500' : 'border-gray-600'
+                          className={`block w-full pl-10 pr-3 py-3 bg-white border-2 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-300 ${spaceGrotesk.className} ${
+                            errors.name ? 'border-red-500' : 'border-gray-300'
                           }`}
                           placeholder="Your full name"
                         />
                         {errors.name && (
-                          <p className="mt-1 text-sm text-red-400">{errors.name}</p>
+                          <p className={`mt-1 text-sm text-red-500 ${spaceGrotesk.className}`}>{errors.name}</p>
                         )}
                       </div>
 
@@ -432,20 +497,18 @@ export default function ContactPage() {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className={`block w-full pl-10 pr-3 py-3 bg-gray-800/50 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
-                            errors.email ? 'border-red-500' : 'border-gray-600'
+                          className={`block w-full pl-10 pr-3 py-3 bg-white border-2 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-300 ${spaceGrotesk.className} ${
+                            errors.email ? 'border-red-500' : 'border-gray-300'
                           }`}
                           placeholder="your.email@example.com"
                         />
                         {errors.email && (
-                          <p className="mt-1 text-sm text-red-400">{errors.email}</p>
+                          <p className={`mt-1 text-sm text-red-500 ${spaceGrotesk.className}`}>{errors.email}</p>
                         )}
                       </div>
 
                       <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          {/* Replace FiBuilding with a valid icon or remove if not imported */}
-                          {/* <FiBuilding className="h-5 w-5 text-gray-400" /> */}
                           <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <rect x="3" y="7" width="7" height="13" rx="2" />
                             <rect x="14" y="3" width="7" height="17" rx="2" />
@@ -458,7 +521,7 @@ export default function ContactPage() {
                           name="company"
                           value={formData.company}
                           onChange={handleInputChange}
-                          className="block w-full pl-10 pr-3 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                          className={`block w-full pl-10 pr-3 py-3 bg-white border-2 border-gray-300 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-300 ${spaceGrotesk.className}`}
                           placeholder="Company name (optional)"
                         />
                       </div>
@@ -482,10 +545,10 @@ export default function ContactPage() {
                           onClick={() => handleServiceToggle(service)}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          className={`relative p-4 rounded-lg text-sm font-medium transition-all duration-300 ${
+                          className={`relative p-4 rounded-lg text-sm font-medium transition-all duration-300 border-2 ${spaceGrotesk.className} ${
                             formData.services.includes(service)
-                              ? 'bg-purple-600 text-white border-2 border-purple-400 shadow-lg'
-                              : 'bg-gray-800/50 text-gray-300 border-2 border-gray-600 hover:border-purple-400 hover:bg-gray-700/50'
+                              ? 'bg-black text-white border-black shadow-lg'
+                              : 'bg-white text-black border-gray-300 hover:border-black hover:bg-gray-50'
                           }`}
                         >
                           {service}
@@ -493,9 +556,9 @@ export default function ContactPage() {
                             <motion.div
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
-                              className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center"
+                              className="absolute -top-2 -right-2 w-6 h-6 bg-white border-2 border-black rounded-full flex items-center justify-center"
                             >
-                              <FiCheck className="h-3 w-3 text-white" />
+                              <FiCheck className="h-3 w-3 text-black" />
                             </motion.div>
                           )}
                         </motion.button>
@@ -523,21 +586,21 @@ export default function ContactPage() {
                         value={formData.message}
                         onChange={handleInputChange}
                         rows={6}
-                        className="block w-full pl-10 pr-3 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 resize-none"
+                        className={`block w-full pl-10 pr-3 py-3 bg-white border-2 border-gray-300 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-300 resize-none ${spaceGrotesk.className}`}
                         placeholder="Tell me about your project, goals, timeline, or any specific requirements..."
                       />
                     </div>
 
                     {formData.services.length > 0 && (
-                      <div className="bg-gray-800/30 rounded-lg p-4">
-                        <h4 className="text-sm font-medium text-gray-300 mb-3">Selected Services:</h4>
+                      <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-4">
+                        <h4 className={`text-sm font-medium text-black mb-3 ${spaceGrotesk.className}`}>Selected Services:</h4>
                         <div className="flex flex-wrap gap-2">
                           {formData.services.map(service => (
                             <motion.span
                               key={service}
                               initial={{ scale: 0.8, opacity: 0 }}
                               animate={{ scale: 1, opacity: 1 }}
-                              className="px-3 py-1 bg-purple-900/50 text-purple-300 text-sm rounded-full border border-purple-800"
+                              className={`px-3 py-1 bg-black text-white text-sm rounded-full border-2 border-black ${spaceGrotesk.className}`}
                             >
                               {service}
                             </motion.span>
@@ -553,7 +616,7 @@ export default function ContactPage() {
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="p-4 bg-red-900/20 text-red-400 text-sm rounded-lg flex items-start border border-red-900/50"
+                  className={`p-4 bg-red-50 text-red-600 text-sm rounded-lg flex items-start border-2 border-red-500 ${spaceGrotesk.className}`}
                 >
                   <FiX className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
                   <div>{submitError}</div>
@@ -567,9 +630,9 @@ export default function ContactPage() {
                   onClick={prevStep}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+                  className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${spaceGrotesk.className} ${
                     currentStep > 1
-                      ? 'text-purple-400 hover:bg-gray-800/50'
+                      ? 'text-black hover:bg-gray-100 border-2 border-gray-300'
                       : 'invisible'
                   }`}
                 >
@@ -577,44 +640,42 @@ export default function ContactPage() {
                 </motion.button>
 
                 {currentStep < 3 ? (
-                  <motion.button
-                    type="button"
+                  <ParticleButton
                     onClick={nextStep}
                     disabled={!formData.name.trim() || !formData.email.trim()}
-                    whileHover={formData.name.trim() && formData.email.trim() ? { scale: 1.02 } : {}}
-                    whileTap={formData.name.trim() && formData.email.trim() ? { scale: 0.98 } : {}}
-                    className={`px-6 py-3 rounded-lg font-medium flex items-center transition-all duration-300 ${
+                    className={`px-6 py-3 font-medium flex items-center ${spaceGrotesk.className} ${
                       !formData.name.trim() || !formData.email.trim()
-                        ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 shadow-lg'
+                        ? 'bg-gray-200 text-gray-500 border-gray-300'
+                        : 'bg-white text-black'
                     }`}
                   >
-                    Next <FiArrowRight className="ml-2" />
-                  </motion.button>
+                    <span className="flex items-center gap-2">
+                      Next
+                      <FiArrowRight className="text-sm" />
+                    </span>
+                  </ParticleButton>
                 ) : (
-                  <motion.button
+                  <ParticleButton
                     type="submit"
                     disabled={isSubmitting}
-                    whileHover={!isSubmitting ? { scale: 1.02 } : {}}
-                    whileTap={!isSubmitting ? { scale: 0.98 } : {}}
-                    className={`px-6 py-3 rounded-lg font-medium flex items-center transition-all duration-300 ${
+                    className={`px-6 py-3 font-medium flex items-center ${spaceGrotesk.className} ${
                       isSubmitting
-                        ? 'bg-purple-800 text-white cursor-not-allowed'
-                        : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 shadow-lg'
+                        ? 'bg-gray-200 text-gray-500 border-gray-300'
+                        : 'bg-white text-black'
                     }`}
                   >
                     {isSubmitting ? (
-                      <>
-                        <FiLoader className="animate-spin mr-2" />
+                      <span className="flex items-center gap-2">
+                        <FiLoader className="animate-spin" />
                         Sending...
-                      </>
+                      </span>
                     ) : (
-                      <>
-                        <FiSend className="mr-2" />
+                      <span className="flex items-center gap-2">
+                        <FiSend />
                         Send Message
-                      </>
+                      </span>
                     )}
-                  </motion.button>
+                  </ParticleButton>
                 )}
               </div>
             </form>
