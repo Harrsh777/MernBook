@@ -831,7 +831,8 @@ export default function Home() {
             {/* Hero Section - Light Minimal Design */}
             <section className="bg-[#F5F5F5] min-h-screen flex items-start relative z-10 overflow-hidden pt-0">
 
-                <div className="relative w-full h-screen pt-4 md:pt-6 lg:pt-8">
+                {/* Desktop Layout - Keep unchanged */}
+                <div className="hidden xl:block relative w-full h-screen pt-4 md:pt-6 lg:pt-8">
                     {/* Left Column - Text Content */}
                     <motion.div
                         className="absolute left-4 md:left-6 lg:left-8 xl:left-12 top-4 md:top-6 lg:top-8 z-10 flex flex-col space-y-4 md:space-y-6 max-w-lg"
@@ -999,11 +1000,171 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-            </section>
 
-            {/* Social Media Carousel */}
+                {/* Mobile/Tablet Responsive Layout */}
+                <div className="xl:hidden relative w-full min-h-screen pt-16 md:pt-20 pb-8 px-4 md:px-6">
+                    <div className="flex flex-row items-start gap-3 md:gap-6 lg:gap-8 max-w-6xl mx-auto">
+                        {/* Left Column - Text Content */}
+                        <motion.div
+                            className="flex-1 flex flex-col space-y-2 md:space-y-4 lg:space-y-6 z-10 min-w-0"
+                            initial={{ opacity: 0, x: -30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6 }}
+                            viewport={{ once: true }}
+                        >
+                            {/* Subheading */}
+                            <h2 className={`text-xs md:text-sm lg:text-base text-black ${playfairDisplay.className} font-normal`}>
+                                Hey, I&apos;m Harsh,
+                            </h2>
+
+                            {/* Main Heading */}
+                            <h1 className="space-y-0.5 md:space-y-1 lg:space-y-2">
+                                <span className={`block text-lg md:text-2xl lg:text-3xl xl:text-4xl font-bold text-black leading-[1.1] ${spaceGrotesk.className}`}>
+                                    A FULL-STACK
+                                </span>
+                                <span className={`block text-lg md:text-2xl lg:text-3xl xl:text-4xl font-bold text-black leading-[1.1] ${spaceGrotesk.className}`}>
+                                    & <span className={`${playfairDisplay.className} font-normal`}>MLOPS</span>
+                                </span>
+                                <span className={`block text-lg md:text-2xl lg:text-3xl xl:text-4xl font-bold text-black leading-[1.1] ${spaceGrotesk.className}`}>
+                                    DEVELOPER
+                                </span>
+                            </h1>
+
+                            {/* Description Paragraph */}
+                            <p className={`text-black text-[9px] md:text-[10px] lg:text-xs leading-relaxed mt-2 md:mt-4 ${playfairDisplay.className} font-normal`}>
+                            Transforming ideas into scalable software, Development that powers reliable, intelligent products.
+                            </p>
+
+                            {/* Contact and Resume Buttons */}
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-3 lg:gap-4 mt-2">
+                                <ParticleButton
+                                    onClick={() => router.push('/contact')}
+                                    className="group bg-black text-white px-3 py-1.5 md:px-5 md:py-2.5 lg:px-6 lg:py-3 font-semibold text-[10px] md:text-xs lg:text-sm w-fit border-2 border-white cursor-pointer"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3">
+                                        <span>Get in touch</span>
+                                        <FaArrowRight className="text-white text-[10px] md:text-xs lg:text-sm group-hover:translate-x-1 transition-transform duration-300" />
+                                    </div>
+                                </ParticleButton>
+                                
+                                <ParticleButton
+                                    onClick={() => {
+                                        const link = document.createElement('a');
+                                        link.href = '/Harsh_Resume.pdf';
+                                        link.download = 'Harsh_Resume.pdf';
+                                        document.body.appendChild(link);
+                                        link.click();
+                                        document.body.removeChild(link);
+                                    }}
+                                    className="group bg-white text-black px-3 py-1.5 md:px-5 md:py-2.5 lg:px-6 lg:py-3 font-semibold text-[10px] md:text-xs lg:text-sm w-fit border-2 border-black cursor-pointer"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3">
+                                        <span>Resume</span>
+                                        <svg className="w-2.5 h-2.5 md:w-3 md:h-3 lg:w-4 lg:h-4 group-hover:translate-y-[-2px] transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                        </svg>
+                                    </div>
+                                </ParticleButton>
+                            </div>
+                        </motion.div>
+
+                        {/* Right Column - Smaller Image */}
+                        <motion.div
+                            className="flex-shrink-0 w-32 sm:w-40 md:w-56 lg:w-72 xl:w-96"
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                            viewport={{ once: true }}
+                        >
+                            <div 
+                                className="relative flex items-center justify-center bg-[#E5E5E5] overflow-hidden rounded-b-xl md:rounded-b-2xl lg:rounded-b-3xl"
+                                style={{
+                                    width: '100%',
+                                    aspectRatio: '3/4',
+                                    maxHeight: '400px'
+                                }}
+                            >
+                                <div 
+                                    className="relative w-full h-full overflow-hidden rounded-b-xl md:rounded-b-2xl lg:rounded-b-3xl"
+                                >
+                                    <Image
+                                        src="/author.jpeg"
+                                        alt="Harsh - Full-Stack & MLOPS Developer"
+                                        fill
+                                        className="object-cover"
+                                        priority
+                                    />
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    {/* Horizontal Menu Bar - Mobile/Tablet */}
+                    <div 
+                        className="mt-8 md:mt-12 w-full z-20 flex items-center justify-center overflow-hidden bg-black py-3 md:py-4"
+                    >
+                        {/* Particle Background Effect - Starry Sky */}
+                        <div className="absolute inset-0">
+                            {menuParticles.map((particle, i) => (
+                                <div
+                                    key={i}
+                                    className="absolute rounded-full bg-gray-400"
+                                    style={{
+                                        width: `${particle.size}px`,
+                                        height: `${particle.size}px`,
+                                        left: `${particle.left}%`,
+                                        top: `${particle.top}%`,
+                                        opacity: particle.opacity
+                                    }}
+                                />
+                            ))}
+                        </div>
+
+                        {/* Menu Items - Responsive */}
+                        <div 
+                            className={`relative z-10 flex items-center justify-center flex-wrap px-4 ${spaceGrotesk.className}`}
+                            style={{ gap: '0.5rem' }}
+                        >
+                            <span className="text-white uppercase font-bold text-[8px] sm:text-[10px] md:text-xs tracking-[0.1em]">WEB DEV</span>
+                            <span className="text-white text-xs md:text-sm">✦</span>
+                            <span className="text-white uppercase font-bold text-[8px] sm:text-[10px] md:text-xs tracking-[0.1em]">APP DEV</span>
+                            <span className="text-white text-xs md:text-sm">✦</span>
+                            <span className="text-white uppercase font-bold text-[8px] sm:text-[10px] md:text-xs tracking-[0.1em]">WRITING</span>
+                            <span className="text-white text-xs md:text-sm">✦</span>
+                            <span className="text-white uppercase font-bold text-[8px] sm:text-[10px] md:text-xs tracking-[0.1em]">WEB FLOW</span>
+                            <span className="text-white text-xs md:text-sm">✦</span>
+                            <span className="text-white uppercase font-bold text-[8px] sm:text-[10px] md:text-xs tracking-[0.1em]">BRANDING</span>
+                        </div>
+                    </div>
+
+                    {/* Social Media Carousel - Mobile/Tablet - Right below menu bar */}
+                    <motion.div 
+                        className="relative z-10 px-4 carousel-mobile-wrapper"
+                        style={{ marginTop: '-2rem' }}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ duration: 0.6 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                    >
+                        <SocialCarousel />
+                    </motion.div>
+                </div>
+            </section>
+            
+            {/* Style override for mobile carousel padding */}
+            <style jsx global>{`
+                .carousel-mobile-wrapper > div {
+                    padding-top: 0 !important;
+                }
+            `}</style>
+
+            {/* Social Media Carousel - Desktop */}
             <motion.div 
-                className="relative z-10 px-4"
+                className="hidden xl:block relative z-10 px-4"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 transition={{ duration: 0.6 }}
@@ -1049,8 +1210,8 @@ export default function Home() {
 
                     {/* Service Cards with Scroll Indicator */}
                     <div className="relative">
-                        {/* Scroll Down Indicator - Left Side */}
-                        <div className="absolute left-0 top-0 flex flex-col items-center z-10">
+                        {/* Scroll Down Indicator - Left Side - Hidden on mobile, visible on desktop */}
+                        <div className="hidden md:flex absolute left-0 top-0 flex-col items-center z-10">
                             <div className="flex flex-col items-center">
                                 <span className={`text-black uppercase text-[10px] md:text-xs tracking-[0.3em] ${spaceGrotesk.className}`} style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
                                     SCROLL DOWN
@@ -1073,7 +1234,7 @@ export default function Home() {
                         </div>
 
                         {/* Service Cards */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 ml-16 md:ml-20">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 md:ml-20">
                         {/* Web Development Card */}
                         <ServiceCard
                             title="WEB DEVELOPMENT"
