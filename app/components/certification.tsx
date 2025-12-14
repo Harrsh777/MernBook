@@ -180,7 +180,6 @@ const certifications = [
 const CertificationsCarousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState<'left' | 'right'>('right');
-  const [isHovered, setIsHovered] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-rotate effect
@@ -201,12 +200,10 @@ const CertificationsCarousel = () => {
 
   // Pause on hover
   const handleMouseEnter = () => {
-    setIsHovered(true);
     if (intervalRef.current) clearInterval(intervalRef.current);
   };
 
   const handleMouseLeave = () => {
-    setIsHovered(false);
     intervalRef.current = setInterval(() => {
       setDirection('right');
       setActiveIndex(prev => (prev + 1) % certifications.length);

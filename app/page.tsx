@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Inter, Space_Grotesk, Playfair_Display } from 'next/font/google';
+import { Space_Grotesk, Playfair_Display } from 'next/font/google';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from "next/image";
 import { FaArrowRight } from 'react-icons/fa';
@@ -19,7 +19,6 @@ import TestimonialFooter from './components/footer';
 import Skills from './components/Skills';
 import { StaggeredMenu } from './components/menu';
 
-const inter = Inter({ subsets: ['latin'] });
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'] });
 const playfairDisplay = Playfair_Display({ subsets: ['latin'], weight: ['400', '700'] });
 
@@ -360,7 +359,7 @@ export default function Home() {
         onClick?: () => void;
         href?: string;
         className?: string;
-        [key: string]: any;
+        [key: string]: unknown;
     }) => {
         const [isHovered, setIsHovered] = React.useState(false);
         const [particles, setParticles] = React.useState<Array<{ id: number; x: number; y: number; size: number; opacity: number }>>([]);
@@ -1057,7 +1056,15 @@ export default function Home() {
                                     SCROLL DOWN
                                 </span>
                                 <div className="w-0.5 h-24 md:h-32 bg-black mt-3 md:mt-4"></div>
-                                <button className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-black text-white flex items-center justify-center mt-3 md:mt-4 hover:opacity-90 transition-opacity">
+                                <button 
+                                    onClick={() => {
+                                        const caseStudySection = document.getElementById('case-study');
+                                        if (caseStudySection) {
+                                            caseStudySection.scrollIntoView({ behavior: 'smooth' });
+                                        }
+                                    }}
+                                    className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-black text-white flex items-center justify-center mt-3 md:mt-4 hover:opacity-90 transition-opacity cursor-pointer"
+                                >
                                     <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                                     </svg>

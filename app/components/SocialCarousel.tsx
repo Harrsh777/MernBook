@@ -28,7 +28,7 @@ const platforms = [
 ]
 
 // Social Platform Card with Particle Effect
-const SocialCard = ({ platform, index, isFirst }: { platform: typeof platforms[0]; index: number; isFirst: boolean }) => {
+const SocialCard = ({ platform, isFirst }: { platform: typeof platforms[0]; isFirst: boolean }) => {
   const [isHovered, setIsHovered] = useState(false)
   const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; size: number; opacity: number }>>([])
   const isBlack = isFirst || isHovered
@@ -195,14 +195,11 @@ export default function SocialCarousel() {
         {[...platforms, ...platforms].map((platform, idx) => {
           // Determine if this is the first item in the first set
           const isFirst = idx === 0
-          // Use modulo to get the original index for styling
-          const originalIndex = idx % platforms.length
           
           return (
             <SocialCard
               key={`${platform.name}-${idx}`}
               platform={platform}
-              index={originalIndex}
               isFirst={isFirst}
             />
           )

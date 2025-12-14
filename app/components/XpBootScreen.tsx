@@ -1,5 +1,7 @@
 "use client";
 
+import Image from 'next/image';
+
 export default function Home() {
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-black relative">
@@ -19,11 +21,15 @@ export default function Home() {
       </div>
 
       {/* Your centered image */}
-      <img
-        src="/MacinHarsh.png"
-        alt="Centered Image"
-        className="max-w-full max-h-full scale-[1.1]"
-      />
+      <div className="relative w-full h-full flex items-center justify-center">
+        <Image
+          src="/MacinHarsh.png"
+          alt="Centered Image"
+          fill
+          className="object-contain scale-[1.1]"
+          priority
+        />
+      </div>
 
       <style jsx>{`
         /* ------------------------------
