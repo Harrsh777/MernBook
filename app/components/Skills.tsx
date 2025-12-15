@@ -134,7 +134,7 @@ const Skills = () => {
       id="skills"
       className="relative bg-white px-4 md:px-6 lg:px-8
                  py-14 md:py-16
-                 max-h-[800px]"
+                 max-h-[800px] md:max-h-[800px]"
     >
       <div className="max-w-7xl mx-auto overflow-hidden">
         {/* Header */}

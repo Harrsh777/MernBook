@@ -586,7 +586,7 @@ export default function Home() {
 
         return (
             <motion.div
-                className="relative overflow-hidden rounded-lg border-2 cursor-pointer"
+                className="relative overflow-hidden rounded-lg border-2 cursor-pointer service-card-wrapper-mobile"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 style={{ minHeight: '280px' }}
@@ -637,7 +637,7 @@ export default function Home() {
 
                 {/* Card Content */}
                 <motion.div 
-                    className={`relative z-10 p-6 md:p-8 flex flex-col h-full min-h-[280px] md:min-h-[300px] pointer-events-auto`}
+                    className={`relative z-10 p-4 md:p-6 lg:p-8 flex flex-col h-full min-h-[220px] md:min-h-[280px] lg:min-h-[300px] pointer-events-auto service-card-mobile`}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     animate={{
@@ -650,7 +650,7 @@ export default function Home() {
                 >
                     {/* Icon */}
                     <motion.div 
-                        className="mb-4 md:mb-6"
+                        className="mb-3 md:mb-4 lg:mb-6 service-icon-mobile"
                         animate={{
                             color: isBlack ? '#FFFFFF' : '#000000',
                         }}
@@ -663,7 +663,7 @@ export default function Home() {
                     </motion.div>
 
                     {/* Title */}
-                    <h3 className={`text-lg md:text-xl lg:text-2xl font-bold uppercase mb-auto leading-tight ${spaceGrotesk.className}`}>
+                    <h3 className={`text-base md:text-lg lg:text-xl xl:text-2xl font-bold uppercase mb-auto leading-tight ${spaceGrotesk.className}`}>
                         {title.split(' ').map((word, i) => (
                             <React.Fragment key={i}>
                                 {word}
@@ -675,9 +675,9 @@ export default function Home() {
                     {/* Read More */}
                     <button
                         onClick={onReadMore}
-                        className="mt-6 md:mt-8 flex items-center gap-2 group/readmore cursor-pointer"
+                        className="mt-4 md:mt-6 lg:mt-8 flex items-center gap-2 group/readmore cursor-pointer"
                     >
-                        <span className={`text-xs md:text-sm font-semibold uppercase ${spaceGrotesk.className}`}>READ MORE</span>
+                        <span className={`text-[10px] md:text-xs lg:text-sm font-semibold uppercase ${spaceGrotesk.className}`}>READ MORE</span>
                         <motion.div
                             animate={{
                                 color: isBlack ? '#FFFFFF' : '#000000',
@@ -844,7 +844,7 @@ export default function Home() {
                         {/* Top Label - Removed, moved to fixed position button */}
 
                         {/* Subheading */}
-                        <h2 className={`text-sm md:text-base lg:text-lg text-black ${playfairDisplay.className} font-normal`}>
+                        <h2 className={`text-sm md:text-base lg:text-lg text-black mt-20 ${playfairDisplay.className} font-normal`}>
                             Hey, I&apos;m Harsh,
                         </h2>
 
@@ -1002,7 +1002,7 @@ export default function Home() {
                 </div>
 
                 {/* Mobile/Tablet Responsive Layout */}
-                <div className="xl:hidden relative w-full min-h-screen pt-16 md:pt-20 pb-8 px-4 md:px-6">
+                <div className="xl:hidden relative w-full min-h-screen pt-16 md:pt-20 pb-0 md:pb-8 px-4 md:px-6 mobile-hero-container">
                     <div className="flex flex-row items-start gap-3 md:gap-6 lg:gap-8 max-w-6xl mx-auto">
                         {/* Left Column - Text Content */}
                         <motion.div
@@ -1031,12 +1031,14 @@ export default function Home() {
                             </h1>
 
                             {/* Description Paragraph */}
-                            <p className={`text-black text-[9px] md:text-[10px] lg:text-xs leading-relaxed mt-2 md:mt-4 ${playfairDisplay.className} font-normal`}>
-                            Transforming ideas into scalable software, Development that powers reliable, intelligent products.
+                            <p className={`text-black text-[9px] md:text-[10px] lg:text-xs leading-relaxed mt-2 md:mt-4 ${playfairDisplay.className} font-normal mobile-description`}>
+                            <span className="block">Transforming ideas into scalable software,</span>
+                            <span className="block">Development that powers reliable,</span>
+                            <span className="block">intelligent products.</span>
                             </p>
 
                             {/* Contact and Resume Buttons */}
-                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-3 lg:gap-4 mt-2">
+                            <div className="flex flex-row items-center gap-2 md:gap-3 lg:gap-4 mt-2">
                                 <ParticleButton
                                     onClick={() => router.push('/contact')}
                                     className="group bg-black text-white px-3 py-1.5 md:px-5 md:py-2.5 lg:px-6 lg:py-3 font-semibold text-[10px] md:text-xs lg:text-sm w-fit border-2 border-white cursor-pointer"
@@ -1074,7 +1076,7 @@ export default function Home() {
 
                         {/* Right Column - Smaller Image */}
                         <motion.div
-                            className="flex-shrink-0 w-32 sm:w-40 md:w-56 lg:w-72 xl:w-96"
+                            className="flex-shrink-0 w-32 sm:w-40 md:w-56 lg:w-72 xl:w-96 mobile-photo-left"
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6 }}
@@ -1105,7 +1107,7 @@ export default function Home() {
 
                     {/* Horizontal Menu Bar - Mobile/Tablet */}
                     <div 
-                        className="mt-8 md:mt-12 w-full z-20 flex items-center justify-center overflow-hidden bg-black py-3 md:py-4"
+                        className="mt-8 md:mt-12 w-full z-20 flex items-center justify-center overflow-hidden bg-black py-1 md:py-3 lg:py-4 mobile-menu-bar"
                     >
                         {/* Particle Background Effect - Starry Sky */}
                         <div className="absolute inset-0">
@@ -1143,8 +1145,7 @@ export default function Home() {
 
                     {/* Social Media Carousel - Mobile/Tablet - Right below menu bar */}
                     <motion.div 
-                        className="relative z-10 px-4 carousel-mobile-wrapper"
-                        style={{ marginTop: '-2rem' }}
+                        className="relative z-10 px-4 carousel-mobile-wrapper mt-1 md:mt-4 lg:mt-6 mobile-carousel-gap"
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         transition={{ duration: 0.6 }}
@@ -1155,10 +1156,189 @@ export default function Home() {
                 </div>
             </section>
             
-            {/* Style override for mobile carousel padding */}
+            {/* Style override for mobile carousel padding and size */}
             <style jsx global>{`
                 .carousel-mobile-wrapper > div {
                     padding-top: 0 !important;
+                    padding-bottom: 0 !important;
+                }
+                
+                @media (max-width: 1279px) {
+                    .carousel-mobile-wrapper > div {
+                        padding-bottom: 0 !important;
+                    }
+                }
+                
+                /* Make social carousel smaller in mobile view */
+                @media (max-width: 1279px) {
+                    .carousel-mobile-wrapper {
+                        max-width: 100% !important;
+                    }
+                    
+                    .carousel-mobile-wrapper .carousel-scroll {
+                        gap: 0.5rem !important;
+                        padding-left: 0.75rem !important;
+                        padding-right: 0.75rem !important;
+                    }
+                    
+                    .carousel-mobile-wrapper button {
+                        min-width: 90px !important;
+                        max-width: 90px !important;
+                        height: 30px !important;
+                        padding-left: 0.5rem !important;
+                        padding-right: 0.5rem !important;
+                        gap: 0.375rem !important;
+                    }
+                    
+                    .carousel-mobile-wrapper button svg,
+                    .carousel-mobile-wrapper button .react-icons {
+                        width: 12px !important;
+                        height: 12px !important;
+                    }
+                    
+                    .carousel-mobile-wrapper button span {
+                        font-size: 0.45rem !important;
+                    }
+                    
+                    .carousel-mobile-wrapper > div {
+                        padding-top: 0 !important;
+                        padding-bottom: 0 !important;
+                    }
+                }
+                
+                /* Reduce gap between social carousel and services in mobile */
+                @media (max-width: 1279px) {
+                    .mobile-services-section {
+                        padding-top: 0 !important;
+                        margin-top: 0 !important;
+                    }
+                    
+                    .carousel-mobile-wrapper {
+                        margin-bottom: 0 !important;
+                        padding-bottom: 0 !important;
+                        margin-top: 0 !important;
+                    }
+                    
+                    .carousel-mobile-wrapper > div {
+                        padding-bottom: 0 !important;
+                        padding-top: 0 !important;
+                        margin-bottom: 0 !important;
+                    }
+                    
+                    /* Remove any gap from carousel container */
+                    .carousel-mobile-wrapper .social-carousel-mobile {
+                        margin-bottom: 0 !important;
+                        padding-bottom: 0 !important;
+                        margin-top: 0 !important;
+                    }
+                    
+                    /* Ensure no gap between carousel and services */
+                    section.mobile-services-section {
+                        margin-top: 0 !important;
+                        padding-top: 0 !important;
+                    }
+                    
+                    /* Remove any spacing from hero section end */
+                    section.bg-\\[\\#F5F5F5\\] {
+                        padding-bottom: 0 !important;
+                        margin-bottom: 0 !important;
+                    }
+                    
+                    /* Remove all spacing between carousel wrapper and services section */
+                    .carousel-mobile-wrapper {
+                        margin-bottom: 0 !important;
+                    }
+                    
+                    /* Target the hero section container that wraps carousel */
+                    section.bg-\\[\\#F5F5F5\\] > div > div:last-child {
+                        padding-bottom: 0 !important;
+                        margin-bottom: 0 !important;
+                    }
+                    
+                    /* Remove padding from hero container */
+                    .mobile-hero-container {
+                        padding-bottom: 0 !important;
+                    }
+                    
+                    /* Remove any gap from the section closing */
+                    section.bg-\\[\\#F5F5F5\\] + section,
+                    section.bg-\\[\\#F5F5F5\\] ~ section.mobile-services-section {
+                        margin-top: 0 !important;
+                        padding-top: 0 !important;
+                    }
+                }
+                
+                /* Shift photo to left in mobile */
+                @media (max-width: 1279px) {
+                    .mobile-photo-left {
+                        margin-left: -1.5rem !important;
+                    }
+                }
+                
+                /* Make menu bar height smaller in mobile */
+                @media (max-width: 1279px) {
+                    .mobile-menu-bar {
+                        padding-top: 0.25rem !important;
+                        padding-bottom: 0.25rem !important;
+                    }
+                }
+                
+                /* Add 0.5cm gap between menu items and social carousel in mobile */
+                @media (max-width: 1279px) {
+                    .mobile-carousel-gap {
+                        margin-top: 0.5cm !important;
+                    }
+                }
+                
+                /* Make description text display in 3 lines on mobile */
+                @media (max-width: 1279px) {
+                    .mobile-description {
+                        display: block !important;
+                        line-height: 1.4 !important;
+                        max-width: 100% !important;
+                    }
+                    
+                    .mobile-description span {
+                        display: block !important;
+                    }
+                }
+                
+                /* Make service cards smaller in mobile */
+                @media (max-width: 1279px) {
+                    .service-card-wrapper-mobile {
+                        min-height: 200px !important;
+                    }
+                    
+                    .service-card-mobile {
+                        min-height: 180px !important;
+                    }
+                    
+                    .service-card-mobile .service-icon-mobile svg {
+                        width: 2.5rem !important;
+                        height: 2.5rem !important;
+                    }
+                }
+                
+                /* Fix overlapping between Skills and LeetCode Dashboard in mobile */
+                @media (max-width: 1279px) {
+                    .mobile-skills-section {
+                        padding-bottom: 1rem !important;
+                    }
+                    
+                    .mobile-skills-section #skills {
+                        padding-bottom: 2rem !important;
+                        max-height: none !important;
+                    }
+                    
+                    .mobile-leetcode-spacing {
+                        margin-top: 3rem !important;
+                        padding-top: 2rem !important;
+                    }
+                    
+                    .mobile-leetcode-container {
+                        padding-top: 1rem !important;
+                        min-height: auto !important;
+                    }
                 }
             `}</style>
 
@@ -1174,7 +1354,7 @@ export default function Home() {
             </motion.div>
 
             {/* Services Section - WHAT I'M OFFERING */}
-            <section className="relative bg-white py-16 md:py-24 px-4 md:px-6 lg:px-8">
+            <section className="relative bg-white py-2 md:py-16 lg:py-24 px-4 md:px-6 lg:px-8 mobile-services-section">
                 <div className="max-w-7xl mx-auto">
                     {/* Top Section */}
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-8">
@@ -1284,9 +1464,11 @@ export default function Home() {
                 <PortfolioGrid/>
             </section>
             
-            <section id="skills">
+            <section id="skills" className="mobile-skills-section">
                 <Skills />
-                <LeetCodeDashboard/>
+                <div className="mobile-leetcode-spacing">
+                    <LeetCodeDashboard/>
+                </div>
             </section>
             
             <section id="certifications">

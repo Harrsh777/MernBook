@@ -115,7 +115,7 @@ const LeetCodeDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-white text-black p-4 sm:p-6 lg:p-8 mobile-leetcode-container">
       <div className="max-w-screen-2xl mx-auto">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}

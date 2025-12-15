@@ -56,7 +56,7 @@ const SocialCard = ({ platform, isFirst }: { platform: typeof platforms[0]; isFi
   return (
     <motion.button
       onClick={() => window.open(platform.url, '_blank')}
-      className="relative overflow-hidden border-2 border-black min-w-[180px] md:min-w-[200px] h-[70px] md:h-[80px] flex items-center justify-center gap-3 px-6 cursor-pointer"
+      className="relative overflow-hidden border-2 border-black min-w-[90px] md:min-w-[180px] lg:min-w-[200px] max-w-[90px] md:max-w-none lg:max-w-none h-[30px] md:h-[70px] lg:h-[80px] flex items-center justify-center gap-2 md:gap-3 px-2 md:px-6 cursor-pointer social-card-mobile"
       onMouseEnter={() => {
         if (!isFirst) {
           setIsHovered(true)
@@ -119,7 +119,7 @@ const SocialCard = ({ platform, isFirst }: { platform: typeof platforms[0]; isFi
 
       {/* Icon */}
       <motion.div
-        className="relative z-10"
+        className="relative z-10 flex items-center justify-center social-icon-wrapper"
         animate={{
           color: isBlack ? '#FFFFFF' : '#000000',
         }}
@@ -131,7 +131,7 @@ const SocialCard = ({ platform, isFirst }: { platform: typeof platforms[0]; isFi
 
       {/* Platform Name */}
       <motion.span
-        className={`relative z-10 text-sm md:text-base font-bold uppercase ${spaceGrotesk.className}`}
+        className={`relative z-10 text-[9px] md:text-sm lg:text-base font-bold uppercase ${spaceGrotesk.className}`}
         animate={{
           color: isBlack ? '#FFFFFF' : '#000000',
         }}
@@ -179,14 +179,14 @@ export default function SocialCarousel() {
   }, [])
 
   return (
-    <div className="w-full overflow-hidden relative py-8 md:py-12 bg-white">
+    <div className="w-full overflow-hidden relative py-2 md:py-4 lg:py-8 xl:py-12 bg-white social-carousel-mobile">
       {/* Gradient fade edges */}
-      <div className="absolute left-0 top-0 bottom-0 w-20 md:w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
-      <div className="absolute right-0 top-0 bottom-0 w-20 md:w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+      <div className="absolute left-0 top-0 bottom-0 w-12 md:w-20 lg:w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+      <div className="absolute right-0 top-0 bottom-0 w-12 md:w-20 lg:w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
 
       <div
         ref={containerRef}
-        className="carousel-scroll flex gap-4 md:gap-6 px-6 md:px-8 overflow-x-scroll"
+        className="carousel-scroll flex gap-2 md:gap-4 lg:gap-6 px-4 md:px-6 lg:px-8 overflow-x-scroll"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
@@ -209,6 +209,27 @@ export default function SocialCarousel() {
       <style jsx>{`
         .carousel-scroll::-webkit-scrollbar {
           display: none;
+        }
+        
+        @media (max-width: 767px) {
+          .social-card-mobile .social-icon-wrapper svg,
+          .social-card-mobile .social-icon-wrapper .react-icons {
+            width: 14px !important;
+            height: 14px !important;
+          }
+        }
+        
+        @media (max-width: 1279px) {
+          .social-carousel-mobile {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            margin-bottom: 0 !important;
+          }
+          
+          .social-carousel-mobile > div {
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+          }
         }
       `}</style>
     </div>

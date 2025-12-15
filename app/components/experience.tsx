@@ -100,7 +100,7 @@ const ExperienceTimeline = () => {
       >
         {/* Numbered Square - Overlapping on left */}
         <motion.div
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-12 h-12 flex items-center justify-center font-bold text-lg z-10"
+          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center font-bold text-sm md:text-lg z-10 experience-number-square"
           animate={{
             backgroundColor: isBlack ? '#FFFFFF' : '#000000',
             color: isBlack ? '#000000' : '#FFFFFF',
@@ -113,7 +113,7 @@ const ExperienceTimeline = () => {
 
         {/* Card */}
         <motion.div
-          className="relative overflow-hidden border-2 border-black cursor-pointer"
+          className="relative overflow-hidden border-2 border-black cursor-pointer experience-card-mobile"
           style={{ marginLeft: '24px', minHeight: '120px', willChange: 'background-color' }}
           initial={false}
           onMouseEnter={() => {
@@ -170,7 +170,7 @@ const ExperienceTimeline = () => {
 
           {/* Card Content */}
           <motion.div 
-            className="relative z-10 p-6 md:p-8 flex items-center justify-between pointer-events-auto"
+            className="relative z-10 p-4 md:p-6 lg:p-8 flex flex-col md:flex-row items-start md:items-center justify-between pointer-events-auto gap-3 md:gap-0"
             onMouseEnter={() => {
               if (!isFirst) {
                 setLocalHovered(true);
@@ -189,17 +189,17 @@ const ExperienceTimeline = () => {
           >
             {/* Left: Job Title and Company */}
             <div className="flex-1">
-              <h3 className={`text-lg md:text-xl font-bold mb-2 ${spaceGrotesk.className}`}>
+              <h3 className={`text-sm md:text-lg lg:text-xl font-bold mb-1 md:mb-2 ${spaceGrotesk.className}`}>
                 {exp.jobTitle}
               </h3>
-              <p className={`text-sm md:text-base ${spaceGrotesk.className}`}>
+              <p className={`text-xs md:text-sm lg:text-base ${spaceGrotesk.className}`}>
                 {exp.company} - {exp.location}
               </p>
             </div>
 
             {/* Vertical Divider */}
             <motion.div 
-              className="w-px h-16 mx-6"
+              className="hidden md:block w-px h-16 mx-6"
               animate={{
                 backgroundColor: isBlack ? '#FFFFFF' : '#000000',
               }}
@@ -208,8 +208,8 @@ const ExperienceTimeline = () => {
             ></motion.div>
 
             {/* Right: Job Duration */}
-            <div className="text-right">
-              <p className={`text-sm md:text-base font-semibold uppercase ${spaceGrotesk.className}`}>
+            <div className="text-right md:text-right">
+              <p className={`text-xs md:text-sm lg:text-base font-semibold uppercase ${spaceGrotesk.className}`}>
                 JOB DURATION - {exp.duration}
               </p>
             </div>
@@ -221,6 +221,20 @@ const ExperienceTimeline = () => {
 
   return (
     <section className="relative bg-white py-16 md:py-24 px-4 md:px-6 lg:px-8">
+      <style jsx>{`
+        @media (max-width: 767px) {
+          .experience-card-mobile {
+            min-height: 100px !important;
+            margin-left: 20px !important;
+          }
+          
+          .experience-number-square {
+            width: 2.5rem !important;
+            height: 2.5rem !important;
+            font-size: 0.875rem !important;
+          }
+        }
+      `}</style>
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="relative mb-12 md:mb-16">

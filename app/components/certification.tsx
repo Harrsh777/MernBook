@@ -260,6 +260,38 @@ const CertificationsCarousel = () => {
 
   return (
     <section className="relative bg-white py-16 md:py-24 px-4 md:px-6 lg:px-8 overflow-hidden">
+      <style jsx>{`
+        @media (max-width: 767px) {
+          .certification-image-mobile {
+            padding: 1rem !important;
+            min-height: 200px !important;
+            max-height: 220px !important;
+          }
+          
+          .certification-details-mobile {
+            padding-top: 1.5rem !important;
+            padding-bottom: 1rem !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+            overflow-y: auto !important;
+            max-height: calc(50% - 20px) !important;
+          }
+          
+          .certification-details-mobile h3 {
+            margin-bottom: 0.5rem !important;
+            line-height: 1.3 !important;
+          }
+          
+          .certification-details-mobile > div > p:first-of-type {
+            margin-bottom: 0.75rem !important;
+            line-height: 1.4 !important;
+          }
+          
+          .certification-details-mobile .flex.flex-wrap {
+            margin-bottom: 0.75rem !important;
+          }
+        }
+      `}</style>
       {/* Decorative background elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-20 right-20 w-32 h-32 md:w-48 md:h-48 border-2 border-gray-200 rotate-45 opacity-30"></div>
@@ -362,7 +394,7 @@ const CertificationsCarousel = () => {
                   {/* Certification content */}
                   <div className="relative h-full flex flex-col md:flex-row">
                     {/* Image section */}
-                    <div className="w-full md:w-2/5 h-1/2 md:h-full bg-gray-50 flex items-center justify-center p-8 border-b-2 md:border-b-0 md:border-r-2 border-black">
+                    <div className="w-full md:w-2/5 h-1/2 md:h-full bg-gray-50 flex items-center justify-center p-4 md:p-6 lg:p-8 border-b-2 md:border-b-0 md:border-r-2 border-black certification-image-mobile">
                       <motion.div 
                         className="relative w-full h-full"
                         initial={{ scale: 0.9, opacity: 0 }}
@@ -380,32 +412,32 @@ const CertificationsCarousel = () => {
                     </div>
                     
                     {/* Details section */}
-                    <div className="w-full md:w-3/5 h-1/2 md:h-full p-6 md:p-8 lg:p-12 flex flex-col justify-center">
+                    <div className="w-full md:w-3/5 h-1/2 md:h-full p-4 md:p-6 lg:p-8 xl:p-12 flex flex-col justify-center certification-details-mobile">
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3, duration: 0.5 }}
-                        className="space-y-4"
+                        className="space-y-3 md:space-y-4"
                       >
-                        <h3 className={`text-2xl md:text-3xl lg:text-4xl font-bold text-black mb-2 ${spaceGrotesk.className}`}>
+                        <h3 className={`text-lg md:text-2xl lg:text-3xl xl:text-4xl font-bold text-black mb-1 md:mb-2 ${spaceGrotesk.className}`}>
                           {certifications[activeIndex].title}
                         </h3>
-                        <p className={`text-lg md:text-xl text-gray-700 mb-6 ${spaceGrotesk.className}`}>
+                        <p className={`text-sm md:text-lg lg:text-xl text-gray-700 mb-4 md:mb-6 ${spaceGrotesk.className}`}>
                           {certifications[activeIndex].issuer}
                         </p>
                         
-                        <div className="flex flex-wrap gap-2 mb-6">
+                        <div className="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
                           {certifications[activeIndex].skills?.slice(0, 6).map((skill) => (
                             <span 
                               key={skill}
-                              className={`px-3 py-1 bg-white border-2 border-black text-sm text-black ${spaceGrotesk.className}`}
+                              className={`px-2 py-0.5 md:px-3 md:py-1 bg-white border-2 border-black text-[10px] md:text-xs lg:text-sm text-black ${spaceGrotesk.className}`}
                             >
                               {skill}
                             </span>
                           ))}
                         </div>
                         
-                        <div className={`grid grid-cols-2 gap-4 text-sm ${spaceGrotesk.className}`}>
+                        <div className={`grid grid-cols-2 gap-3 md:gap-4 text-xs md:text-sm ${spaceGrotesk.className}`}>
                           <div>
                             <p className="font-semibold text-black mb-1">Issued</p>
                             <p className="text-gray-700">{certifications[activeIndex].issued}</p>
@@ -419,7 +451,7 @@ const CertificationsCarousel = () => {
                           {certifications[activeIndex].credentialId && (
                             <div className="col-span-2">
                               <p className="font-semibold text-black mb-1">Credential ID</p>
-                              <p className="text-gray-700 font-mono text-xs break-all">
+                              <p className="text-gray-700 font-mono text-[10px] md:text-xs break-all">
                                 {certifications[activeIndex].credentialId}
                               </p>
                             </div>

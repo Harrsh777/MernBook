@@ -106,7 +106,7 @@ export default function RootLayout({
     },
     alumniOf: {
       '@type': 'EducationalOrganization',
-      name: 'VIT University Chennai',
+      name: 'VIT University Bhopal',
       url: 'https://vit.ac.in'
     },
     description: 'AWS Certified Solutions Architect, VIT\'27 Computer Science student, Google Summer of Code\'24 participant, 5× Hackathon Winner, and Full-Stack Developer specializing in MERN Stack, TypeScript, Spring Boot, REST APIs, Microservices, Docker, Kubernetes, CI/CD, and System Design.',
