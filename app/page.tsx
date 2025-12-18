@@ -208,7 +208,7 @@ export default function Home() {
         return (
             <motion.button
                 onClick={handleEmailClick}
-                className="fixed z-[10000] bg-black text-white px-4 py-2 font-semibold text-xs md:text-sm cursor-pointer rounded-full overflow-hidden"
+                className="fixed z-[10000] bg-black text-white px-4 py-2 font-semibold text-xs md:text-sm cursor-pointer rounded-full overflow-hidden mobile-email-button"
                 style={{ 
                     position: 'fixed',
                     top: '0.5cm',
@@ -299,7 +299,7 @@ export default function Home() {
                     }
                     setIsMenuOpen(!isMenuOpen);
                 }}
-                className="fixed z-[10000] bg-black text-white px-6 py-3 font-semibold text-sm md:text-base cursor-pointer rounded-full overflow-hidden"
+                className="fixed z-[10000] bg-black text-white px-6 py-3 font-semibold text-sm md:text-base cursor-pointer rounded-full overflow-hidden mobile-menu-button"
                 style={{ 
                     position: 'fixed',
                     top: '0.5cm',
@@ -779,9 +779,20 @@ export default function Home() {
                     overflow-y: auto;
                     top: 0 !important;
                     right: 0 !important;
+                    left: auto !important;
                     position: fixed !important;
                     z-index: 9998 !important;
+                }
+                
+                /* Hide menu panel by default, only show when data-open is present */
+                .staggered-menu-container .staggered-menu-wrapper:not([data-open]) .staggered-menu-panel {
+                    pointer-events: none !important;
+                    visibility: hidden !important;
+                }
+                
+                .staggered-menu-container .staggered-menu-wrapper[data-open] .staggered-menu-panel {
                     pointer-events: auto !important;
+                    visibility: visible !important;
                 }
                 .staggered-menu-container .staggered-menu-panel * {
                     pointer-events: auto !important;
@@ -825,6 +836,127 @@ export default function Home() {
                     pointer-events: auto !important;
                     position: absolute !important;
                     visibility: hidden !important;
+                }
+                
+                /* Make staggered menu 7cm height and 5cm width in mobile view, hide blue background */
+                @media (max-width: 1279px) {
+                    .staggered-menu-container {
+                        height: 7cm !important;
+                        max-height: 7cm !important;
+                    }
+                    
+                    .staggered-menu-container .staggered-menu-panel {
+                        max-height: 7cm !important;
+                        height: 7cm !important;
+                        width: 3cm !important;
+                        max-width: 3cm !important;
+                        padding: 0.8em 0.6em 0.6em 0.6em !important;
+                        overflow-y: auto !important;
+                        right: 0 !important;
+                        left: auto !important;
+                    }
+                    
+                    .staggered-menu-container .staggered-menu-wrapper {
+                        height: 7cm !important;
+                        max-height: 7cm !important;
+                        width: 3.5cm !important;
+                        right: 0 !important;
+                        left: auto !important;
+                    }
+                    
+                    /* Ensure menu panel is on the right side */
+                    .staggered-menu-container .staggered-menu-wrapper[data-position="right"] .staggered-menu-panel,
+                    .staggered-menu-container .staggered-menu-panel {
+                        right: 0 !important;
+                        left: auto !important;
+                    }
+                    
+                    /* Override any left positioning */
+                    .staggered-menu-container[data-position="right"] .staggered-menu-panel {
+                        right: 0 !important;
+                        left: auto !important;
+                    }
+                    
+                    /* Hide blue prelayers (animation layers) - only show white panel */
+                    .staggered-menu-container .sm-prelayers {
+                        display: none !important;
+                        visibility: hidden !important;
+                        opacity: 0 !important;
+                        pointer-events: none !important;
+                    }
+                    
+                    .staggered-menu-container .sm-prelayer {
+                        display: none !important;
+                        visibility: hidden !important;
+                        opacity: 0 !important;
+                    }
+                    
+                    /* Ensure menu is hidden by default in mobile - let GSAP handle transform */
+                    .staggered-menu-container .staggered-menu-wrapper:not([data-open]) .staggered-menu-panel {
+                        pointer-events: none !important;
+                    }
+                    
+                    .staggered-menu-container .staggered-menu-wrapper[data-open] .staggered-menu-panel {
+                        pointer-events: auto !important;
+                    }
+                    
+                    /* Reduce menu content sizes to fit properly */
+                    .staggered-menu-container .sm-panel-inner {
+                        gap: 0.25rem !important;
+                        flex: 1 !important;
+                        min-height: 0 !important;
+                    }
+                    
+                    .staggered-menu-container .sm-panel-item {
+                        font-size: 0.9rem !important;
+                        padding-right: 1.2em !important;
+                        letter-spacing: -0.5px !important;
+                        line-height: 1.1 !important;
+                    }
+                    
+                    .staggered-menu-container .sm-panel-list {
+                        gap: 0.15rem !important;
+                    }
+                    
+                    .staggered-menu-container .sm-panel-title {
+                        font-size: 0.6rem !important;
+                    }
+                    
+                    .staggered-menu-container .sm-socials {
+                        margin-top: auto !important;
+                        padding-top: 0.4rem !important;
+                        gap: 0.3rem !important;
+                        flex-shrink: 0 !important;
+                    }
+                    
+                    .staggered-menu-container .sm-socials-title {
+                        font-size: 0.55rem !important;
+                        margin-bottom: 0.2rem !important;
+                    }
+                    
+                    .staggered-menu-container .sm-socials-link {
+                        font-size: 0.40rem !important;
+                    }
+                    
+                    .staggered-menu-container .sm-socials-list {
+                        gap: 0.4rem !important;
+                        flex-wrap: wrap !important;
+                    }
+                    
+                    .staggered-menu-container .sm-panel-list[data-numbering] .sm-panel-item::after {
+                        font-size: 8px !important;
+                        right: 0.3em !important;
+                        top: 0.1em !important;
+                        font-weight: 400 !important;
+                    }
+                    
+                    /* Ensure proper overflow handling */
+                    .staggered-menu-container .sm-panel-itemLabel {
+                        display: block !important;
+                        white-space: nowrap !important;
+                        overflow: hidden !important;
+                        text-overflow: ellipsis !important;
+                    }
                 }
             `}</style>
 
@@ -1003,7 +1135,7 @@ export default function Home() {
 
                 {/* Mobile/Tablet Responsive Layout */}
                 <div className="xl:hidden relative w-full min-h-screen pt-16 md:pt-20 pb-0 md:pb-8 px-4 md:px-6 mobile-hero-container">
-                    <div className="flex flex-row items-start gap-3 md:gap-6 lg:gap-8 max-w-6xl mx-auto">
+                    <div className="flex flex-row items-start gap-3 md:gap-6 lg:gap-8 max-w-6xl mx-auto mobile-hero-content">
                         {/* Left Column - Text Content */}
                         <motion.div
                             className="flex-1 flex flex-col space-y-2 md:space-y-4 lg:space-y-6 z-10 min-w-0"
@@ -1013,7 +1145,7 @@ export default function Home() {
                             viewport={{ once: true }}
                         >
                             {/* Subheading */}
-                            <h2 className={`text-xs md:text-sm lg:text-base text-black ${playfairDisplay.className} font-normal`}>
+                            <h2 className={`text-xs md:text-sm lg:text-base text-black ${playfairDisplay.className} font-normal mobile-hey-harsh`}>
                                 Hey, I&apos;m Harsh,
                             </h2>
 
@@ -1081,13 +1213,17 @@ export default function Home() {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6 }}
                             viewport={{ once: true }}
+                            style={{
+                                marginTop: 0
+                            }}
                         >
                             <div 
-                                className="relative flex items-center justify-center bg-[#E5E5E5] overflow-hidden rounded-b-xl md:rounded-b-2xl lg:rounded-b-3xl"
+                                className="relative flex items-start justify-center bg-[#E5E5E5] overflow-hidden rounded-b-xl md:rounded-b-2xl lg:rounded-b-3xl mobile-photo-container"
                                 style={{
                                     width: '100%',
                                     aspectRatio: '3/4',
-                                    maxHeight: '400px'
+                                    maxHeight: '400px',
+                                    marginTop: 0
                                 }}
                             >
                                 <div 
@@ -1108,6 +1244,7 @@ export default function Home() {
                     {/* Horizontal Menu Bar - Mobile/Tablet */}
                     <div 
                         className="mt-8 md:mt-12 w-full z-20 flex items-center justify-center overflow-hidden bg-black py-1 md:py-3 lg:py-4 mobile-menu-bar"
+                        style={{ width: '100%', marginLeft: 0, marginRight: 0, paddingLeft: 0, paddingRight: 0 }}
                     >
                         {/* Particle Background Effect - Starry Sky */}
                         <div className="absolute inset-0">
@@ -1145,7 +1282,7 @@ export default function Home() {
 
                     {/* Social Media Carousel - Mobile/Tablet - Right below menu bar */}
                     <motion.div 
-                        className="relative z-10 px-4 carousel-mobile-wrapper mt-1 md:mt-4 lg:mt-6 mobile-carousel-gap"
+                        className="relative z-10 px-4 carousel-mobile-wrapper mobile-carousel-gap"
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         transition={{ duration: 0.6 }}
@@ -1197,7 +1334,7 @@ export default function Home() {
                     }
                     
                     .carousel-mobile-wrapper button span {
-                        font-size: 0.45rem !important;
+                        font-size: 0.50rem !important;
                     }
                     
                     .carousel-mobile-wrapper > div {
@@ -1206,46 +1343,94 @@ export default function Home() {
                     }
                 }
                 
-                /* Reduce gap between social carousel and services in mobile */
+                /* Remove all spacing between social carousel and services in mobile */
                 @media (max-width: 1279px) {
-                    .mobile-services-section {
-                        padding-top: 0 !important;
-                        margin-top: 0 !important;
-                    }
-                    
+                    /* Remove margin-top from carousel wrapper and motion.div */
                     .carousel-mobile-wrapper {
-                        margin-bottom: 0 !important;
-                        padding-bottom: 0 !important;
                         margin-top: 0 !important;
-                    }
-                    
-                    .carousel-mobile-wrapper > div {
-                        padding-bottom: 0 !important;
+                        margin-bottom: 0 !important;
                         padding-top: 0 !important;
-                        margin-bottom: 0 !important;
+                        padding-bottom: 0 !important;
                     }
                     
-                    /* Remove any gap from carousel container */
-                    .carousel-mobile-wrapper .social-carousel-mobile {
+                    /* Target motion.div specifically */
+                    .carousel-mobile-wrapper[class*="motion"],
+                    div[class*="motion"].carousel-mobile-wrapper {
                         margin-bottom: 0 !important;
                         padding-bottom: 0 !important;
-                        margin-top: 0 !important;
                     }
                     
-                    /* Ensure no gap between carousel and services */
+                    /* Remove all spacing from carousel inner elements - target SocialCarousel component */
+                    .carousel-mobile-wrapper > div,
+                    .carousel-mobile-wrapper > div.social-carousel-mobile {
+                        padding-top: 0 !important;
+                        padding-bottom: 0 !important;
+                        margin-top: 0 !important;
+                        margin-bottom: 0 !important;
+                    }
+                    
+                    /* Target the social-carousel-mobile class directly - override py-2 from component */
+                    .social-carousel-mobile {
+                        padding-top: 0 !important;
+                        padding-bottom: 0 !important;
+                        margin-top: 0 !important;
+                        margin-bottom: 0 !important;
+                    }
+                    
+                    /* Override py-2 class from SocialCarousel component */
+                    .social-carousel-mobile[class*="py-"] {
+                        padding-top: 0 !important;
+                        padding-bottom: 0 !important;
+                    }
+                    
+                    /* Remove padding from carousel scroll container */
+                    .carousel-mobile-wrapper .carousel-scroll {
+                        margin-top: 0 !important;
+                        margin-bottom: 0 !important;
+                    }
+                    
+                    /* Remove padding-top from services section - override Tailwind py-2 and pull it up */
                     section.mobile-services-section {
+                        padding-top: 0 !important;
+                        padding-bottom: 0.5rem !important; /* Keep bottom padding */
+                        margin-top: -2rem !important; /* Very aggressive negative margin to pull up */
+                    }
+                    
+                    /* Override Tailwind py-2 utility class specifically */
+                    section.mobile-services-section[class*="py-"] {
+                        padding-top: 0 !important;
+                    }
+                    
+                    /* Target the first div inside services section */
+                    section.mobile-services-section > div {
                         margin-top: 0 !important;
                         padding-top: 0 !important;
                     }
                     
-                    /* Remove any spacing from hero section end */
+                    /* Remove any spacing from hero section and ensure it ends exactly at carousel */
                     section.bg-\\[\\#F5F5F5\\] {
                         padding-bottom: 0 !important;
                         margin-bottom: 0 !important;
                     }
                     
-                    /* Remove all spacing between carousel wrapper and services section */
-                    .carousel-mobile-wrapper {
+                    /* Ensure the last child of hero section (carousel wrapper) has no bottom spacing */
+                    section.bg-\\[\\#F5F5F5\\] .carousel-mobile-wrapper:last-child {
+                        margin-bottom: 0 !important;
+                        padding-bottom: 0 !important;
+                    }
+                    
+                    /* Remove any line-height or other spacing that might create gaps */
+                    section.bg-\\[\\#F5F5F5\\] + section.mobile-services-section {
+                        line-height: 0 !important;
+                    }
+                    
+                    section.mobile-services-section {
+                        line-height: normal !important;
+                    }
+                    
+                    /* Remove padding from hero container */
+                    .mobile-hero-container {
+                        padding-bottom: 0 !important;
                         margin-bottom: 0 !important;
                     }
                     
@@ -1255,31 +1440,141 @@ export default function Home() {
                         margin-bottom: 0 !important;
                     }
                     
-                    /* Remove padding from hero container */
-                    .mobile-hero-container {
+                    /* Remove any gap between sections - pull services section up to carousel */
+                    section.bg-\\[\\#F5F5F5\\] + section.mobile-services-section,
+                    section.bg-\\[\\#F5F5F5\\] ~ section.mobile-services-section {
+                        margin-top: -2rem !important; /* Very aggressive negative margin to eliminate gap */
+                        padding-top: 0 !important;
+                        position: relative !important;
+                        top: 0 !important;
+                    }
+                    
+                    /* Ensure carousel wrapper has no spacing after it */
+                    .carousel-mobile-wrapper + section,
+                    .carousel-mobile-wrapper ~ section {
+                        margin-top: -2rem !important; /* Pull services section up */
+                        padding-top: 0 !important;
+                    }
+                    
+                    /* Target motion.div wrapper if it has spacing */
+                    .carousel-mobile-wrapper.motion-div,
+                    .carousel-mobile-wrapper[class*="motion"] {
+                        margin-bottom: 0 !important;
                         padding-bottom: 0 !important;
                     }
                     
-                    /* Remove any gap from the section closing */
-                    section.bg-\\[\\#F5F5F5\\] + section,
-                    section.bg-\\[\\#F5F5F5\\] ~ section.mobile-services-section {
+                    /* Ensure section elements have no default margins */
+                    section {
+                        margin-top: 0 !important;
+                    }
+                    
+                    /* Specifically target the gap between hero and services */
+                    section.bg-\\[\\#F5F5F5\\] {
+                        margin-bottom: 0 !important;
+                        padding-bottom: 0 !important;
+                    }
+                    
+                    /* Make sure services section starts right after hero */
+                    section.mobile-services-section:first-of-type,
+                    section.bg-white.mobile-services-section {
                         margin-top: 0 !important;
                         padding-top: 0 !important;
                     }
-                }
-                
-                /* Shift photo to left in mobile */
-                @media (max-width: 1279px) {
-                    .mobile-photo-left {
-                        margin-left: -1.5rem !important;
+                    
+                    /* Remove padding from services section inner container */
+                    section.mobile-services-section > div {
+                        padding-top: 0 !important;
+                        margin-top: 0 !important;
                     }
                 }
                 
-                /* Make menu bar height smaller in mobile */
+                /* Make menu button and email button smaller in mobile and position at corners */
+                @media (max-width: 1279px) {
+                    .mobile-menu-button {
+                        padding: 0.375rem 0.75rem !important;
+                        font-size: 0.625rem !important;
+                        top: 0.25cm !important;
+                        right: 0.25cm !important;
+                    }
+                    
+                    .mobile-email-button {
+                        padding: 0.375rem 0.75rem !important;
+                        font-size: 0.625rem !important;
+                        top: 0.25cm !important;
+                        left: 0.25cm !important;
+                    }
+                    
+                    .mobile-email-button span {
+                        font-size: 0.625rem !important;
+                    }
+                }
+                
+                /* Move "Hey, I'm Harsh" paragraph 1cm down in mobile */
+                @media (max-width: 1279px) {
+                    .mobile-hey-harsh {
+                        margin-top: 1.5cm !important;
+                    }
+                }
+                
+                /* Shift photo more to left and stick to top in mobile */
+                @media (max-width: 1279px) {
+                    .mobile-hero-container {
+                        padding-top: 0 !important;
+                    }
+                    
+                    .mobile-hero-content {
+                        position: relative !important;
+                        align-items: flex-start !important;
+                        overflow: visible !important;
+                    }
+                    
+                    .mobile-hero-container {
+                        overflow: visible !important;
+                    }
+                    
+                    .mobile-photo-left {
+                        margin-left: 0 !important;
+                        transform: translateX(-2cm) !important;
+                        margin-top: 0 !important;
+                        padding-top: 0 !important;
+                        align-self: flex-start !important;
+                        position: relative !important;
+                    }
+                    
+                    .mobile-photo-left .mobile-photo-container {
+                        margin-top: 0 !important;
+                        padding-top: 0 !important;
+                        height: 6cm !important;
+                        max-height: 6cm !important;
+                        aspect-ratio: auto !important;
+                        border-radius: 0 0 1cm 1cm !important; /* U-shape: rounded bottom corners */
+                    }
+                    
+                    .mobile-photo-left .mobile-photo-container > div {
+                        height: 6cm !important;
+                        max-height: 6cm !important;
+                    }
+                }
+                
+                /* Make menu bar full width and smaller in mobile */
                 @media (max-width: 1279px) {
                     .mobile-menu-bar {
-                        padding-top: 0.25rem !important;
-                        padding-bottom: 0.25rem !important;
+                        width: 100vw !important;
+                        max-width: 100vw !important;
+                        padding-top: 0.2rem !important;
+                        padding-bottom: 0.2rem !important;
+                        margin-left: calc(-50vw + 50%) !important;
+                        margin-right: calc(-50vw + 50%) !important;
+                        padding-left: 0 !important;
+                        padding-right: 0 !important;
+                        position: relative !important;
+                    }
+                    
+                    /* Ensure parent container doesn't limit width */
+                    .mobile-hero-container .mobile-menu-bar {
+                        width: 100vw !important;
+                        margin-left: calc(-50vw + 50%) !important;
+                        margin-right: calc(-50vw + 50%) !important;
                     }
                 }
                 
