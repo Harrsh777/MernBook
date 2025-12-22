@@ -1170,7 +1170,7 @@ export default function Home() {
                             </p>
 
                             {/* Contact and Resume Buttons */}
-                            <div className="flex flex-row items-center gap-2 md:gap-3 lg:gap-4 mt-2">
+                            <div className="flex flex-row items-center gap-2 md:gap-3 lg:gap-4 mt-2 mobile-hero-buttons">
                                 <ParticleButton
                                     onClick={() => router.push('/contact')}
                                     className="group bg-black text-white px-3 py-1.5 md:px-5 md:py-2.5 lg:px-6 lg:py-3 font-semibold text-[10px] md:text-xs lg:text-sm w-fit border-2 border-white cursor-pointer"
@@ -1283,10 +1283,8 @@ export default function Home() {
                     {/* Social Media Carousel - Mobile/Tablet - Right below menu bar */}
                     <motion.div 
                         className="relative z-10 px-4 carousel-mobile-wrapper mobile-carousel-gap"
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        transition={{ duration: 0.6 }}
-                        viewport={{ once: true, margin: "-100px" }}
+                        initial={{ opacity: 1 }}
+                        animate={{ opacity: 1 }}
                     >
                         <SocialCarousel />
                     </motion.div>
@@ -1310,6 +1308,9 @@ export default function Home() {
                 @media (max-width: 1279px) {
                     .carousel-mobile-wrapper {
                         max-width: 100% !important;
+                        display: block !important;
+                        visibility: visible !important;
+                        opacity: 1 !important;
                     }
                     
                     .carousel-mobile-wrapper .carousel-scroll {
@@ -1353,6 +1354,12 @@ export default function Home() {
                         padding-bottom: 0 !important;
                     }
                     
+                    /* Ensure motion.div wrapper has no spacing */
+                    .carousel-mobile-wrapper[class*="motion"] {
+                        margin-bottom: 0 !important;
+                        padding-bottom: 0 !important;
+                    }
+                    
                     /* Target motion.div specifically */
                     .carousel-mobile-wrapper[class*="motion"],
                     div[class*="motion"].carousel-mobile-wrapper {
@@ -1367,6 +1374,9 @@ export default function Home() {
                         padding-bottom: 0 !important;
                         margin-top: 0 !important;
                         margin-bottom: 0 !important;
+                        display: block !important;
+                        visibility: visible !important;
+                        opacity: 1 !important;
                     }
                     
                     /* Target the social-carousel-mobile class directly - override py-2 from component */
@@ -1378,7 +1388,18 @@ export default function Home() {
                     }
                     
                     /* Override py-2 class from SocialCarousel component */
-                    .social-carousel-mobile[class*="py-"] {
+                    .social-carousel-mobile[class*="py-"],
+                    .carousel-mobile-wrapper .social-carousel-mobile {
+                        padding-top: 0 !important;
+                        padding-bottom: 0 !important;
+                        margin-bottom: 0 !important;
+                    }
+                    
+                    /* Override any Tailwind padding classes on SocialCarousel */
+                    .carousel-mobile-wrapper div[class*="py-2"],
+                    .carousel-mobile-wrapper div[class*="py-4"],
+                    .carousel-mobile-wrapper div[class*="py-8"],
+                    .carousel-mobile-wrapper div[class*="py-12"] {
                         padding-top: 0 !important;
                         padding-bottom: 0 !important;
                     }
@@ -1393,18 +1414,51 @@ export default function Home() {
                     section.mobile-services-section {
                         padding-top: 0 !important;
                         padding-bottom: 0.5rem !important; /* Keep bottom padding */
-                        margin-top: -2rem !important; /* Very aggressive negative margin to pull up */
+                        margin-top: 0 !important;
                     }
                     
-                    /* Override Tailwind py-2 utility class specifically */
-                    section.mobile-services-section[class*="py-"] {
+                    /* Override Tailwind py-2 utility class specifically - more aggressive */
+                    section.mobile-services-section[class*="py-"],
+                    section.mobile-services-section.py-2,
+                    section[class*="mobile-services-section"].py-2,
+                    section.bg-white.mobile-services-section.py-2,
+                    section.relative.bg-white.mobile-services-section {
                         padding-top: 0 !important;
+                        padding-bottom: 0.5rem !important;
+                        margin-top: 0 !important;
+                    }
+                    
+                    /* Remove all top spacing from services section - maximum specificity */
+                    section.mobile-services-section,
+                    section.bg-white.mobile-services-section,
+                    section.relative.bg-white.mobile-services-section {
+                        margin-top: 0 !important;
+                        padding-top: 0 !important;
+                    }
+                    
+                    /* Force remove padding with inline style level specificity */
+                    section.mobile-services-section[class*="py-2"] {
+                        padding-top: 0 !important;
+                        padding-bottom: 0.5rem !important;
                     }
                     
                     /* Target the first div inside services section */
                     section.mobile-services-section > div {
                         margin-top: 0 !important;
                         padding-top: 0 !important;
+                    }
+                    
+                    /* Ultra-specific override for Tailwind py-2 class */
+                    section.relative.bg-white.py-2.px-4.mobile-services-section,
+                    section.relative.bg-white.py-2.px-4.md\\:px-6.lg\\:px-8.mobile-services-section {
+                        padding-top: 0 !important;
+                        margin-top: 0 !important;
+                    }
+                    
+                    /* Use attribute selector for maximum specificity */
+                    section[class*="mobile-services-section"][class*="py-2"] {
+                        padding-top: 0 !important;
+                        margin-top: 0 !important;
                     }
                     
                     /* Remove any spacing from hero section and ensure it ends exactly at carousel */
@@ -1416,6 +1470,18 @@ export default function Home() {
                     /* Ensure the last child of hero section (carousel wrapper) has no bottom spacing */
                     section.bg-\\[\\#F5F5F5\\] .carousel-mobile-wrapper:last-child {
                         margin-bottom: 0 !important;
+                        padding-bottom: 0 !important;
+                    }
+                    
+                    /* Remove bottom padding from mobile hero container */
+                    section.bg-\\[\\#F5F5F5\\] .mobile-hero-container,
+                    .mobile-hero-container {
+                        padding-bottom: 0 !important;
+                        margin-bottom: 0 !important;
+                    }
+                    
+                    /* Override any Tailwind padding classes on mobile hero container */
+                    .mobile-hero-container[class*="pb-"] {
                         padding-bottom: 0 !important;
                     }
                     
@@ -1443,17 +1509,73 @@ export default function Home() {
                     /* Remove any gap between sections - pull services section up to carousel */
                     section.bg-\\[\\#F5F5F5\\] + section.mobile-services-section,
                     section.bg-\\[\\#F5F5F5\\] ~ section.mobile-services-section {
-                        margin-top: -2rem !important; /* Very aggressive negative margin to eliminate gap */
+                        margin-top: -1rem !important;
                         padding-top: 0 !important;
                         position: relative !important;
                         top: 0 !important;
                     }
                     
+                    /* Ultra-aggressive: Remove all possible spacing sources */
+                    section.bg-\\[\\#F5F5F5\\] {
+                        margin-bottom: 0 !important;
+                        padding-bottom: 0 !important;
+                    }
+                    
+                    /* Ensure services section has zero top spacing */
+                    section.mobile-services-section:first-of-type {
+                        margin-top: 0 !important;
+                        padding-top: 0 !important;
+                    }
+                    
+                    /* Aggressively remove all spacing - target all possible selectors */
+                    section.bg-\\[\\#F5F5F5\\] ~ section,
+                    section.bg-\\[\\#F5F5F5\\] + section {
+                        margin-top: 0 !important;
+                    }
+                    
+                    /* Remove spacing from hero section end */
+                    section.bg-\\[\\#F5F5F5\\] {
+                        margin-bottom: 0 !important;
+                        padding-bottom: 0 !important;
+                    }
+                    
+                    /* Remove spacing from mobile hero container and all its children */
+                    .mobile-hero-container,
+                    .mobile-hero-container > * {
+                        margin-bottom: 0 !important;
+                        padding-bottom: 0 !important;
+                    }
+                    
+                    /* Ensure carousel wrapper has absolutely no bottom spacing */
+                    .carousel-mobile-wrapper,
+                    .carousel-mobile-wrapper.mobile-carousel-gap {
+                        margin-bottom: 0 !important;
+                        padding-bottom: 0 !important;
+                    }
+                    
+                    /* Remove any spacing from the last element in hero container */
+                    .mobile-hero-container > *:last-child {
+                        margin-bottom: 0 !important;
+                        padding-bottom: 0 !important;
+                    }
+                    
                     /* Ensure carousel wrapper has no spacing after it */
                     .carousel-mobile-wrapper + section,
                     .carousel-mobile-wrapper ~ section {
-                        margin-top: -2rem !important; /* Pull services section up */
+                        margin-top: 0 !important;
                         padding-top: 0 !important;
+                    }
+                    
+                    /* Remove any bottom spacing from carousel wrapper and SocialCarousel */
+                    .carousel-mobile-wrapper > div.social-carousel-mobile {
+                        margin-bottom: 0 !important;
+                        padding-bottom: 0 !important;
+                    }
+                    
+                    /* Remove bottom spacing from carousel scroll container */
+                    .carousel-mobile-wrapper .carousel-scroll {
+                        margin-bottom: 0 !important;
+                        padding-bottom: 0 !important;
                     }
                     
                     /* Target motion.div wrapper if it has spacing */
@@ -1465,6 +1587,12 @@ export default function Home() {
                     
                     /* Ensure section elements have no default margins */
                     section {
+                        margin-top: 0 !important;
+                        margin-bottom: 0 !important;
+                    }
+                    
+                    /* Remove any default browser spacing */
+                    section + section {
                         margin-top: 0 !important;
                     }
                     
@@ -1498,14 +1626,36 @@ export default function Home() {
                     }
                     
                     .mobile-email-button {
-                        padding: 0.375rem 0.75rem !important;
-                        font-size: 0.625rem !important;
+                        padding: 0.25rem 0.5rem !important;
+                        font-size: 0.5rem !important;
                         top: 0.25cm !important;
                         left: 0.25cm !important;
                     }
                     
                     .mobile-email-button span {
-                        font-size: 0.625rem !important;
+                        font-size: 0.5rem !important;
+                    }
+                    
+                    /* Make Get in touch and Resume buttons smaller in mobile */
+                    .mobile-hero-buttons > div > div[class*="rounded-full"] {
+                        padding: 0.375rem 0.625rem !important;
+                    }
+                    
+                    .mobile-hero-buttons span {
+                        font-size: 0.5rem !important;
+                    }
+                    
+                    .mobile-hero-buttons svg {
+                        width: 0.5rem !important;
+                        height: 0.5rem !important;
+                    }
+                    
+                    .mobile-hero-buttons > div > div[class*="rounded-full"] > div[class*="flex"] {
+                        gap: 0.375rem !important;
+                    }
+                    
+                    .mobile-hero-buttons {
+                        gap: 0.5rem !important;
                     }
                 }
                 
@@ -1675,7 +1825,7 @@ export default function Home() {
                                 WebkitBoxOrient: 'vertical',
                                 overflow: 'hidden'
                             }}>
-                                There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.
+                                I deliver cutting-edge digital solutions including responsive web applications, cross-platform mobile apps, and compelling visual designs that transform your ideas into powerful, user-centric products.
                             </p>
                             <ParticleButton className="bg-black text-white px-6 py-3 uppercase text-xs md:text-sm font-semibold whitespace-nowrap flex-shrink-0 cursor-pointer">
                                 ALL SERVICE
