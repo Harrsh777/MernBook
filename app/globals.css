@@ -223,4 +223,28 @@
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
   }
+
+  /* Palak joy page – floating elements */
+  @keyframes palak-float {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
+    50% { transform: translateY(-12px) scale(1.05); opacity: 1; }
+  }
+  @keyframes palak-float-slow {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(4px, -8px); }
+    66% { transform: translate(-2px, -4px); }
+  }
+  @keyframes palak-float-delayed {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .animate-palak-float {
+    animation: palak-float 4s ease-in-out infinite;
+  }
+  .animate-palak-float-slow {
+    animation: palak-float-slow 5s ease-in-out infinite;
+  }
+  .animate-palak-float-delayed {
+    animation: palak-float-delayed 5.5s ease-in-out infinite;
+  }
 }
