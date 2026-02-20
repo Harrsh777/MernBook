@@ -20,6 +20,27 @@ const PROJECTS = [
     imagePosition: 'left' as const,
   },
   {
+    title: 'School SaaS ERP Platform',
+    category: 'Full Stack DEVELOPMENT',
+    imageUrl: '/educore.png',
+    link: 'https://www.educorerp.in/',
+    imagePosition: 'left' as const,
+  },
+  {
+    title: 'TrekkinGods: A Trek and Travel Booking Platform',
+    category: 'WEB DEVELOPMENT',
+    imageUrl: '/trek.png',
+    link: 'https://trekkingGods.com/',
+    imagePosition: 'left' as const,
+  },
+  {
+    title: 'Moksha Classes: All-in-One Online Yoga Class Platform',
+    category: 'WEB DEVELOPMENT',
+    imageUrl: '/moksha.png',
+    link: 'https://trekkingGods.com/',
+    imagePosition: 'left' as const,
+  },
+  {
     title: 'Plotify - Real Estate Listing Platform',
     category: 'WEB DEVELOPMENT',
     imageUrl: '/plotify.png',

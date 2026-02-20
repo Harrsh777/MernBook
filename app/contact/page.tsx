@@ -128,6 +128,12 @@ export default function ContactPage() {
   const [submitError, setSubmitError] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const isEmailJSConfigured = Boolean(
+    typeof window !== 'undefined' &&
+    process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID &&
+    process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID &&
+    process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+  );
 
   // Validation function
   const validateStep = (step: number) => {
@@ -230,36 +236,21 @@ You can reply directly to this email to respond to ${formData.name} at ${formDat
         `.trim()
       };
 
-      // Send email using EmailJS
-      // To set up EmailJS:
-      // 1. Go to your EmailJS dashboard (https://dashboard.emailjs.com)
-      // 2. Create a new email template or edit existing one
-      // 3. In the template, use these variables:
-      //    - {{from_name}} - Submitter's name
-      //    - {{from_email}} or {{reply_to}} - Submitter's email (for reply-to)
-      //    - {{to_email}} - Your email (harrshh077@gmail.com)
-      //    - {{email_body}} - Formatted email with all form data
-      //    - {{company}}, {{services}}, {{message}} - Individual fields
-      // 4. Set "Reply To" field in template to: {{reply_to}}
-      // 5. Get your Template ID from the Email Templates section
-      // 6. Get your Public Key from Account > General > API Keys
-      // 7. Create a .env.local file in the root directory and add:
-      //    NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id_here
-      //    NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key_here
-      
-      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID';
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
-      
-      // Validate that required values are set
-      if (templateId === 'YOUR_TEMPLATE_ID' || publicKey === 'YOUR_PUBLIC_KEY') {
-        throw new Error('Please configure EmailJS Template ID and Public Key. See comments in code for instructions.');
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '';
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '';
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '';
+
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error(
+          'EmailJS not configured. Add to .env.local: NEXT_PUBLIC_EMAILJS_SERVICE_ID, NEXT_PUBLIC_EMAILJS_TEMPLATE_ID, NEXT_PUBLIC_EMAILJS_PUBLIC_KEY (see env.example).'
+        );
       }
-      
+
       const response = await emailjs.send(
-        'service_t05mdq2', // Service ID (already provided)
-        templateId, // Template ID
+        serviceId,
+        templateId,
         templateParams,
-        publicKey // Public Key
+        publicKey
       );
 
       if (response.status === 200) {
@@ -611,6 +602,30 @@ You can reply directly to this email to respond to ${formData.name} at ${formDat
                   </motion.div>
                 )}
               </AnimatePresence>
+
+              {!isEmailJSConfigured && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 bg-amber-50 text-amber-900 text-sm rounded-lg border-2 border-amber-400"
+                >
+                  <p className="font-medium mb-1">Emails not set up yet</p>
+                  <p className="mb-2">
+                    Add to <code className="bg-amber-100 px-1 rounded">.env.local</code>:{' '}
+                    <code className="text-xs">NEXT_PUBLIC_EMAILJS_SERVICE_ID</code>,{' '}
+                    <code className="text-xs">NEXT_PUBLIC_EMAILJS_TEMPLATE_ID</code>,{' '}
+                    <code className="text-xs">NEXT_PUBLIC_EMAILJS_PUBLIC_KEY</code>. Copy from <code className="bg-amber-100 px-1 rounded">env.example</code>.
+                  </p>
+                  <a
+                    href="https://dashboard.emailjs.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-amber-700 underline font-medium"
+                  >
+                    Get keys from EmailJS dashboard →
+                  </a>
+                </motion.div>
+              )}
 
               {submitError && (
                 <motion.div
