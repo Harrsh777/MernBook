@@ -1,182 +1,223 @@
-"use client"
+"use client";
 
-import React, { useRef } from 'react';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-import { FaDownload } from 'react-icons/fa';
+import React, { useRef } from "react";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import { FaDownload } from "react-icons/fa";
 
-export default function InvoicePage() {
-    const invoiceRef = useRef<HTMLDivElement>(null);
+const breakdown = [
+  {
+    title: "1. Customer App + Website",
+    items: [
+      "User registration & login",
+      "Product listing & search",
+      "Cart & checkout",
+    
+    ],
+    amount: 52000,
+  },
+  {
+    title: "2. Vendor App / Panel",
+    items: [
+      "Vendor onboarding",
+      "Product & inventory management",
+    
+    ],
+    amount: 38000,
+  },
+  {
+    title: "3. Delivery Partner App",
+    items: [
+      "Delivery partner onboarding",
+      "Order assignment",
+      "Live order status",
+      "Earnings & payout tracking",
+    ],
+    amount: 26000,
+  },
+  {
+    title: "4. Admin Panel",
+    items: [
+      "Full system control",
+      "Commission management",
+      
+    ],
+    amount: 22000,
+  },
+  {
+    title: "5. Backend + API + Database",
+    items: [
+      "Secure backend",
+      "API development",
+      "Database setup",
+      
+    ],
+    amount: 10000,
+  },
+  {
+    title: "6. iOS & App Store Deployment",
+    items: [
+      "Apple Developer account setup",
+      "App Store submission & listing",
+      "iOS build configuration",
+      "Store compliance & review support",
+    ],
+    amount: 12000,
+  },
+];
 
-    const handleDownloadPDF = async () => {
-        if (!invoiceRef.current) return;
+const TOTAL = breakdown.reduce((s, b) => s + b.amount, 0);
+const TIMELINE = "50-60 Days";
 
-        try {
-            const canvas = await html2canvas(invoiceRef.current, {
-                scale: 2,
-                useCORS: true,
-                logging: false,
-                backgroundColor: '#ffffff'
-            });
+const ISSUE_DATE = new Date().toLocaleDateString("en-IN", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
 
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            
-            const margin = 5;
-            const pageWidth = pdf.internal.pageSize.getWidth();
-            const contentWidth = pageWidth - (2 * margin);
-            
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
-            const ratio = contentWidth / imgWidth;
-            
-            const imgScaledWidth = imgWidth * ratio;
-            const imgScaledHeight = imgHeight * ratio;
-            
-            pdf.addImage(imgData, 'PNG', margin, margin, imgScaledWidth, imgScaledHeight);
-            pdf.save('Invoice_INV-2025-001.pdf');
-        } catch (error) {
-            console.error('Error generating PDF:', error);
-            alert('Error generating PDF. Please try again.');
-        }
-    };
+const QUOTE_ID = `FMW-${Math.floor(1000 + Math.random() * 9000)}`;
 
-    const invoiceItems = [
-        {
-            description: "Database Reconfiguration & Optimization",
-            qty: 1,
-            rate: 3500,
-            amount: 3500
-        },
-        {
-            description: "Domain Name Change & DNS Transfer",
-            qty: 1,
-            rate: 2000,
-            amount: 2000
-        },
-        {
-            description: "Hosting Plan Recharge",
-            qty: 1,
-            rate: 3500,
-            amount: 3500
-        },
-        {
-            description: "Security Hardening & Firewall Setup",
-            qty: 1,
-            rate: 2000,
-            amount: 2000
-        },
-        {
-            description: "Ongoing Maintenance & Monitoring",
-            qty: 1,
-            rate: 800,
-            amount: 800
-        }
-    ];
+export default function BudgetPage() {
+  const invoiceRef = useRef<HTMLDivElement>(null);
 
-    const subtotal = invoiceItems.reduce((sum, item) => sum + item.amount, 0);
-    const grandTotal = 11800; // Fixed total as per requirement
+  const handleDownloadPDF = async () => {
+    if (!invoiceRef.current) return;
 
-    return (
-        <div className="min-h-screen bg-gray-100 py-8 px-4">
-            <div className="max-w-4xl mx-auto">
-                {/* Download Button */}
-                <div className="mb-6 flex justify-end">
-                    <button
-                        onClick={handleDownloadPDF}
-                        className="flex items-center gap-2 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors font-semibold shadow-lg"
-                    >
-                        <FaDownload />
-                        <span>Download PDF</span>
-                    </button>
-                </div>
+    const canvas = await html2canvas(invoiceRef.current, {
+      scale: 3,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+    });
 
-                {/* Invoice Content */}
-                <div
-                    ref={invoiceRef}
-                    className="bg-white shadow-lg rounded-lg overflow-hidden"
-                    style={{ padding: '50px' }}
-                >
-                    {/* Company Name at Top */}
-                    <div className="text-center mb-8 pb-6 border-b-2 border-gray-300">
-                        <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                            Society Distributor Pvt Ltd
-                        </h1>
-                        <div className="flex justify-between items-center mt-6 text-sm text-gray-700">
-                            <div>
-                                <span className="font-semibold">Invoice No:</span>
-                                <span className="ml-2">INV-2025-001</span>
-                            </div>
-                            <div>
-                                <span className="font-semibold">Invoice Date:</span>
-                                <span className="ml-2">{new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
-                            </div>
-                            <div>
-                                <span className="font-semibold">Due Date:</span>
-                                <span className="ml-2">
-                                    {new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+    const imgData = canvas.toDataURL("image/png");
 
-                    {/* Invoice Table */}
-                    <div className="mb-8">
-                        <table className="w-full border-collapse">
-                            <thead>
-                                <tr className="bg-gray-100 border-b-2 border-gray-300">
-                                    <th className="text-left py-3 px-4 font-semibold text-gray-900">Description</th>
-                                    <th className="text-center py-3 px-4 font-semibold text-gray-900 w-20">Qty</th>
-                                    <th className="text-right py-3 px-4 font-semibold text-gray-900 w-32">Rate (₹)</th>
-                                    <th className="text-right py-3 px-4 font-semibold text-gray-900 w-32">Amount (₹)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {invoiceItems.map((item, index) => (
-                                    <tr key={index} className="border-b border-gray-200">
-                                        <td className="py-3 px-4 text-gray-700">{item.description}</td>
-                                        <td className="py-3 px-4 text-center text-gray-700">{item.qty}</td>
-                                        <td className="py-3 px-4 text-right text-gray-700">{item.rate.toLocaleString('en-IN')}</td>
-                                        <td className="py-3 px-4 text-right text-gray-700 font-medium">{item.amount.toLocaleString('en-IN')}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+    const pdf = new jsPDF("p", "mm", "a4");
 
-                    {/* Summary Section */}
-                    <div className="flex justify-end mb-8">
-                        <div className="w-80">
-                            <div className="flex justify-between py-2 border-b border-gray-200">
-                                <span className="text-gray-700 font-medium">Subtotal:</span>
-                                <span className="text-gray-900 font-semibold">₹{subtotal.toLocaleString('en-IN')}</span>
-                            </div>
-                            {/* GST Section - Commented as optional */}
-                            {/* <div className="flex justify-between py-2 border-b border-gray-200">
-                                <span className="text-gray-700 font-medium">GST (18%):</span>
-                                <span className="text-gray-900 font-semibold">₹{(subtotal * 0.18).toLocaleString('en-IN')}</span>
-                            </div> */}
-                            <div className="flex justify-between py-3 mt-2 bg-gray-50 px-4 rounded">
-                                <span className="text-gray-900 font-bold text-lg">Grand Total:</span>
-                                <span className="text-gray-900 font-bold text-lg">₹{grandTotal.toLocaleString('en-IN')}</span>
-                            </div>
-                        </div>
-                    </div>
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
 
-                    {/* Footer */}
-                    <div className="border-t-2 border-gray-300 pt-6">
-                        <div className="mb-4">
-                            <p className="text-sm font-semibold text-gray-900 mb-2">Payment Method:</p>
-                            <p className="text-sm text-gray-700">Bank Transfer / UPI</p>
-                        </div>
-                        <div className="mt-6 pt-4 border-t border-gray-200">
-                            <p className="text-xs text-gray-600 text-center">
-                                This is a system-generated invoice. No signature required.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    const imgProps = pdf.getImageProperties(imgData);
+
+    const imgWidth = pdfWidth - 10;
+    const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+
+    const y = (pdfHeight - imgHeight) / 2;
+
+    pdf.addImage(imgData, "PNG", 5, y > 0 ? y : 5, imgWidth, imgHeight);
+
+    pdf.save("FreshMeatWala_Project_Quotation.pdf");
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-100 py-8 px-4 flex flex-col items-center">
+      
+      {/* Download */}
+      <div className="mb-6 w-full max-w-[210mm] flex justify-end">
+        <button
+          onClick={handleDownloadPDF}
+          className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-lg hover:bg-black transition font-semibold shadow"
+        >
+          <FaDownload />
+          Download PDF
+        </button>
+      </div>
+
+      {/* Invoice */}
+      <div
+        ref={invoiceRef}
+        className="bg-white shadow-xl rounded-lg overflow-hidden w-full max-w-[210mm]"
+      >
+        {/* Header */}
+        <div className="bg-gradient-to-r from-[#6b0f1a] to-[#3b0a0f] text-white px-8 py-8 text-center">
+          <h1 className="text-3xl font-bold">Fresh Meat Wala</h1>
+
+          <p className="text-sm mt-2 opacity-90">
+            Complete E-Commerce Platform Solution
+          </p>
+
+          <p className="text-xs mt-2 opacity-80">
+            Project Cost Breakdown
+          </p>
+
+          <div className="text-xs mt-3 space-y-1 opacity-80">
+            <p>Date of Issue: {ISSUE_DATE}</p>
+            <p>Quote ID: {QUOTE_ID}</p>
+          </div>
         </div>
-    );
+
+        {/* Summary */}
+        <div className="px-8 py-4 bg-slate-50 border-b flex justify-between">
+          <div>
+            <span className="text-slate-500 text-xs uppercase">
+              Total Investment
+            </span>
+            <p className="text-2xl font-bold text-black mt-1">
+              ₹{TOTAL.toLocaleString("en-IN")}
+            </p>
+          </div>
+
+          <div className="text-right">
+            <span className="text-slate-500 text-xs uppercase">
+              Estimated Delivery
+            </span>
+            <p className="text-lg font-semibold text-black mt-1">
+              {TIMELINE}
+            </p>
+          </div>
+        </div>
+
+        {/* Breakdown */}
+        <div className="px-8 py-5 space-y-4">
+          {breakdown.map((section, i) => (
+            <div
+              key={i}
+              className="flex justify-between border-b border-slate-100 pb-3"
+            >
+              <div>
+                <h3 className="text-sm font-semibold text-slate-800 mb-2">
+                  {section.title}
+                </h3>
+
+                <ul className="text-xs text-slate-600 space-y-1">
+                  {section.items.map((item, j) => (
+                    <li key={j}>• {item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="text-right">
+                <span className="text-base font-bold text-black">
+                  ₹{section.amount.toLocaleString("en-IN")}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Total */}
+        <div className="px-8 py-5 bg-slate-900 text-white">
+          <div className="flex justify-between">
+            <span className="text-sm uppercase opacity-80">
+              Total Project Investment
+            </span>
+
+            <span className="text-2xl font-bold">
+              ₹{TOTAL.toLocaleString("en-IN")}
+            </span>
+          </div>
+
+          <p className="text-xs opacity-70 mt-2">
+            Estimated delivery timeline: {TIMELINE}
+          </p>
+        </div>
+
+        {/* Footer */}
+        <div className="px-8 py-3 border-t text-center">
+          <p className="text-slate-400 text-[10px]">
+            This document represents an official quotation for the Fresh Meat Wala platform development.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
