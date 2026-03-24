@@ -1,8 +1,18 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase-client";
+import { getSupabaseAdmin } from "@/lib/supabase-client";
 import { supabaseServer } from "@/lib/supabase-auth";
 
 export async function POST(req: Request) {
+  let supabaseAdmin: ReturnType<typeof getSupabaseAdmin>;
+  try {
+    supabaseAdmin = getSupabaseAdmin();
+  } catch {
+    return NextResponse.json(
+      { error: "Server is missing Supabase admin configuration." },
+      { status: 500 }
+    );
+  }
+
   const supabase = supabaseServer();
   const {
     data: { user },

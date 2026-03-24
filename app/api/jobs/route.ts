@@ -27,8 +27,8 @@ const isSupabaseConfigured = () => {
 const getSupabaseClient = async () => {
   if (!isSupabaseConfigured()) return null;
   try {
-    const { supabaseAdmin } = await import('@/lib/supabase-client');
-    return supabaseAdmin;
+    const { getSupabaseAdmin } = await import('@/lib/supabase-client');
+    return getSupabaseAdmin();
   } catch {
     console.error('Supabase not configured, using fallback storage');
     return null;

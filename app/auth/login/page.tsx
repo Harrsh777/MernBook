@@ -1,12 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { motion } from "framer-motion";
 
-export default function LoginPage() {
+function LoginPageContent() {
   const router = useRouter();
   const params = useSearchParams();
   const redirectTo = useMemo(() => params.get("redirectTo") || "/dashboard", [params]);
@@ -120,6 +120,14 @@ export default function LoginPage() {
         </div>
       </div>
     </motion.div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="w-full max-w-md" />}>
+      <LoginPageContent />
+    </Suspense>
   );
 }
 
