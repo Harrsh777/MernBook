@@ -31,7 +31,7 @@ export default function CreateProjectPage() {
         .select("id,name,email,role")
         .eq("role", "client")
         .order("created_at", { ascending: false });
-      setClients((data || []).map((d: any) => ({ id: d.id, name: d.name, email: d.email })));
+      setClients((data || []).map((d: ClientOption) => ({ id: d.id, name: d.name, email: d.email })));
       setLoadingClients(false);
     };
     load();
