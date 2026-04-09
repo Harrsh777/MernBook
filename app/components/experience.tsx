@@ -19,20 +19,20 @@ const ExperienceTimeline = () => {
 
   const experiences: ExperienceItem[] = [
     {
-      id: 1,
+      id: 2,
       jobTitle: 'Full Stack Developer Intern',
       company: 'BUILD AI ENGINE',
       location: 'India',
-      timeRange: 'Mar 2025 – Present',
-      duration: '1 YEAR',
+      timeRange: 'Mar 2025 – July 2025',
+      duration: '5 Months',
     },
     {
-      id: 2,
+      id: 1,
       jobTitle: 'Software Engineer Intern',
       company: 'MyTripGoal',
       location: 'India',
-      timeRange: 'Dec 2024 – Mar 2025',
-      duration: '4 MONTHS',
+      timeRange: 'July 2025 – Current',
+      duration: '11 MONTHS',
     },
     {
       id: 3,
@@ -42,14 +42,7 @@ const ExperienceTimeline = () => {
       timeRange: 'Dec 2024 – Mar 2025',
       duration: '4 MONTHS',
     },
-    {
-      id: 4,
-      jobTitle: 'Full Stack Developer Intern',
-      company: 'FlatPur',
-      location: 'India',
-      timeRange: 'Aug 2024 – Oct 2024',
-      duration: '3 MONTHS',
-    },
+
   ];
 
   // Experience Card Component with Particles

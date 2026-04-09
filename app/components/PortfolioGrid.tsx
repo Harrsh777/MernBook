@@ -183,7 +183,7 @@ const PortfolioGrid = () => {
           <h2
             className={`text-5xl md:text-6xl lg:text-7xl font-bold uppercase mb-6 ${spaceGrotesk.className}`}
           >
-            Case Study
+            My Clients Case Study
           </h2>
 
           <p className="text-sm md:text-base max-w-2xl mx-auto text-gray-600">
