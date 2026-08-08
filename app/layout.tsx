@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   publisher: "Harsh Srivastava",
   applicationName: "Harsh Srivastava Portfolio",
   generator: "Next.js",
+  manifest: "/manifest.json",
   referrer: "origin-when-cross-origin",
   formatDetection: {
     email: false,

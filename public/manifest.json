@@ -1,27 +1,22 @@
 {
-  "name": "Harsh Srivastava - AWS Certified Solutions Architect",
-  "short_name": "Harsh Srivastava",
-  "description": "AWS Certified Solutions Architect, VIT'27 Computer Science student, Google Summer of Code'24 participant, 5× Hackathon Winner, and Full-Stack Developer specializing in MERN Stack, TypeScript, Spring Boot, REST APIs, Microservices, Docker, Kubernetes, CI/CD, and System Design.",
+  "name": "Harsh Srivastava — macOS Portfolio",
+  "short_name": "MacPortfolio",
+  "description": "Native macOS Desktop Portfolio of Harsh Srivastava — AWS Certified Solutions Architect & Full Stack Engineer",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0f0f23",
-  "theme_color": "#3b82f6",
-  "orientation": "portrait-primary",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "any",
   "icons": [
     {
-      "src": "/profile.jpg",
+      "src": "/apple finder.png",
       "sizes": "192x192",
-      "type": "image/jpeg",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
-      "src": "/profile.jpg",
+      "src": "/apple finder.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
-  ],
-  "categories": ["portfolio", "developer", "technology"],
-  "lang": "en-US",
-  "dir": "ltr"
+  ]
 }
