@@ -38,6 +38,34 @@ const BadgeCard = ({ icon, title, subtitle, isHighlighted = false }: BadgeCardPr
   </motion.div>
 );
 
+/** Deterministic count from date so SSR and client hydration match. */
+function heatmapCountForDate(dateStr: string): number {
+  let hash = 0;
+  for (let i = 0; i < dateStr.length; i++) {
+    hash = (hash * 31 + dateStr.charCodeAt(i)) | 0;
+  }
+  const roll = Math.abs(hash) % 100;
+  if (roll < 30) return 0;
+  return (Math.abs(hash) % 9) + 1;
+}
+
+function buildHeatmapData(): { date: string; count: number }[] {
+  const today = new Date();
+  const utcToday = Date.UTC(
+    today.getUTCFullYear(),
+    today.getUTCMonth(),
+    today.getUTCDate()
+  );
+  const dayMs = 24 * 60 * 60 * 1000;
+
+  return Array.from({ length: 53 * 7 }, (_, i) => {
+    const ms = utcToday - (53 * 7 - 1 - i) * dayMs;
+    const d = new Date(ms);
+    const date = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
+    return { date, count: heatmapCountForDate(date) };
+  });
+}
+
 const HeatmapDay = ({ count, date }: HeatmapDayProps) => {
   const getColor = (c: number) => {
     if (c === 0) return 'bg-gray-200 hover:bg-gray-300 border-gray-300';
@@ -67,11 +95,11 @@ const LeetCodeDashboard = () => {
 
   // --- MOCK DATA (Replace with real API data) ---
   const problemsData = {
-    totalSolved: 1052,
+    totalSolved: 1352,
     totalQuestions: 3553,
-    easy: { solved: 240, total: 877, color: '#00B8A3' },
+    easy: { solved: 540, total: 877, color: '#00B8A3' },
     medium: { solved: 549, total: 1842, color: '#FFC01E' },
-    hard: { solved: 161, total: 834, color: '#FF375F' },
+    hard: { solved: 263, total: 834, color: '#FF375F' },
   };
 
   const pieChartData = [
@@ -89,14 +117,7 @@ const LeetCodeDashboard = () => {
     { icon: '📅', title: 'Weekly Pro', subtitle: '7 Day Streak' },
   ];
 
-  const heatmapData = Array.from({ length: 53 * 7 }, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - (53 * 7 - 1) + i);
-    return {
-      date: date.toISOString().split('T')[0],
-      count: Math.random() > 0.3 ? Math.floor(Math.random() * 10) : 0,
-    };
-  });
+  const heatmapData = buildHeatmapData();
 
   const heatmapMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -217,8 +238,8 @@ const LeetCodeDashboard = () => {
 
                       {/* THE CRUCIAL CHANGE: grid-rows-7 and grid-flow-col */}
                       <div className="grid grid-rows-7 grid-flow-col gap-1">
-                        {heatmapData.map((day, i) => (
-                          <HeatmapDay key={i} count={day.count} date={day.date} />
+                        {heatmapData.map((day) => (
+                          <HeatmapDay key={day.date} count={day.count} date={day.date} />
                         ))}
                       </div>
                     </div>

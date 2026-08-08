@@ -5,7 +5,7 @@ type Project = {
   client_id: string;
   title: string;
   description: string | null;
-  status: "in_progress" | "completed" | "review";
+  status: "not_started" | "in_progress" | "completed" | "review";
   progress: number;
   deadline: string | null;
   price: number | null;
@@ -26,6 +26,8 @@ function statusBadge(status: Project["status"]) {
       return "bg-emerald-500/15 text-emerald-300 border-emerald-500/20";
     case "review":
       return "bg-amber-500/15 text-amber-200 border-amber-500/20";
+    case "not_started":
+      return "bg-zinc-500/15 text-zinc-200 border-zinc-500/20";
     default:
       return "bg-blue-500/15 text-blue-200 border-blue-500/20";
   }

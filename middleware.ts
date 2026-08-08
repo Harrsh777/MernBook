@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 
-const PROTECTED_PREFIXES = ["/dashboard"];
+const PROTECTED_PREFIXES = ["/dashboard", "/crm"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -31,6 +31,11 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/auth/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/crm",
+    "/crm/:path*",
+    "/auth/:path*",
+  ],
 };
 

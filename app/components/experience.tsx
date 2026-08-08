@@ -18,8 +18,26 @@ type ExperienceItem = {
 const ExperienceTimeline = () => {
 
   const experiences: ExperienceItem[] = [
+
+  
+    {
+      id: 1,
+      jobTitle: 'Full Stack Developer Intern',
+      company: 'EaseHawk Technologies',
+      location: 'India',
+      timeRange: 'May 2026 – Current',
+      duration: '3 Months',
+    },
     {
       id: 2,
+      jobTitle: 'Software Engineer Intern',
+      company: 'MyTripGoal',
+      location: 'India',
+      timeRange: 'July 2025 – April 2026',
+      duration: '11 MONTHS',
+    },
+    {
+      id: 3,
       jobTitle: 'Full Stack Developer Intern',
       company: 'BUILD AI ENGINE',
       location: 'India',
@@ -27,15 +45,7 @@ const ExperienceTimeline = () => {
       duration: '5 Months',
     },
     {
-      id: 1,
-      jobTitle: 'Software Engineer Intern',
-      company: 'MyTripGoal',
-      location: 'India',
-      timeRange: 'July 2025 – Current',
-      duration: '11 MONTHS',
-    },
-    {
-      id: 3,
+      id: 4,
       jobTitle: 'Cyber Security Intern',
       company: 'MP Police',
       location: 'India',

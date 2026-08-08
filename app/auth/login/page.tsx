@@ -22,15 +22,31 @@ function LoginPageContent() {
     setBusy(true);
     setError(null);
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { data: signInData, error: signInError } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
     if (signInError) {
       setBusy(false);
       setError(signInError.message);
       return;
+    }
+
+    const uid = signInData.user?.id;
+    if (uid) {
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("access_disabled")
+        .eq("id", uid)
+        .maybeSingle();
+      if (prof?.access_disabled) {
+        await supabase.auth.signOut();
+        setBusy(false);
+        setError("This account has been disabled. Contact your administrator.");
+        return;
+      }
     }
 
     router.replace(redirectTo);
