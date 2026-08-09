@@ -1,4 +1,13 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Live Dashboard & Project Metrics | Harsh Srivastava",
+  description: "Real-time client metrics and systems dashboard managed by Harsh Srivastava.",
+  alternates: {
+    canonical: "https://www.harshsrivastava.in/dashboard",
+  },
+};
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (

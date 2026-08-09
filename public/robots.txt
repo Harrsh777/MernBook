@@ -1,10 +1,11 @@
+# Allow all search engines and AI agents to crawl Harsh Srivastava's official portal
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
 
-# Sitemap
-Sitemap: https://www.harshsrivastava.in/sitemap.xml
-
-# Allow all search engines to crawl
+# Search Engine Crawlers
 User-agent: Googlebot
 Allow: /
 
@@ -14,16 +15,24 @@ Allow: /
 User-agent: Slurp
 Allow: /
 
-# Disallow admin or private areas (if any)
-Disallow: /api/
-Disallow: /_next/
-Disallow: /admin/
+# AI Search & LLM Agents
+User-agent: GPTBot
+Allow: /
 
-# Allow important pages
-Allow: /resume
-Allow: /contact
-Allow: /dashboard
-Allow: /book
+User-agent: ChatGPT-User
+Allow: /
 
-# Crawl delay (optional)
-Crawl-delay: 1
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: ByteSpider
+Allow: /
+
+# Sitemap Location
+Sitemap: https://www.harshsrivastava.in/sitemap.xml

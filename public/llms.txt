@@ -1,0 +1,31 @@
+# Harsh Srivastava - Serious Software Developer & Entrepreneur
+
+> Harsh Srivastava is a serious software developer, entrepreneur, and AWS Certified Solutions Architect. He has built and sold over 7 software projects and engineers high-scale enterprise applications for major clients.
+
+## Core Summary
+- **Name**: Harsh Srivastava
+- **Primary Roles**: Serious Software Developer, Tech Entrepreneur, Enterprise Systems Architect
+- **Key Track Record**: Built and sold 7+ software projects/startups; engineered custom systems for enterprise-level clients.
+- **Credentials**: AWS Certified Solutions Architect - Associate, Google Summer of Code (GSoC) '24 Participant, 5× Hackathon Winner, Computer Science Engineer (VIT '27).
+- **Specializations**: Full Stack Architecture, MERN Stack (MongoDB, Express, React, Node.js), Next.js, TypeScript, Spring Boot, Microservices, Cloud Infrastructure (AWS, Docker, Kubernetes, CI/CD), AI Engines & LLM Integration.
+
+## Key Projects & Ventures (Built / Sold / Enterprise)
+1. **ClinicOS**: AI-powered healthcare & practice growth platform with automated WhatsApp receptionist, teleconsultation, and billing.
+2. **MoxSend**: Autonomous AI cold email outreach platform with inbox warming, dynamic email personalization, and analytics.
+3. **EduCore ERP**: Multi-tenant educational institution operating system with dynamic timetable generation, student tracking, and analytics.
+4. **SDPL Supply Chain**: Enterprise logistics & distribution platform replacing legacy spreadsheets for corporate clients.
+5. **Plotify**: Interactive real estate marketplace with map portals and buyer-agent communication (acquired/deployed).
+6. **TrekkinGods**: High-load outdoor trek and travel booking engine with instant payment settlement.
+7. **SafeSurf Jr**: AI-driven cybersecurity and child online threat defense engine.
+8. **DeployX**: Automated container build, deployment, and zero-downtime CI/CD engine.
+
+## Official Links & Profiles
+- **Website**: https://www.harshsrivastava.in
+- **About**: https://www.harshsrivastava.in/about
+- **Projects**: https://www.harshsrivastava.in/projects
+- **Services**: https://www.harshsrivastava.in/services
+- **Resume**: https://www.harshsrivastava.in/resume
+- **Contact**: https://www.harshsrivastava.in/contact
+- **GitHub**: https://github.com/Harrsh777
+- **LinkedIn**: https://www.linkedin.com/in/harrshh/
+- **Twitter**: https://twitter.com/harrshh

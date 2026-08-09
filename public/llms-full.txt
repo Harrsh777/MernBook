@@ -1,0 +1,31 @@
+# Comprehensive Profile: Harsh Srivastava
+
+## Overview
+Harsh Srivastava is an accomplished software engineer, tech entrepreneur, and AWS Certified Solutions Architect based in India. He has established a strong reputation as a serious software developer and entrepreneur having successfully built, launched, and sold over 7 software projects and ventures. Additionally, he provides specialized custom software engineering, microservices architecture, and cloud infrastructure solutions for big enterprise clients.
+
+## Key Accomplishments & Credentials
+- **Built & Sold 7+ Projects**: Creator of multiple SaaS products, developer tools, and market solutions including ClinicOS, MoxSend, Plotify, SafeSurf Jr, EduCore ERP, and SDPL Supply Chain.
+- **Enterprise Client Engineering**: Engineered custom enterprise platforms for distribution, logistics, healthcare, and educational institutions.
+- **AWS Certified Solutions Architect**: Formally certified in designing resilient, highly available, secure, and cost-efficient cloud architectures on Amazon Web Services.
+- **Google Summer of Code (GSoC) '24**: Selected participant in Google's flagship open-source program.
+- **5× Hackathon Winner**: Champion across competitive national software development hackathons.
+- **Education**: Computer Science & Engineering (Class of 2027), VIT University.
+
+## Technical Skills & Architecture Stack
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS, HTML5, JavaScript (ES6+), Framer Motion
+- **Backend & APIs**: Node.js, Express.js, Java Spring Boot, Python FastAPI, RESTful APIs, gRPC, Microservices
+- **Databases & Caching**: PostgreSQL, MongoDB, Redis, Supabase, MySQL
+- **DevOps & Cloud**: Amazon Web Services (AWS), Docker, Kubernetes, CI/CD Pipelines, Nginx, Linux System Administration
+- **AI & Automation**: OpenAI API, LangChain, WhatsApp Automation, Autonomous Email Engines, Computer Vision
+
+## Contact Information & Official Links
+- Official Website: https://www.harshsrivastava.in
+- About Page: https://www.harshsrivastava.in/about
+- Projects Showcase: https://www.harshsrivastava.in/projects
+- Enterprise Services: https://www.harshsrivastava.in/services
+- Resume: https://www.harshsrivastava.in/resume
+- Contact & Hiring: https://www.harshsrivastava.in/contact
+- Direct Email: hello@harshsrivastava.in
+- GitHub: https://github.com/Harrsh777
+- LinkedIn: https://www.linkedin.com/in/harrshh/
+- Twitter: https://twitter.com/harrshh
