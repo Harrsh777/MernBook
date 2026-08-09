@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Search, Folder, Briefcase, Award, Sparkles, Terminal, FileText, ArrowRight } from "lucide-react";
+import { Search, Folder, Briefcase, Award, Sparkles, Terminal, FileText, ArrowRight, Music, Settings, Phone } from "lucide-react";
 import { WindowId } from "@/lib/windowStore";
 
 interface SpotlightSearchProps {
@@ -16,6 +16,7 @@ interface SearchResult {
   icon: React.ReactNode;
   windowId: WindowId;
   description: string;
+  keywords?: string[];
 }
 
 export default function SpotlightSearch({ isOpen, onClose, onOpenWindow }: SpotlightSearchProps) {
@@ -30,6 +31,7 @@ export default function SpotlightSearch({ isOpen, onClose, onOpenWindow }: Spotl
       icon: <Folder className="w-4 h-4 text-blue-400" />,
       windowId: "projects",
       description: "AI-driven clinic practice management and automated patient scheduling system",
+      keywords: ["clinicos", "healthcare", "ai", "whatsapp", "teleconsultation", "medical"],
     },
     {
       title: "MoxSend Cold Email SaaS",
@@ -37,6 +39,15 @@ export default function SpotlightSearch({ isOpen, onClose, onOpenWindow }: Spotl
       icon: <Folder className="w-4 h-4 text-blue-400" />,
       windowId: "projects",
       description: "Autonomous multi-agent outreach platform built with Next.js 15 & LangChain",
+      keywords: ["moxsend", "email", "cold email", "saas", "langchain", "agents"],
+    },
+    {
+      title: "EduCore ERP",
+      category: "Featured Project",
+      icon: <Folder className="w-4 h-4 text-blue-400" />,
+      windowId: "projects",
+      description: "Multi-tenant school ERP with automated timetable generation & attendance",
+      keywords: ["educore", "erp", "school", "university", "tenant", "timetable"],
     },
     {
       title: "AWS Certified Solutions Architect",
@@ -44,6 +55,7 @@ export default function SpotlightSearch({ isOpen, onClose, onOpenWindow }: Spotl
       icon: <Award className="w-4 h-4 text-amber-400" />,
       windowId: "certifications",
       description: "Official AWS Associate Accreditation (Score 953/1000)",
+      keywords: ["aws", "cloud", "solutions architect", "associate", "saa", "amazon"],
     },
     {
       title: "BUILD AI ENGINE — Full Stack & AI Intern",
@@ -51,6 +63,7 @@ export default function SpotlightSearch({ isOpen, onClose, onOpenWindow }: Spotl
       icon: <Briefcase className="w-4 h-4 text-sky-400" />,
       windowId: "experience",
       description: "Architecting autonomous AI receptionist and cold email microservices",
+      keywords: ["build ai", "intern", "experience", "work", "fastapi", "python"],
     },
     {
       title: "MP Police Cyber Security Division",
@@ -58,6 +71,7 @@ export default function SpotlightSearch({ isOpen, onClose, onOpenWindow }: Spotl
       icon: <Briefcase className="w-4 h-4 text-rose-400" />,
       windowId: "experience",
       description: "Digital forensic threat analysis and Python security automation",
+      keywords: ["police", "cyber", "security", "forensics", "python", "threat"],
     },
     {
       title: "Google Summer of Code (GSoC 2024)",
@@ -65,27 +79,55 @@ export default function SpotlightSearch({ isOpen, onClose, onOpenWindow }: Spotl
       icon: <Briefcase className="w-4 h-4 text-amber-400" />,
       windowId: "experience",
       description: "Open-source developer infrastructure contributor",
+      keywords: ["gsoc", "google", "summer of code", "open source", "contributor"],
     },
     {
       title: "Top 10 AI & Fullstack Engineering Blogs",
       category: "Safari Articles",
       icon: <Sparkles className="w-4 h-4 text-emerald-400" />,
       windowId: "safari",
-      description: "Curated architecture breakdowns and AI agent guides",
+      description: "Curated architecture breakdowns, Next.js 15 guides, and performance specs",
+      keywords: ["safari", "blogs", "articles", "reading", "posts", "nextjs"],
     },
     {
       title: "Tech Stack Shell (zsh)",
       category: "Terminal CLI",
       icon: <Terminal className="w-4 h-4 text-green-400" />,
       windowId: "terminal",
-      description: "Interactive command line interface with custom bash scripts",
+      description: "Interactive command line interface with custom bash scripts & auto-complete",
+      keywords: ["terminal", "zsh", "cli", "command", "bash", "shell"],
     },
     {
       title: "Harsh Srivastava Resume (PDF)",
       category: "Document",
       icon: <FileText className="w-4 h-4 text-cyan-400" />,
       windowId: "resume",
-      description: "Official 1-page software engineer resume & achievements",
+      description: "Official 1-page software engineer resume, VIT credentials & achievements",
+      keywords: ["resume", "cv", "pdf", "vit", "education", "download"],
+    },
+    {
+      title: "Apple Music Lo-Fi Beats",
+      category: "Media Player",
+      icon: <Music className="w-4 h-4 text-rose-400" />,
+      windowId: "music",
+      description: "Chill developer lo-fi beats stream with real audio visualizer",
+      keywords: ["music", "audio", "lofi", "beats", "player", "songs"],
+    },
+    {
+      title: "Contact Harsh Srivastava",
+      category: "Contact",
+      icon: <Phone className="w-4 h-4 text-purple-400" />,
+      windowId: "contact",
+      description: "Email Harrshh077@gmail.com, social links & direct recruiter message note",
+      keywords: ["contact", "email", "phone", "message", "hire", "linkedin", "github"],
+    },
+    {
+      title: "System Settings & Specs",
+      category: "Preferences",
+      icon: <Settings className="w-4 h-4 text-slate-300" />,
+      windowId: "settings",
+      description: "View hardware specs, macOS theme customization & memory status",
+      keywords: ["settings", "specs", "hardware", "mac", "ram", "cpu"],
     },
   ];
 
@@ -95,7 +137,8 @@ export default function SpotlightSearch({ isOpen, onClose, onOpenWindow }: Spotl
         (item) =>
           item.title.toLowerCase().includes(query.toLowerCase()) ||
           item.category.toLowerCase().includes(query.toLowerCase()) ||
-          item.description.toLowerCase().includes(query.toLowerCase())
+          item.description.toLowerCase().includes(query.toLowerCase()) ||
+          item.keywords?.some((k) => k.toLowerCase().includes(query.toLowerCase()))
       );
 
   useEffect(() => {
@@ -163,7 +206,7 @@ export default function SpotlightSearch({ isOpen, onClose, onOpenWindow }: Spotl
         </div>
 
         {/* Search Results List */}
-        <div className="max-h-[360px] overflow-y-auto p-2.5 flex flex-col gap-1">
+        <div className="max-h-[380px] overflow-y-auto p-2.5 flex flex-col gap-1">
           {filtered.length === 0 ? (
             <div className="p-6 text-center text-xs text-white/50">
               No Spotlight results for &ldquo;{query}&rdquo;

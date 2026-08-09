@@ -20,6 +20,8 @@ import {
   Camera,
 } from "lucide-react";
 
+import { WindowId } from "@/lib/windowStore";
+
 export type WallpaperId = "wallpaper" | "wallpap" | "img" | "dark";
 
 interface ControlCenterProps {
@@ -27,6 +29,13 @@ interface ControlCenterProps {
   onClose: () => void;
   currentWallpaper: WallpaperId;
   onSelectWallpaper: (id: WallpaperId) => void;
+  brightness: number;
+  setBrightness: (val: number) => void;
+  volume: number;
+  setVolume: (val: number) => void;
+  focusActive: boolean;
+  setFocusActive: (val: boolean | ((prev: boolean) => boolean)) => void;
+  onOpenWindow?: (id: WindowId) => void;
 }
 
 export default function ControlCenter({
@@ -34,13 +43,17 @@ export default function ControlCenter({
   onClose,
   currentWallpaper,
   onSelectWallpaper,
+  brightness,
+  setBrightness,
+  volume,
+  setVolume,
+  focusActive,
+  setFocusActive,
+  onOpenWindow,
 }: ControlCenterProps) {
   const [wifiActive, setWifiActive] = useState(true);
   const [btActive, setBtActive] = useState(true);
   const [airDropActive, setAirDropActive] = useState(true);
-  const [focusActive, setFocusActive] = useState(true);
-  const [brightness, setBrightness] = useState(85);
-  const [volume, setVolume] = useState(70);
 
   if (!isOpen) return null;
 
@@ -58,7 +71,7 @@ export default function ControlCenter({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="absolute top-9 right-4 w-[340px] apple-glass-panel rounded-[32px] p-4 text-white flex flex-col gap-3.5 animate-in fade-in zoom-in-95 duration-150"
+        className="absolute top-9 right-4 w-[340px] apple-glass-panel rounded-[32px] p-4 text-white flex flex-col gap-3.5 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-3xl bg-slate-900/40 border border-white/20 shadow-2xl"
       >
         {/* Top 2 Columns: Toggles + Media Box */}
         <div className="grid grid-cols-2 gap-3">
@@ -69,8 +82,8 @@ export default function ControlCenter({
               onClick={() => setWifiActive(!wifiActive)}
               className={`p-2.5 rounded-[22px] border transition-all flex items-center gap-3 text-left ${
                 wifiActive
-                  ? "bg-white/20 border-white/30 text-white shadow-sm"
-                  : "bg-white/10 border-white/10 text-white/50"
+                  ? "bg-white/20 border-white/30 text-white shadow-sm backdrop-blur-md"
+                  : "bg-white/10 border-white/10 text-white/50 backdrop-blur-md"
               }`}
             >
               <div className="w-9 h-9 rounded-full bg-white text-[#1d4ed8] flex items-center justify-center shrink-0 shadow-md">
@@ -113,7 +126,7 @@ export default function ControlCenter({
           </div>
 
           {/* Right Column: Media Player Box */}
-          <div className="bg-white/15 border border-white/20 rounded-[24px] p-3.5 flex flex-col justify-between shadow-sm">
+          <div className="bg-white/10 border border-white/20 rounded-[24px] p-3.5 flex flex-col justify-between shadow-sm backdrop-blur-md">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-500 to-amber-500 border border-white/20 flex items-center justify-center text-white shrink-0 shadow-md">
                 <Play className="w-4 h-4 fill-current ml-0.5" />
@@ -139,8 +152,8 @@ export default function ControlCenter({
             onClick={() => setFocusActive(!focusActive)}
             className={`flex-1 p-2.5 rounded-[22px] border transition-all flex items-center gap-2.5 text-left ${
               focusActive
-                ? "bg-white/20 border-white/30 text-white shadow-sm"
-                : "bg-white/10 border-white/10 text-white/50"
+                ? "bg-white/20 border-white/30 text-white shadow-sm backdrop-blur-md"
+                : "bg-white/10 border-white/10 text-white/50 backdrop-blur-md"
             }`}
           >
             <div className="w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center shrink-0">
@@ -153,18 +166,18 @@ export default function ControlCenter({
           </button>
 
           {/* Stage Manager Circle */}
-          <button className="w-12 h-12 rounded-full bg-white/15 border border-white/20 hover:bg-white/25 text-white flex items-center justify-center shrink-0 shadow-sm transition-all">
+          <button className="w-12 h-12 rounded-full bg-white/15 border border-white/20 hover:bg-white/25 text-white flex items-center justify-center shrink-0 shadow-sm transition-all backdrop-blur-md">
             <LayoutGrid className="w-5 h-5" />
           </button>
 
           {/* Screen Mirroring Circle */}
-          <button className="w-12 h-12 rounded-full bg-white/15 border border-white/20 hover:bg-white/25 text-white flex items-center justify-center shrink-0 shadow-sm transition-all">
+          <button className="w-12 h-12 rounded-full bg-white/15 border border-white/20 hover:bg-white/25 text-white flex items-center justify-center shrink-0 shadow-sm transition-all backdrop-blur-md">
             <Cast className="w-5 h-5" />
           </button>
         </div>
 
         {/* Display Brightness Slider */}
-        <div className="bg-[#1d4ed8]/60 border border-white/25 rounded-[22px] p-3.5 flex flex-col gap-1.5 shadow-sm">
+        <div className="bg-white/10 border border-white/20 rounded-[22px] p-3.5 flex flex-col gap-1.5 shadow-sm backdrop-blur-md">
           <div className="flex justify-between items-center text-xs font-bold text-white">
             <span>Display</span>
             <span className="text-[10px] text-white/80">{brightness}%</span>
@@ -184,7 +197,7 @@ export default function ControlCenter({
         </div>
 
         {/* Sound Volume Slider */}
-        <div className="bg-[#2563eb]/60 border border-white/25 rounded-[22px] p-3.5 flex flex-col gap-1.5 shadow-sm">
+        <div className="bg-white/10 border border-white/20 rounded-[22px] p-3.5 flex flex-col gap-1.5 shadow-sm backdrop-blur-md">
           <div className="flex justify-between items-center text-xs font-bold text-white">
             <span>Sound</span>
             <span className="text-[10px] text-white/80">{volume}%</span>
@@ -205,16 +218,45 @@ export default function ControlCenter({
 
         {/* Bottom Quick Utilities Circle Row */}
         <div className="flex items-center justify-around pt-0.5">
-          <button className="w-12 h-12 rounded-full bg-white/15 border border-white/20 hover:bg-white/25 text-white flex items-center justify-center shadow-sm">
+          <button
+            onClick={() => setFocusActive(!focusActive)}
+            className="w-12 h-12 rounded-full bg-white/15 border border-white/20 hover:bg-white/25 text-white flex items-center justify-center shadow-sm cursor-pointer transition-transform hover:scale-105 active:scale-95"
+            title="Toggle Focus Mode"
+          >
             <Moon className="w-5 h-5" />
           </button>
-          <button className="w-12 h-12 rounded-full bg-white/15 border border-white/20 hover:bg-white/25 text-white flex items-center justify-center shadow-sm">
-            <Calculator className="w-5 h-5" />
+
+          {/* Calculator Quick Launcher Button */}
+          <button
+            onClick={() => {
+              onClose();
+              if (onOpenWindow) onOpenWindow("calculator");
+            }}
+            className="w-12 h-12 rounded-full bg-white/15 border border-white/20 hover:bg-white/25 text-white flex items-center justify-center shadow-sm cursor-pointer transition-transform hover:scale-105 active:scale-95 group"
+            title="Open Calculator"
+          >
+            <Calculator className="w-5 h-5 group-hover:text-amber-300 transition-colors" />
           </button>
-          <button className="w-12 h-12 rounded-full bg-white/15 border border-white/20 hover:bg-white/25 text-white flex items-center justify-center shadow-sm">
+
+          <button
+            onClick={() => {
+              onClose();
+              if (onOpenWindow) onOpenWindow("settings");
+            }}
+            className="w-12 h-12 rounded-full bg-white/15 border border-white/20 hover:bg-white/25 text-white flex items-center justify-center shadow-sm cursor-pointer transition-transform hover:scale-105 active:scale-95"
+            title="Timer / System Settings"
+          >
             <Timer className="w-5 h-5" />
           </button>
-          <button className="w-12 h-12 rounded-full bg-white/15 border border-white/20 hover:bg-white/25 text-white flex items-center justify-center shadow-sm">
+
+          <button
+            onClick={() => {
+              onClose();
+              if (onOpenWindow) onOpenWindow("finder");
+            }}
+            className="w-12 h-12 rounded-full bg-white/15 border border-white/20 hover:bg-white/25 text-white flex items-center justify-center shadow-sm cursor-pointer transition-transform hover:scale-105 active:scale-95"
+            title="Camera / Finder"
+          >
             <Camera className="w-5 h-5" />
           </button>
         </div>

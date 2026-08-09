@@ -56,7 +56,7 @@ export default function MobileSafariView() {
     <div className="md:hidden fixed inset-0 z-50 bg-[#000000] text-white flex flex-col justify-between overflow-hidden select-none font-sans">
       {/* 1. iOS Top Status Bar */}
       <div className="h-11 bg-[#161618] px-5 flex items-center justify-between text-xs text-white/90 font-medium shrink-0 pt-2 border-b border-white/5">
-        <span className="font-semibold">{timeStr}</span>
+        <span className="font-semibold" suppressHydrationWarning>{timeStr}</span>
         <div className="flex items-center gap-2">
           {/* Signal */}
           <div className="flex items-end gap-0.5 h-3">

@@ -9,6 +9,41 @@ interface SiriAssistantProps {
   onClose: () => void;
 }
 
+const KNOWLEDGE_BASE = [
+  {
+    keywords: ["who", "harsh", "about", "bio", "background", "summary"],
+    answer: "Harsh Srivastava is an AWS Certified Solutions Architect (953/1000), Full-Stack & AI Engineer, CS student at VIT ('27), GSoC '24 contributor, and 5× Hackathon Winner specializing in Next.js 15, FastAPI, Docker, and Autonomous AI Agents.",
+  },
+  {
+    keywords: ["project", "build", "clinicos", "moxsend", "educore", "work", "app"],
+    answer: "Harsh has built top production platforms including ClinicOS (AI healthcare practice & patient management), MoxSend (autonomous multi-agent cold email outreach SaaS), EduCore ERP (multi-tenant school OS), and SafeSurf Jr (AI threat detection).",
+  },
+  {
+    keywords: ["aws", "certif", "cloud", "score", "saa", "amazon"],
+    answer: "Harsh achieved the official AWS Certified Solutions Architect - Associate accreditation with an outstanding score of 953/1000, mastering ECS Fargate, IAM security, Terraform, and auto-scaling cloud microservices.",
+  },
+  {
+    keywords: ["contact", "email", "hire", "reach", "social", "github", "linkedin", "phone"],
+    answer: "You can email Harsh directly at Harrshh077@gmail.com, visit his website at harshsrivastava.in, or connect via GitHub (@Harrsh777) and LinkedIn (@harrshh). He is actively open for SDE and Full Stack/AI roles!",
+  },
+  {
+    keywords: ["skills", "stack", "tech", "react", "next", "python", "node", "postgres", "docker"],
+    answer: "Harsh's core technical stack includes React 19, Next.js 15, TypeScript, Node.js, FastAPI, PostgreSQL, Redis, MongoDB, Docker, Kubernetes, AWS Cloud, and LangChain AI agent frameworks.",
+  },
+  {
+    keywords: ["dsa", "leetcode", "algo", "problem", "codeforces", "streak"],
+    answer: "Harsh has solved over 850+ DSA problems across LeetCode & Codeforces with a 150-day active problem-solving streak, demonstrating deep mastery in Dynamic Programming, Graphs, and Trees.",
+  },
+  {
+    keywords: ["education", "college", "vit", "university", "btech", "degree"],
+    answer: "Harsh is pursuing his B.Tech in Computer Science & Engineering (Cyber Security Specialization) at VIT Bhopal University (2023 - 2027).",
+  },
+  {
+    keywords: ["hackathon", "winner", "award", "contest", "trophy"],
+    answer: "Harsh is a 5× Winner and Finalist across 6+ national-level hackathons across India, building rapid 24-hour MVPs and pitch-ready web applications.",
+  },
+];
+
 export default function SiriAssistant({ isOpen, onClose }: SiriAssistantProps) {
   const [response, setResponse] = useState<string>(
     "Hi, I'm Siri — Harsh's AI Portfolio Assistant. Ask me anything about his projects, AWS certifications, experience, or skills!"
@@ -47,7 +82,7 @@ export default function SiriAssistant({ isOpen, onClose }: SiriAssistantProps) {
       setResponse(answer);
       setIsThinking(false);
       setActiveQuestion(null);
-    }, 4000); // Exact 4-second processing delay requested by user
+    }, 1200);
   };
 
   const handleCustomSubmit = (e: React.FormEvent) => {
@@ -59,22 +94,22 @@ export default function SiriAssistant({ isOpen, onClose }: SiriAssistantProps) {
     setActiveQuestion(query);
     setIsThinking(true);
 
-    // Find best match or default answer
-    const matched = prompts.find(
-      (p) =>
-        p.q.toLowerCase().includes(query.toLowerCase()) ||
-        query.toLowerCase().includes(p.q.toLowerCase())
+    const lowerQuery = query.toLowerCase();
+
+    // Find best match in knowledge base
+    const matched = KNOWLEDGE_BASE.find((k) =>
+      k.keywords.some((word) => lowerQuery.includes(word))
     );
 
     const targetAnswer = matched
-      ? matched.a
-      : `Based on Harsh's records: Harsh Srivastava is a Full-Stack & AI Engineer specializing in Next.js 15, FastAPI, and AWS Cloud Architecture. Contact him directly at Harrshh077@gmail.com!`;
+      ? matched.answer
+      : `Based on Harsh's records: Harsh Srivastava is a Full-Stack & AI Engineer specializing in Next.js 15, FastAPI, and AWS Cloud Architecture (AWS SAA score 953/1000). Contact him directly at Harrshh077@gmail.com!`;
 
     setTimeout(() => {
       setResponse(targetAnswer);
       setIsThinking(false);
       setActiveQuestion(null);
-    }, 4000);
+    }, 1200);
   };
 
   return (
@@ -103,7 +138,7 @@ export default function SiriAssistant({ isOpen, onClose }: SiriAssistantProps) {
                 <Sparkles className="w-4 h-4 text-cyan-300 animate-pulse" />
               </h3>
               <p className="text-[11px] text-white/60">
-                {isThinking ? "Thinking & querying engineering database..." : "Ask Siri about Harsh Srivastava"}
+                {isThinking ? "Querying engineering database..." : "Ask Siri about Harsh Srivastava"}
               </p>
             </div>
           </div>
@@ -116,7 +151,7 @@ export default function SiriAssistant({ isOpen, onClose }: SiriAssistantProps) {
           </button>
         </div>
 
-        {/* AI Answer Bubble or 4-Second Processing State */}
+        {/* AI Answer Bubble */}
         <div className="p-4 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-2xl text-xs text-white/90 leading-relaxed min-h-[110px] flex flex-col justify-center relative overflow-hidden shadow-inner">
           {isThinking ? (
             <div className="flex flex-col items-center justify-center py-2 gap-3 animate-in fade-in duration-300">
@@ -153,7 +188,7 @@ export default function SiriAssistant({ isOpen, onClose }: SiriAssistantProps) {
             value={customInput}
             onChange={(e) => setCustomInput(e.target.value)}
             disabled={isThinking}
-            placeholder="Ask Siri a question..."
+            placeholder="Ask Siri anything about Harsh..."
             className="flex-1 bg-white/10 border border-white/20 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-white/50 focus:outline-none focus:border-white/40 backdrop-blur-md transition-colors"
           />
           <button

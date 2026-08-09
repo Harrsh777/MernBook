@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useWindowStore } from "@/lib/windowStore";
 
 import MenuBar from "./MenuBar";
@@ -34,6 +34,7 @@ import ScreenSaver from "./macos/ScreenSaver";
 
 import FullscreenToast, { useFullscreen } from "./macos/FullscreenManager";
 import PWAInstaller from "./macos/PWAInstaller";
+import MacOSBootScreen from "./macos/MacOSBootScreen";
 
 export default function Desktop() {
   const {
@@ -59,6 +60,21 @@ export default function Desktop() {
   const [isControlCenterOpen, setIsControlCenterOpen] = useState(false);
   const [isWidgetsOpen, setIsWidgetsOpen] = useState(false);
   const [isNotificationCenterOpen, setIsNotificationCenterOpen] = useState(false);
+  const [brightness, setBrightness] = useState(100);
+  const [volume, setVolume] = useState(80);
+  const [focusActive, setFocusActive] = useState(false);
+  const [isBootCompleted, setIsBootCompleted] = useState(false);
+  const [forceReboot, setForceReboot] = useState(false);
+
+  const handleTriggerReboot = () => {
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("portfolioBootSeen");
+      localStorage.removeItem("portfolioBootSeen");
+    }
+    setIsBootCompleted(false);
+    setForceReboot(true);
+    setTimeout(() => setForceReboot(false), 3600);
+  };
 
   const handleDesktopClick = (e: React.MouseEvent) => {
     // Deselect desktop icon when clicking empty desktop area
@@ -82,6 +98,12 @@ export default function Desktop() {
 
   return (
     <>
+      {/* Real macOS Sequoia Hardware Boot Loading Screen */}
+      <MacOSBootScreen
+        forceReboot={forceReboot}
+        onComplete={() => setIsBootCompleted(true)}
+      />
+
       {/* Mobile Responsive iOS Safari Application View (for screens < 768px) */}
       <MobileSafariView />
 
@@ -97,10 +119,14 @@ export default function Desktop() {
       {/* Desktop macOS Application View (for screens >= 768px) */}
       <div
         onClick={handleDesktopClick}
+        style={{ filter: `brightness(${brightness}%)`, transition: "filter 150ms ease" }}
         className="hidden md:flex relative w-screen h-screen overflow-hidden bg-slate-950 select-none flex-col justify-between"
       >
-        {/* 1. Wallpaper Background & Subtle Overlay */}
-        <div className="absolute inset-0 z-0">
+        {/* 1. Wallpaper Background & Soft Blur Sharpness Transition */}
+        <div
+          className={`absolute inset-0 z-0 transition-all duration-500 ease-out ${isBootCompleted ? "blur-none opacity-100 scale-100" : "blur-xl opacity-40 scale-105"
+            }`}
+        >
           <Image
             src={wallpaperPaths[currentWallpaper]}
             alt="macOS Wallpaper"
@@ -109,9 +135,8 @@ export default function Desktop() {
             className="object-cover object-center transition-all duration-300"
           />
           <div
-            className={`absolute inset-0 pointer-events-none transition-colors duration-300 ${
-              currentWallpaper === "dark" ? "bg-black/60 backdrop-blur-xs" : "bg-black/10"
-            }`}
+            className={`absolute inset-0 pointer-events-none transition-colors duration-300 ${currentWallpaper === "dark" ? "bg-black/60 backdrop-blur-xs" : "bg-black/10"
+              }`}
           />
         </div>
 
@@ -123,6 +148,7 @@ export default function Desktop() {
           onToggleWidgets={() => setIsWidgetsOpen(!isWidgetsOpen)}
           onToggleNotifications={() => setIsNotificationCenterOpen(!isNotificationCenterOpen)}
           onToggleFullscreen={toggleFullscreen}
+          onTriggerReboot={handleTriggerReboot}
           isFullscreen={isFullscreen}
         />
 
@@ -138,6 +164,13 @@ export default function Desktop() {
           onClose={() => setIsControlCenterOpen(false)}
           currentWallpaper={currentWallpaper}
           onSelectWallpaper={(id) => setCurrentWallpaper(id)}
+          brightness={brightness}
+          setBrightness={setBrightness}
+          volume={volume}
+          setVolume={setVolume}
+          focusActive={focusActive}
+          setFocusActive={setFocusActive}
+          onOpenWindow={openWindow}
         />
 
         <WidgetsSidebar
@@ -156,8 +189,8 @@ export default function Desktop() {
           onClose={() => closeWindow("siri")}
         />
 
-        {/* 4. Hero Section (Positioned at Bottom Right Edge) */}
-        <div className="absolute -bottom-4 right-2 md:-bottom-4 md:right-4 z-0 pointer-events-none text-right flex justify-end">
+        {/* 4. Hero Section (Positioned lower at Bottom Right Edge) */}
+        <div className="absolute -bottom-10 right-4 md:-bottom-12 md:right-6 z-0 pointer-events-none text-right flex justify-end">
           <div className="w-80 sm:w-96 md:w-[420px] pointer-events-auto">
             <WarpText
               text={"Hey, I'm Harsh! welcome to my\nportfolio."}
@@ -179,10 +212,24 @@ export default function Desktop() {
           </div>
         </div>
 
-        {/* 5. Desktop Icons (Draggable & Droppable) */}
+        {/* 5. Desktop Icons (Draggable & Droppable with 40ms stagger entrance) */}
         <div className="hidden md:flex flex-col gap-4 absolute top-14 left-6 z-20 pointer-events-none">
-          {visibleDesktopItems.map((item) => (
-            <div key={item.id} className="pointer-events-auto">
+          {visibleDesktopItems.map((item, idx) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, scale: 0.9, y: 8 }}
+              animate={{
+                opacity: isBootCompleted ? 1 : 0,
+                scale: isBootCompleted ? 1 : 0.9,
+                y: isBootCompleted ? 0 : 8,
+              }}
+              transition={{
+                duration: 0.2,
+                delay: isBootCompleted ? 0.15 + idx * 0.04 : 0,
+                ease: "easeOut",
+              }}
+              className="pointer-events-auto"
+            >
               <DesktopIcon
                 itemId={item.id}
                 windowId={item.windowId}
@@ -193,7 +240,7 @@ export default function Desktop() {
                 onOpen={(wId) => openWindow(wId)}
                 onMoveToTrash={(id) => moveToTrash(id)}
               />
-            </div>
+            </motion.div>
           ))}
         </div>
 
@@ -394,12 +441,25 @@ export default function Desktop() {
           </Window>
         </AnimatePresence>
 
-        {/* 7. Bottom Floating Glass Dock */}
-        <Dock
-          windows={windows}
-          onToggleWindow={toggleWindow}
-          bouncingDockId={bouncingDockId}
-        />
+        {/* 7. Bottom Floating Glass Dock (rises 12px & fades in over 220ms) */}
+        <motion.div
+          initial={{ y: 12, opacity: 0 }}
+          animate={{
+            y: isBootCompleted ? 0 : 12,
+            opacity: isBootCompleted ? 1 : 0,
+          }}
+          transition={{
+            duration: 0.22,
+            delay: 0.1,
+            ease: "easeOut",
+          }}
+        >
+          <Dock
+            windows={windows}
+            onToggleWindow={toggleWindow}
+            bouncingDockId={bouncingDockId}
+          />
+        </motion.div>
       </div>
     </>
   );

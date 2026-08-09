@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { FaApple } from "react-icons/fa6";
 import { WindowId } from "@/lib/windowStore";
-import { Wifi, Search, SlidersHorizontal, BatteryMedium, Bell, Maximize2, Minimize2 } from "lucide-react";
+import { Wifi, Search, SlidersHorizontal, BatteryMedium, Bell, Maximize2, Minimize2, RotateCcw, Settings, Info } from "lucide-react";
 
 interface MenuBarProps {
   onOpenWindow: (id: WindowId) => void;
@@ -11,6 +12,7 @@ interface MenuBarProps {
   onToggleWidgets: () => void;
   onToggleNotifications: () => void;
   onToggleFullscreen: () => void;
+  onTriggerReboot?: () => void;
   isFullscreen?: boolean;
 }
 
@@ -21,9 +23,12 @@ export default function MenuBar({
   onToggleWidgets,
   onToggleNotifications,
   onToggleFullscreen,
+  onTriggerReboot,
   isFullscreen = false,
 }: MenuBarProps) {
   const [timeString, setTimeString] = useState<string>("");
+  const [isAppleMenuOpen, setIsAppleMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const updateTime = () => {
@@ -43,23 +48,71 @@ export default function MenuBar({
 
     updateTime();
     const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setIsAppleMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-[30px] px-3 md:px-4 flex items-center justify-between backdrop-blur-md bg-black/35 border-b border-white/10 text-white/90 text-[13px] select-none">
       {/* Left Menu Items */}
-      <div className="flex items-center gap-4 md:gap-5">
-        {/* Apple Logo */}
-        <button
-          aria-label="Apple logo menu"
-          onClick={() => onOpenWindow("finder")}
-          className="hover:opacity-80 transition-opacity flex items-center justify-center cursor-pointer"
-        >
-          <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 170 170">
-            <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.34.13-9.16-1.9-14.49-6.1-3.32-2.73-7.27-7.46-11.85-14.18-6.53-9.57-11.66-20.31-15.38-32.22-3.72-11.91-5.58-23.01-5.58-33.3 0-14.15 3.52-25.75 10.56-34.8 7.04-9.06 15.78-13.67 26.23-13.84 4.88 0 10.37 1.25 16.48 3.75 6.1 2.5 10.45 3.75 13.06 3.75 2.14 0 6.64-1.32 13.48-3.96 6.85-2.64 12.52-3.86 17.02-3.65 12.08.76 21.6 5.3 28.58 13.62-10.74 6.51-15.99 15.67-15.75 27.48.24 9.17 3.75 16.89 10.53 23.16 6.78 6.28 14.86 9.77 24.23 10.47-2.6 7.74-6.07 15.54-10.41 23.4zM119.22 31.84c0-7.39 2.65-14.38 7.95-20.97 5.3-6.59 11.96-10.5 20-11.73.11.98.17 1.94.17 2.88 0 7.29-2.75 14.38-8.25 21.28-5.5 6.9-12.18 10.74-20.04 11.52-.22-.98-.33-1.97-.33-2.98z" />
-          </svg>
-        </button>
+      <div className="flex items-center gap-4 md:gap-5 relative">
+        {/* Apple Logo Dropdown Menu Trigger */}
+        <div ref={menuRef} className="relative">
+          <button
+            aria-label="Apple logo menu"
+            onClick={() => setIsAppleMenuOpen(!isAppleMenuOpen)}
+            className="hover:opacity-80 transition-opacity flex items-center justify-center cursor-pointer p-1 rounded hover:bg-white/10"
+          >
+            <FaApple className="w-3.5 h-3.5 text-white" />
+          </button>
+
+          {/* Apple Menu Dropdown Panel */}
+          {isAppleMenuOpen && (
+            <div className="absolute left-0 top-8 w-56 bg-slate-900/90 backdrop-blur-2xl border border-white/20 rounded-xl shadow-2xl p-1.5 z-50 text-xs flex flex-col gap-1 text-white/90">
+              <button
+                onClick={() => {
+                  setIsAppleMenuOpen(false);
+                  onOpenWindow("settings");
+                }}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-sky-600 hover:text-white transition-colors cursor-pointer text-left"
+              >
+                <Info className="w-3.5 h-3.5" />
+                <span>About This Mac</span>
+              </button>
+              <button
+                onClick={() => {
+                  setIsAppleMenuOpen(false);
+                  onOpenWindow("settings");
+                }}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-sky-600 hover:text-white transition-colors cursor-pointer text-left"
+              >
+                <Settings className="w-3.5 h-3.5" />
+                <span>System Settings...</span>
+              </button>
+              <div className="h-[1px] bg-white/10 my-0.5" />
+              <button
+                onClick={() => {
+                  setIsAppleMenuOpen(false);
+                  if (onTriggerReboot) onTriggerReboot();
+                }}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-amber-600 hover:text-white transition-colors cursor-pointer text-left font-medium text-amber-300"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Restart macOS... (Play Boot Screen)</span>
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Name / Title */}
         <span className="font-semibold tracking-tight cursor-default text-white">

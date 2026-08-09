@@ -11,10 +11,30 @@ import {
   ExternalLink,
   BookOpen,
   Sparkles,
+  Search,
+  Filter,
 } from "lucide-react";
 
 export default function SafariWindow() {
-  const [url] = useState("https://harshsrivastava.in/blogs/top-10-ai-fullstack");
+  const [addressBar, setAddressBar] = useState("harshsrivastava.in/blogs");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [history, setHistory] = useState<string[]>(["harshsrivastava.in/blogs"]);
+  const [historyIdx, setHistoryIdx] = useState(0);
+
+  const categories = [
+    "All",
+    "AI & Agents",
+    "Backend & DB",
+    "Cloud & DevOps",
+    "Frontend",
+    "Cybersecurity",
+    "DevOps",
+    "Architecture",
+    "Performance",
+    "WebRTC",
+    "Hackathons",
+  ];
 
   const blogs = [
     {
@@ -129,35 +149,107 @@ export default function SafariWindow() {
     },
   ];
 
+  const filteredBlogs = blogs.filter((b) => {
+    const matchesCategory = selectedCategory === "All" || b.category === selectedCategory;
+    const matchesSearch =
+      searchQuery.trim() === "" ||
+      b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      b.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      b.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+    return matchesCategory && matchesSearch;
+  });
+
+  const handleAddressSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const query = addressBar.replace(/https?:\/\//, "").replace("harshsrivastava.in/blogs", "").replace("/", "").trim();
+    setSearchQuery(query);
+
+    const newUrl = addressBar.startsWith("https://") ? addressBar : `https://${addressBar}`;
+    if (history[historyIdx] !== newUrl) {
+      const updated = [...history.slice(0, historyIdx + 1), newUrl];
+      setHistory(updated);
+      setHistoryIdx(updated.length - 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (historyIdx > 0) {
+      const prev = historyIdx - 1;
+      setHistoryIdx(prev);
+      setAddressBar(history[prev]);
+      setSearchQuery("");
+    }
+  };
+
+  const handleForward = () => {
+    if (historyIdx < history.length - 1) {
+      const next = historyIdx + 1;
+      setHistoryIdx(next);
+      setAddressBar(history[next]);
+    }
+  };
+
+  const handleRefresh = () => {
+    setSelectedCategory("All");
+    setSearchQuery("");
+    setAddressBar("harshsrivastava.in/blogs");
+  };
+
   return (
     <div className="h-full w-full bg-transparent text-white flex flex-col select-none overflow-hidden font-sans">
       {/* macOS Safari Browser Toolbar */}
-      <div className="h-11 bg-white/10 border-b border-white/10 px-4 flex items-center justify-between gap-3 text-white/80 backdrop-blur-xl">
+      <div className="h-11 bg-white/10 border-b border-white/10 px-4 flex items-center justify-between gap-3 text-white/80 backdrop-blur-xl shrink-0">
         {/* Nav Buttons */}
         <div className="flex items-center gap-2">
-          <button aria-label="Back" className="p-1 rounded hover:bg-white/10 transition-colors">
+          <button
+            onClick={handleBack}
+            disabled={historyIdx === 0}
+            aria-label="Back"
+            className="p-1 rounded hover:bg-white/10 disabled:opacity-30 transition-colors"
+          >
             <ChevronLeft className="w-4 h-4" />
           </button>
-          <button aria-label="Forward" className="p-1 rounded hover:bg-white/10 transition-colors">
+          <button
+            onClick={handleForward}
+            disabled={historyIdx >= history.length - 1}
+            aria-label="Forward"
+            className="p-1 rounded hover:bg-white/10 disabled:opacity-30 transition-colors"
+          >
             <ChevronRight className="w-4 h-4" />
           </button>
-          <button aria-label="Refresh" className="p-1 rounded hover:bg-white/10 transition-colors">
+          <button
+            onClick={handleRefresh}
+            aria-label="Refresh"
+            className="p-1 rounded hover:bg-white/10 transition-colors"
+          >
             <RotateCw className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        {/* Address Bar */}
-        <div className="flex-1 max-w-xl bg-white/10 border border-white/15 rounded-lg px-3 py-1 flex items-center justify-center gap-2 text-xs text-white/90 shadow-inner">
-          <Lock className="w-3 h-3 text-emerald-400 shrink-0" />
-          <span className="truncate font-medium text-white/90">{url}</span>
-        </div>
+        {/* Address Bar Form */}
+        <form onSubmit={handleAddressSubmit} className="flex-1 max-w-xl">
+          <div className="bg-white/10 border border-white/15 rounded-lg px-3 py-1 flex items-center gap-2 text-xs text-white/90 shadow-inner">
+            <Lock className="w-3 h-3 text-emerald-400 shrink-0" />
+            <input
+              type="text"
+              value={addressBar}
+              onChange={(e) => {
+                setAddressBar(e.target.value);
+                setSearchQuery(e.target.value.replace(/https?:\/\//, "").replace("harshsrivastava.in/blogs", "").replace("/", "").trim());
+              }}
+              placeholder="Search or type URL..."
+              className="w-full bg-transparent text-xs text-white placeholder-white/40 focus:outline-none"
+            />
+            <Search className="w-3 h-3 text-white/40 shrink-0" />
+          </div>
+        </form>
 
         {/* Action Controls */}
         <div className="flex items-center gap-2">
           <button aria-label="Share" className="p-1.5 rounded hover:bg-white/10 transition-colors">
             <Share2 className="w-4 h-4" />
           </button>
-          <button aria-label="New Tab" className="p-1.5 rounded hover:bg-white/10 transition-colors">
+          <button aria-label="New Tab" onClick={handleRefresh} className="p-1.5 rounded hover:bg-white/10 transition-colors">
             <Plus className="w-4 h-4" />
           </button>
         </div>
@@ -166,7 +258,7 @@ export default function SafariWindow() {
       {/* Safari Page Content */}
       <div className="flex-1 bg-transparent p-6 md:p-8 overflow-y-auto select-text backdrop-blur-2xl">
         {/* Page Header */}
-        <div className="mb-8 pb-4 border-b border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="mb-6 pb-4 border-b border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
               <Sparkles className="w-6 h-6 text-sky-300" />
@@ -176,64 +268,92 @@ export default function SafariWindow() {
               Curated architecture breakdowns, AI agent guides, and systems performance specs by Harsh Srivastava
             </p>
           </div>
-          <span className="text-xs px-3 py-1.5 rounded-full bg-sky-500/20 text-sky-200 border border-sky-400/30 font-medium self-start md:self-auto">
-            10 Curated Reads
+          <span className="text-xs px-3 py-1.5 rounded-full bg-sky-500/20 text-sky-200 border border-sky-400/30 font-medium self-start md:self-auto shrink-0">
+            Showing {filteredBlogs.length} of {blogs.length} Articles
           </span>
         </div>
 
-        {/* Articles List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {blogs.map((b) => (
-            <div
-              key={b.id}
-              className="apple-glass-card rounded-2xl p-5 hover:border-white/35 transition-all flex flex-col justify-between group shadow-md"
-            >
-              <div>
-                {/* Meta header */}
-                <div className="flex items-center justify-between text-xs text-white/60 mb-2">
-                  <span className="px-2.5 py-0.5 rounded-full bg-white/15 text-sky-300 font-semibold text-[11px] border border-white/10">
-                    {b.category}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <BookOpen className="w-3.5 h-3.5" />
-                    <span>{b.readTime}</span>
+        {/* Category Pills Filter */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 scrollbar-none">
+          <Filter className="w-4 h-4 text-white/50 shrink-0 mr-1" />
+          {categories.map((cat) => {
+            const isSelected = selectedCategory === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+                  isSelected
+                    ? "bg-sky-500 text-white shadow-md border border-sky-400"
+                    : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white border border-white/10"
+                }`}
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Articles Grid */}
+        {filteredBlogs.length === 0 ? (
+          <div className="p-12 text-center text-white/50 text-xs apple-glass-card rounded-2xl">
+            No articles found matching &ldquo;{searchQuery || selectedCategory}&rdquo;. Try clearing filters or searching for another keyword.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredBlogs.map((b) => (
+              <div
+                key={b.id}
+                className="apple-glass-card rounded-2xl p-5 hover:border-white/35 transition-all flex flex-col justify-between group shadow-md"
+              >
+                <div>
+                  {/* Meta header */}
+                  <div className="flex items-center justify-between text-xs text-white/60 mb-2">
+                    <span className="px-2.5 py-0.5 rounded-full bg-white/15 text-sky-300 font-semibold text-[11px] border border-white/10">
+                      {b.category}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <BookOpen className="w-3.5 h-3.5" />
+                      <span>{b.readTime}</span>
+                    </div>
+                  </div>
+
+                  <h2 className="text-base font-bold text-white group-hover:text-sky-300 transition-colors leading-snug mb-2">
+                    {b.title}
+                  </h2>
+                  <p className="text-xs text-white/80 leading-relaxed mb-4">{b.description}</p>
+
+                  {/* Tech Tags */}
+                  <div className="flex flex-wrap gap-1.5 mb-6">
+                    {b.tags.map((t, tid) => (
+                      <span
+                        key={tid}
+                        onClick={() => setSearchQuery(t)}
+                        className="text-[10px] bg-white/10 hover:bg-white/20 text-white/90 px-2 py-0.5 rounded border border-white/10 font-medium cursor-pointer transition-colors"
+                      >
+                        #{t}
+                      </span>
+                    ))}
                   </div>
                 </div>
 
-                <h2 className="text-base font-bold text-white group-hover:text-sky-300 transition-colors leading-snug mb-2">
-                  {b.title}
-                </h2>
-                <p className="text-xs text-white/80 leading-relaxed mb-4">{b.description}</p>
-
-                {/* Tech Tags */}
-                <div className="flex flex-wrap gap-1.5 mb-6">
-                  {b.tags.map((t, tid) => (
-                    <span
-                      key={tid}
-                      className="text-[10px] bg-white/10 text-white/90 px-2 py-0.5 rounded border border-white/10 font-medium"
-                    >
-                      #{t}
-                    </span>
-                  ))}
+                {/* Action Button */}
+                <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+                  <span className="text-[11px] text-white/50">{b.date}</span>
+                  <a
+                    href={b.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-xs font-semibold text-sky-300 hover:text-white transition-colors"
+                  >
+                    <span>Read Article</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
                 </div>
               </div>
-
-              {/* Action Button */}
-              <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-                <span className="text-[11px] text-white/50">{b.date}</span>
-                <a
-                  href={b.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-xs font-semibold text-sky-300 hover:text-white transition-colors"
-                >
-                  <span>Read Article</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ export default function ProjectsWindow() {
       description:
         "AI cold email outreach platform featuring automated inbox warm-up, dynamic AI email personalization, campaign analytics, and deliverability optimization.",
       tech: ["Next.js", "FastAPI", "Redis", "Docker", "LangChain", "MongoDB"],
-      img: "/moksha.png",
+      img: "/moxsend.png",
       demoUrl: "https://www.harshsrivastava.in",
       githubUrl: "https://github.com/Harrsh777",
     },
