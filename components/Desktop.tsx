@@ -25,7 +25,7 @@ import CalculatorWindow from "./windows/CalculatorWindow";
 import SystemSettingsWindow from "./windows/SystemSettingsWindow";
 import SiriAssistant from "./macos/SiriAssistant";
 
-import MobileSafariView from "./mobile/MobileSafariView";
+import IPhoneView from "./mobile/IPhoneView";
 import SpotlightSearch from "./macos/SpotlightSearch";
 import ControlCenter, { WallpaperId } from "./macos/ControlCenter";
 import WidgetsSidebar from "./macos/WidgetsSidebar";
@@ -104,8 +104,8 @@ export default function Desktop() {
         onComplete={() => setIsBootCompleted(true)}
       />
 
-      {/* Mobile Responsive iOS Safari Application View (for screens < 768px) */}
-      <MobileSafariView />
+      {/* Mobile Responsive Realistic iOS iPhone Application View (for screens < 768px) */}
+      <IPhoneView />
 
       {/* macOS Sonoma Motion Screen Saver (triggers on 60s idle) */}
       <ScreenSaver />
